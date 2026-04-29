@@ -240,33 +240,65 @@ select.fc option{background:var(--card3)}
 .notif-bell.has-new{border-color:rgba(245,158,11,.5);color:var(--amber);animation:bellRing .6s ease-in-out}
 @keyframes bellRing{0%,100%{transform:rotate(0)}20%{transform:rotate(-15deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
 .notif-count{background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:1px 5px;min-width:16px;text-align:center;line-height:1.4}
-.notif-panel{position:absolute;top:calc(100% + 8px);right:0;width:360px;max-height:480px;background:var(--nav);border:1px solid var(--b1);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.6);z-index:500;display:none;flex-direction:column;overflow:hidden}
+.notif-panel{position:absolute;top:calc(100% + 8px);right:0;width:420px;max-height:560px;background:var(--nav);border:1px solid var(--b1);border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.65);z-index:500;display:none;flex-direction:column;overflow:hidden}
 .notif-panel.show{display:flex}
-.np-hd{padding:12px 16px;border-bottom:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.np-hd h4{font-family:'Crimson Pro',serif;font-size:15px;font-weight:600;color:var(--goldl)}
+/* Header */
+.np-hd{padding:13px 16px 11px;border-bottom:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.np-hd h4{font-family:'Crimson Pro',serif;font-size:16px;font-weight:600;color:var(--goldl);display:flex;align-items:center;gap:8px}
+.np-total-badge{font-size:11px;background:var(--red);color:#fff;border-radius:9px;padding:1px 7px;font-weight:700}
 .np-acts{display:flex;gap:6px}
-.np-btn{font-size:10px;padding:3px 8px;border-radius:5px;border:1px solid var(--b2);background:transparent;color:var(--dim);cursor:pointer;transition:.15s}
+.np-btn{font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--b2);background:transparent;color:var(--dim);cursor:pointer;transition:.15s}
 .np-btn:hover{border-color:var(--goldl);color:var(--goldl)}
+/* Summary strip */
+.np-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-bottom:2px solid var(--b2);flex-shrink:0}
+.nps-card{padding:10px 12px;text-align:center;border-right:1px solid var(--b2);cursor:pointer;transition:background .12s}
+.nps-card:last-child{border-right:none}
+.nps-card:hover{background:var(--card2)}
+.nps-card.active{background:rgba(200,148,31,.08)}
+.nps-v{font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;line-height:1}
+.nps-act .nps-v{color:var(--blue)}
+.nps-ev .nps-v{color:var(--amber)}
+.nps-ut .nps-v{color:var(--teal)}
+.nps-l{font-size:10px;color:var(--dim);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+/* List */
 .np-list{flex:1;overflow-y:auto}
 .np-list::-webkit-scrollbar{width:3px}
 .np-list::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
-.np-item{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border-bottom:1px solid var(--b3);cursor:pointer;transition:background .12s}
-.np-item:hover{background:var(--card2)}
-.np-item.unread{background:rgba(200,148,31,.05)}
-.np-item:last-child{border-bottom:none}
-.np-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px}
-.np-ico-val{background:rgba(74,158,245,.15)}
-.np-ico-sel{background:rgba(245,158,11,.15)}
+/* Section header */
+.np-section{padding:7px 16px;font-size:11px;font-weight:700;color:var(--dim);background:var(--card3);border-bottom:1px solid var(--b2);border-top:1px solid var(--b2);display:flex;align-items:center;gap:6px}
+.np-section .nps-ico{font-size:13px}
+.np-section .nps-cnt{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:8px;padding:1px 6px}
+/* Item */
+.np-item{display:flex;align-items:flex-start;gap:11px;padding:12px 16px;border-bottom:1px solid var(--b3);cursor:pointer;transition:background .12s;position:relative}
+.np-item:hover{background:rgba(255,255,255,.025)}
+.np-item.unread{background:rgba(200,148,31,.04)}
+.np-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
+.np-item.unread.type-kegiatan::before{background:var(--blue)}
+.np-item.unread.type-evaluasi::before{background:var(--amber)}
+.np-item.unread.type-uraian::before{background:var(--teal)}
+.np-item:last-child{border:none}
+/* Icon */
+.np-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.np-ico.ico-kegiatan{background:rgba(74,158,245,.15);color:var(--blue)}
+.np-ico.ico-evaluasi{background:rgba(245,158,11,.15);color:var(--amber)}
+.np-ico.ico-uraian{background:rgba(29,179,163,.15);color:var(--teal)}
+/* Body */
 .np-body{flex:1;min-width:0}
-.np-msg{font-size:12px;font-weight:500;color:var(--txt);line-height:1.4}
-.np-msg strong{color:var(--goldl)}
-.np-sub{font-size:11px;color:var(--dim);margin-top:3px}
-.np-time{font-size:10px;color:var(--dim2);margin-top:3px}
-.np-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:5px}
-.np-dot.read{background:transparent}
-.np-empty{text-align:center;padding:32px 16px;color:var(--dim);font-size:12px}
-.np-empty .ne-i{font-size:32px;opacity:.3;margin-bottom:8px}
-.np-section{padding:6px 15px;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim2);font-weight:600;background:var(--card3);border-bottom:1px solid var(--b3)}
+.np-who{font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-what{font-size:12px;color:var(--dim);margin-top:2px;line-height:1.4}
+.np-what strong{color:var(--txt);font-weight:600}
+.np-detail{font-size:11px;color:var(--dim2);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap}
+.np-dtag{background:var(--card3);border:1px solid var(--b2);border-radius:4px;padding:1px 6px;font-size:10px}
+/* Action button */
+.np-act-btn{margin-left:4px;padding:3px 9px;border-radius:6px;border:1px solid var(--b2);background:transparent;color:var(--tl);font-size:11px;cursor:pointer;white-space:nowrap;transition:.15s;font-family:'Barlow',sans-serif}
+.np-act-btn:hover{background:rgba(29,179,163,.12);border-color:var(--teal)}
+/* Dot */
+.np-dot{width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:6px}
+.np-dot.read{background:transparent;border:1px solid var(--b2)}
+/* Empty */
+.np-empty{text-align:center;padding:36px 16px;color:var(--dim)}
+.np-empty .ne-i{font-size:36px;opacity:.3;margin-bottom:10px}
+.np-empty p{font-size:13px}
 
 
 /* ── EXECUTIVE VIEW ── */
@@ -274,87 +306,115 @@ select.fc option{background:var(--card3)}
 .exec-overlay.show{display:flex}
 .exec-hd{background:var(--nav);border-bottom:1px solid var(--b1);padding:14px 24px;display:flex;align-items:center;gap:14px;flex-shrink:0}
 .exec-hd h2{font-family:'Crimson Pro',serif;font-size:20px;font-weight:600;color:var(--goldl);flex:1}
-.exec-body{flex:1;overflow-y:auto;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-content:start}
+/* Exec body: 2 rows – stat strip + 3-col panels */
+.exec-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 20px;display:flex;flex-direction:column;gap:12px}
 .exec-body::-webkit-scrollbar{width:4px}
 .exec-body::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
-.exec-card{background:var(--card);border:1px solid var(--b2);border-radius:10px;overflow:hidden}
-.exec-card.full{grid-column:1/-1}
-.exec-card-hd{padding:12px 16px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:8px}
-.exec-card-hd h3{font-family:'Crimson Pro',serif;font-size:15px;font-weight:600;color:var(--goldl)}
-.exec-card-hd .eico{font-size:16px}
-.exec-card-body{padding:14px}
-.exec-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.estat{background:var(--card2);border:1px solid var(--b2);border-radius:8px;padding:12px;text-align:center}
-.estat-v{font-family:'Crimson Pro',serif;font-size:28px;font-weight:600}
-.estat-l{font-size:10px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
-.exec-table{width:100%;border-collapse:collapse;font-size:12px}
-.exec-table th{background:var(--card3);color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.4px;font-weight:600;padding:7px 10px;text-align:left;border-bottom:1px solid var(--b2)}
-.exec-table td{padding:7px 10px;border-bottom:1px solid var(--b3);vertical-align:middle}
+/* Top stats strip */
+.exec-stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-shrink:0}
+.estat{background:var(--card);border:1px solid var(--b2);border-radius:12px;padding:18px 20px;text-align:center}
+.estat-v{font-family:'Crimson Pro',serif;font-size:44px;font-weight:600;line-height:1}
+.estat-l{font-size:12px;color:var(--dim);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+/* Kaitan SS comparison strip */
+.ks-comp-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;flex-shrink:0}
+.ksc-card{border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;border:1px solid transparent}
+.ksc-lang{background:rgba(46,201,126,.09);border-color:rgba(46,201,126,.3)}
+.ksc-tlang{background:rgba(245,158,11,.09);border-color:rgba(245,158,11,.3)}
+.ksc-tdk{background:rgba(96,122,156,.09);border-color:rgba(96,122,156,.25)}
+.ksc-icon{font-size:30px;flex-shrink:0;opacity:.85}
+.ksc-info{flex:1;min-width:0}
+.ksc-v{font-family:'Crimson Pro',serif;font-size:52px;font-weight:600;line-height:1}
+.ksc-lang .ksc-v{color:var(--green)}
+.ksc-tlang .ksc-v{color:var(--amber)}
+.ksc-tdk .ksc-v{color:var(--dim)}
+.ksc-l{font-size:14px;font-weight:600;margin-top:5px}
+.ksc-lang .ksc-l{color:var(--green)}
+.ksc-tlang .ksc-l{color:var(--amber)}
+.ksc-tdk .ksc-l{color:var(--dim)}
+.ksc-sub{font-size:12px;color:var(--dim);margin-top:3px}
+.ksc-pct{font-size:20px;font-weight:600;font-family:'Crimson Pro',serif;color:var(--dim);margin-left:auto;flex-shrink:0;align-self:flex-start;padding-top:2px}
+.ksc-lang .ksc-pct{color:var(--green)}
+.ksc-tlang .ksc-pct{color:var(--amber)}
+.ksc-bar-wrap{position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(255,255,255,.06)}
+.ksc-bar{height:100%;border-radius:0 2px 0 0;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.ksc-lang .ksc-bar{background:var(--green)}
+.ksc-tlang .ksc-bar{background:var(--amber)}
+.ksc-tdk .ksc-bar{background:var(--dim2)}
+/* Panel row */
+.exec-panels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;flex:1;min-height:0}
+.exec-card{background:var(--card);border:1px solid var(--b2);border-radius:12px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.exec-card-hd{padding:13px 16px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.exec-card-hd h3{font-family:'Crimson Pro',serif;font-size:16px;font-weight:600;color:var(--goldl)}
+.exec-card-hd .eico{font-size:18px}
+.exec-card-hd .echd-right{margin-left:auto;font-size:12px;color:var(--dim)}
+.exec-card-body{flex:1;overflow-y:auto;padding:0}
+.exec-card-body::-webkit-scrollbar{width:3px}
+.exec-card-body::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.exec-card-foot{padding:9px 15px;font-size:12px;color:var(--dim);display:flex;gap:10px;border-top:1px solid var(--b2);flex-shrink:0;flex-wrap:wrap}
+.exec-table{width:100%;border-collapse:collapse;font-size:13px}
+.exec-table th{background:var(--card2);color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.4px;font-weight:600;padding:8px 11px;text-align:left;border-bottom:1px solid var(--b2);position:sticky;top:0;z-index:1}
+.exec-table td{padding:9px 11px;border-bottom:1px solid var(--b3);vertical-align:middle;line-height:1.5}
 .exec-table tr:last-child td{border-bottom:none}
 .exec-table tr:hover td{background:rgba(255,255,255,.012)}
-.cell-ok{text-align:center;color:var(--green);font-size:13px}
-.cell-mid{text-align:center;color:var(--amber);font-size:13px}
-.cell-no{text-align:center;color:var(--dim2);font-size:13px}
+.cell-ok{text-align:center;color:var(--green)}
+.cell-mid{text-align:center;color:var(--amber)}
+.cell-no{text-align:center;color:var(--dim2)}
 .tw-cell{text-align:center;width:56px}
-.ev-pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600}
-.ep-v{background:rgba(46,201,126,.15);color:var(--green)}
-.ep-p{background:rgba(245,158,11,.15);color:var(--amber)}
-.ep-n{background:rgba(96,122,156,.1);color:var(--dim2)}
-.act-today-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--b3)}
+.ep{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:600}
+.epv{background:rgba(46,201,126,.15);color:var(--green)}
+.epp{background:rgba(245,158,11,.15);color:var(--amber)}
+.epn{background:rgba(96,122,156,.1);color:var(--dim2)}
+.act-today-row{display:flex;align-items:center;gap:9px;padding:10px 15px;border-bottom:1px solid var(--b3);cursor:pointer;transition:background .1s}
+.act-today-row:hover{background:var(--card2)}
 .act-today-row:last-child{border:none}
-.hbtn-exec{padding:5px 12px;border-radius:16px;border:1px solid rgba(200,148,31,.4);background:rgba(200,148,31,.08);color:var(--goldl);font-family:'Barlow',sans-serif;font-size:11px;cursor:pointer;transition:.15s}
-.hbtn-exec:hover{background:rgba(200,148,31,.18)}
+.exec-hd h2{font-family:'Crimson Pro',serif;font-size:22px;font-weight:600;color:var(--goldl);flex:1}
+.vb-none{text-align:center;padding:14px;font-size:13px;color:var(--grn)}
 
-/* ── PRINT STYLES ── */
-@media print{
-  body *{visibility:hidden}
-  #printArea,#printArea *{visibility:visible}
-  #printArea{position:fixed;inset:0;background:#fff;color:#000;padding:20px;font-family:Arial,sans-serif;font-size:11px}
-  .print-hd{text-align:center;margin-bottom:16px;border-bottom:2px solid #000;padding-bottom:10px}
-  .print-hd h2{font-size:16px;font-weight:700}
-  .print-hd p{font-size:12px}
-  .print-table{width:100%;border-collapse:collapse;margin-top:10px}
-  .print-table th{background:#ddd;font-size:10px;font-weight:700;padding:5px 7px;border:1px solid #999;text-align:left}
-  .print-table td{font-size:10px;padding:4px 7px;border:1px solid #ccc;vertical-align:top}
-  .print-date-hd{background:#eee;font-weight:700;font-size:11px;padding:5px 7px;border:1px solid #999;margin-top:8px}
-  .print-status{font-size:9px;font-weight:700}
-  .no-print{display:none!important}
+/* ── MEDAL / LEADERBOARD ── */
+.medal-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:0;flex-shrink:0}
+.medal-card{background:var(--c1);border:1px solid var(--b2);border-radius:10px;padding:14px 15px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden}
+.medal-card::before{content:'';position:absolute;inset:0;opacity:.06;pointer-events:none}
+.medal-gold::before{background:linear-gradient(135deg,#FFD700,#FFA500)}
+.medal-silver::before{background:linear-gradient(135deg,#C0C0C0,#808080)}
+.medal-bronze::before{background:linear-gradient(135deg,#CD7F32,#8B4513)}
+.medal-card .mav{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#fff;flex-shrink:0;position:relative}
+.medal-card .mav .mbadge{position:absolute;bottom:-4px;right:-4px;font-size:16px;line-height:1}
+.medal-info{flex:1;min-width:0}
+.medal-info .mnm{font-size:14px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.medal-info .mti{font-size:10px;color:var(--dim);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.medal-info .mstat{font-family:'Crimson Pro',serif;font-size:26px;font-weight:600;margin-top:4px}
+.medal-info .mperiod{font-size:11px;color:var(--dim);margin-top:3px}
+.medal-gold .mstat{color:#FFD700}
+.medal-silver .mstat{color:#C0C0C0}
+.medal-bronze .mstat{color:#CD7F32}
+.medal-empty{text-align:center;padding:14px;color:var(--dim);font-size:11px;font-style:italic}
+
+
+/* ── KAITAN SASARAN STRATEGIS ── */
+.ks-radio-group{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.ks-radio-opt{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:1px solid var(--b2);cursor:pointer;font-size:12px;font-weight:500;transition:.15s;user-select:none}
+.ks-radio-opt:hover{border-color:var(--gl)}
+.ks-radio-opt input[type=radio]{accent-color:var(--gold);width:13px;height:13px;cursor:pointer}
+.ks-radio-opt.ks-lang{border-color:rgba(46,201,126,.35);background:rgba(46,201,126,.06);color:var(--grn)}
+.ks-radio-opt.ks-tidak-lang{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.06);color:var(--amb)}
+.ks-radio-opt.ks-tdk{border-color:rgba(96,122,156,.3);background:rgba(96,122,156,.06);color:var(--dim)}
+.ks-bdg{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.ks-lang-bdg{background:rgba(46,201,126,.15);color:var(--grn)}
+.ks-tidak-lang-bdg{background:rgba(245,158,11,.12);color:var(--amb)}
+.ks-tdk-bdg{background:rgba(96,122,156,.1);color:var(--dim)}
+
+/* ── SIDEBAR PENDING BADGE ── */
+.ti-wrap{position:relative;display:inline-block}
+.pending-bubble{
+  position:absolute;top:-4px;right:-4px;
+  min-width:16px;height:16px;border-radius:8px;
+  background:var(--red);color:#fff;
+  font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 4px;line-height:1;
+  border:2px solid var(--nav);
+  pointer-events:none;z-index:2;
 }
-
-/* ── CONTRACT STATUS ── */
-.cstat-bar{display:flex;align-items:center;gap:8px;padding:10px 0 4px;margin-top:8px;border-top:1px solid var(--b2)}
-.cstat-pill{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600}
-.csp-belum{background:rgba(96,122,156,.1);color:var(--dim)}
-.csp-diisi{background:rgba(245,158,11,.12);color:var(--amber)}
-.csp-diserahkan{background:rgba(74,158,245,.12);color:var(--blue)}
-.csp-tervalidasi{background:rgba(46,201,126,.12);color:var(--green)}
-/* ── DAILY ACTIVITY ── */
-.day-nav{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.day-nav-date{font-family:'Crimson Pro',serif;font-size:17px;font-weight:600;color:var(--goldl)}
-.day-nav-sub{font-size:11px;color:var(--dim)}
-.day-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--b2);background:transparent;color:var(--dim);font-family:'Barlow',sans-serif;font-size:12px;cursor:pointer;transition:.15s}
-.day-btn:hover{border-color:var(--gold);color:var(--goldl)}
-.day-input-date{background:var(--card3);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;color:var(--txt);font-family:'Barlow',sans-serif;font-size:12px;outline:none;cursor:pointer}
-.day-input-date:focus{border-color:var(--gold)}
-.act-table{width:100%;border-collapse:collapse;font-size:12.5px}
-.act-table th{background:var(--card3);color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;padding:8px 10px;text-align:left;border-bottom:1px solid var(--b2)}
-.act-table td{padding:9px 10px;border-bottom:1px solid var(--b3);vertical-align:middle;line-height:1.5}
-.act-table tr:last-child td{border-bottom:none}
-.act-table tr:hover td{background:rgba(255,255,255,.012)}
-.act-row-done td{opacity:.6}
-.act-row-done .act-nm{text-decoration:line-through;color:var(--dim)}
-.act-status{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:600}
-.st-baru{background:rgba(74,158,245,.12);color:#6BB8FF}
-.st-valid{background:rgba(245,158,11,.12);color:var(--amber)}
-.st-selesai{background:rgba(46,201,126,.12);color:var(--green)}
-.st-lanjut{background:rgba(155,119,217,.12);color:#C4A3F5}
-.carry-tag{font-size:9px;background:rgba(155,119,217,.15);color:#C4A3F5;border-radius:3px;padding:1px 5px;margin-left:4px}
-.daily-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.ds-card{background:var(--card2);border:1px solid var(--b2);border-radius:8px;padding:10px 12px;text-align:center}
-.ds-v{font-family:'Crimson Pro',serif;font-size:22px;font-weight:600}
-.ds-l{font-size:10px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
-.no-act{text-align:center;padding:24px;color:var(--dim);font-size:12px;font-style:italic}
-.act-nm{font-weight:500;color:var(--txt)}
 </style>
 </head>
 <body>
@@ -399,10 +459,26 @@ select.fc option{background:var(--card3)}
         </button>
         <div class="notif-panel" id="notifPanel">
           <div class="np-hd">
-            <h4>🔔 Notifikasi</h4>
+            <h4>🔔 Perlu Validasi
+              <span class="np-total-badge" id="npTotalBadge" style="display:none">0</span>
+            </h4>
             <div class="np-acts">
-              <button class="np-btn" onclick="markAllRead()">Tandai Semua Dibaca</button>
-              <button class="np-btn" onclick="refreshNotif()">↺ Refresh</button>
+              <button class="np-btn" onclick="markAllRead()">Semua Dibaca</button>
+              <button class="np-btn" onclick="renderNotifPanel();updateNotifBadge()">↺</button>
+            </div>
+          </div>
+          <div class="np-summary">
+            <div class="nps-card nps-act" onclick="scrollNPSection('Kegiatan')">
+              <div class="nps-v" id="npsAct">0</div>
+              <div class="nps-l">📅 Kegiatan</div>
+            </div>
+            <div class="nps-card nps-ev" onclick="scrollNPSection('Evaluasi')">
+              <div class="nps-v" id="npsEval">0</div>
+              <div class="nps-l">📊 Evaluasi</div>
+            </div>
+            <div class="nps-card nps-ut" onclick="scrollNPSection('Uraian')">
+              <div class="nps-v" id="npsUT">0</div>
+              <div class="nps-l">📄 Uraian Tugas</div>
             </div>
           </div>
           <div class="np-list" id="notifList"></div>
@@ -442,9 +518,9 @@ select.fc option{background:var(--card3)}
 <div class="exec-overlay" id="execView">
   <div class="exec-hd">
     <div class="hlogo">🎯</div>
-    <h2>Eksekutif View – Ringkasan Kinerja Organisasi</h2>
+    <h2 style="font-size:22px">Eksekutif View – Ringkasan Kinerja Organisasi</h2>
     <span style="font-size:11px;color:var(--dim);margin-right:8px" id="execUserInfo"></span>
-    <button class="hbtn" onclick="closeExecView()" style="flex-shrink:0">✕ Tutup</button>
+    <button class="hbtn-exec" onclick="exportExcelBulkHarian()">📥 Export Excel Semua</button><button class="hbtn" onclick="closeExecView()" style="flex-shrink:0">✕ Tutup</button>
   </div>
   <div class="exec-body" id="execBody"></div>
 </div>
@@ -491,8 +567,12 @@ select.fc option{background:var(--card3)}
 // ══════════════════════════════════════════════════════════
 const STAFF={
   KD:{id:'KD',nm:'dr. Budi Andri, MKM',ti:'Kepala Dinas Kesehatan',lv:'L0',par:null,un:'kd'},
+
+  // ─── SEKRETARIAT ────────────────────────────────────────────
   SEK:{id:'SEK',nm:'Deni Hendra Suryadi, SKM, MKes',ti:'Sekretaris',lv:'L1',par:'KD',un:'sek'},
-  KSB_KEU:{id:'KSB_KEU',nm:'Mimi Hanggraini, SE',ti:'Kasubag Keuangan & Pengelolaan Aset',lv:'L2',par:'SEK',un:'sek'},
+
+  // a. Kasubag Keuangan dan Pengelolaan Aset
+  KSB_KEU:{id:'KSB_KEU',nm:'Mimi Hanggraini, SE, MSi',ti:'Kepala Sub Bagian Keuangan dan Pengelolaan Aset',lv:'L2',par:'SEK',un:'sek'},
   S_KEU_1:{id:'S_KEU_1',nm:'Widia Handayani, SKM',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
   S_KEU_2:{id:'S_KEU_2',nm:'Heldina, S.ST',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
   S_KEU_3:{id:'S_KEU_3',nm:'Zulhaneva, Amd.Kep',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
@@ -501,14 +581,18 @@ const STAFF={
   S_KEU_6:{id:'S_KEU_6',nm:'Putri Anggun Adityawan, SE',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
   S_KEU_7:{id:'S_KEU_7',nm:'Doni Yuliardi, Amd.Farm',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
   S_KEU_8:{id:'S_KEU_8',nm:'Loli Satria, Amd.Keb',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
-  S_KEU_9:{id:'S_KEU_9',nm:'Riche',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
-  KSB_REN:{id:'KSB_REN',nm:'Himayanti, SKM, MSi',ti:'Kasubag Perencanaan, Evaluasi & Pelaporan',lv:'L2',par:'SEK',un:'sek'},
+  S_KEU_9:{id:'S_KEU_9',nm:'Riche Sari Yoneta, AMd',ti:'Staf Keuangan',lv:'L3',par:'KSB_KEU',un:'sek'},
+
+  // b. Sub Koord Perencanaan, Evaluasi Program dan Pelaporan
+  KSB_REN:{id:'KSB_REN',nm:'Himayanti, SKM, MSi',ti:'Sub Koordinator Perencanaan, Evaluasi Program dan Pelaporan',lv:'L2',par:'SEK',un:'sek'},
   S_REN_1:{id:'S_REN_1',nm:'Mira Nofita, S.Kep',ti:'Staf Perencanaan',lv:'L3',par:'KSB_REN',un:'sek'},
   S_REN_2:{id:'S_REN_2',nm:'Ns. Wahyu Yuliani, S.Kep',ti:'Staf Perencanaan',lv:'L3',par:'KSB_REN',un:'sek'},
   S_REN_3:{id:'S_REN_3',nm:'Wiwi Fatmawati, Amd.Kep',ti:'Staf Perencanaan',lv:'L3',par:'KSB_REN',un:'sek'},
   S_REN_4:{id:'S_REN_4',nm:'Donna Octavia',ti:'Staf Perencanaan',lv:'L3',par:'KSB_REN',un:'sek'},
   S_REN_5:{id:'S_REN_5',nm:'Ade Noverandi, S.Kom',ti:'Staf Perencanaan',lv:'L3',par:'KSB_REN',un:'sek'},
-  KSB_UMU:{id:'KSB_UMU',nm:'Devi Susana, SKM, MSi',ti:'Kasubag Umum & Kepegawaian',lv:'L2',par:'SEK',un:'sek'},
+
+  // c. Sub Bagian Umum dan Kepegawaian
+  KSB_UMU:{id:'KSB_UMU',nm:'Devi Susana, SKM, MSi',ti:'Kepala Sub Bagian Umum dan Kepegawaian',lv:'L2',par:'SEK',un:'sek'},
   S_UMU_1:{id:'S_UMU_1',nm:'Diana Kartika Dewi, SKM',ti:'Staf Umum',lv:'L3',par:'KSB_UMU',un:'sek'},
   S_UMU_2:{id:'S_UMU_2',nm:'Erda Yoda, S.Sos',ti:'Staf Umum',lv:'L3',par:'KSB_UMU',un:'sek'},
   S_UMU_3:{id:'S_UMU_3',nm:'Lili Petrina, S.Kep',ti:'Staf Umum',lv:'L3',par:'KSB_UMU',un:'sek'},
@@ -520,60 +604,91 @@ const STAFF={
   S_UMU_9:{id:'S_UMU_9',nm:'M. Firdaus',ti:'Staf Umum',lv:'L3',par:'KSB_UMU',un:'sek'},
   S_UMU_10:{id:'S_UMU_10',nm:'Yuni Fasri Efendi',ti:'Staf Umum',lv:'L3',par:'KSB_UMU',un:'sek'},
   S_UMU_11:{id:'S_UMU_11',nm:'Anggawan Putra',ti:'Staf Umum',lv:'L3',par:'KSB_UMU',un:'sek'},
-  KBD_P2P:{id:'KBD_P2P',nm:'dr. Edison',ti:'Kepala Bidang P2P',lv:'L1',par:'KD',un:'p2p'},
-  SKP_SUR:{id:'SKP_SUR',nm:'Suriani Wahyuni S, SKM',ti:'Sub Kor. Surveilans, Imunisasi & PPK',lv:'L2',par:'KBD_P2P',un:'p2p'},
+
+  // ─── BIDANG P2P ─────────────────────────────────────────────
+  KBD_P2P:{id:'KBD_P2P',nm:'dr. Edison',ti:'Kepala Bidang Pencegahan dan Pengendalian Penyakit',lv:'L1',par:'KD',un:'p2p'},
+
+  // a. Sub Koord Surveilans, Imunisasi dan PPK
+  SKP_SUR:{id:'SKP_SUR',nm:'Suriani Wahyuni S, SKM',ti:'Sub Koordinator Surveilans, Imunisasi dan PPK',lv:'L2',par:'KBD_P2P',un:'p2p'},
   S_SUR_1:{id:'S_SUR_1',nm:'Dian Eka Lestari, Amd.Kep',ti:'Staf Surveilans',lv:'L3',par:'SKP_SUR',un:'p2p'},
   S_SUR_2:{id:'S_SUR_2',nm:'Rira Mabrurati, Amd',ti:'Staf Surveilans',lv:'L3',par:'SKP_SUR',un:'p2p'},
   S_SUR_3:{id:'S_SUR_3',nm:'Des Putra, SKM, MH',ti:'Staf Surveilans',lv:'L3',par:'SKP_SUR',un:'p2p'},
-  SKP_P2M:{id:'SKP_P2M',nm:'A. Fachrurrozi, SKM',ti:'Sub Kor. Pencegahan & Pengendalian Penyakit Menular',lv:'L2',par:'KBD_P2P',un:'p2p'},
+
+  // b. Sub Koord Pencegahan dan Pengendalian Penyakit Menular
+  SKP_P2M:{id:'SKP_P2M',nm:'A. Fachrurrozi, SKM',ti:'Sub Koordinator Pencegahan dan Pengendalian Penyakit Menular',lv:'L2',par:'KBD_P2P',un:'p2p'},
   S_P2M_1:{id:'S_P2M_1',nm:'Satria Deni, SKM',ti:'Staf P2M',lv:'L3',par:'SKP_P2M',un:'p2p'},
   S_P2M_2:{id:'S_P2M_2',nm:'Herika Febrina, SKM, MKM',ti:'Staf P2M',lv:'L3',par:'SKP_P2M',un:'p2p'},
   S_P2M_3:{id:'S_P2M_3',nm:'Kuntum Mardian, SKM',ti:'Staf P2M',lv:'L3',par:'SKP_P2M',un:'p2p'},
   S_P2M_4:{id:'S_P2M_4',nm:'Hafzni Hardi, AMKG',ti:'Staf P2M',lv:'L3',par:'SKP_P2M',un:'p2p'},
-  S_P2M_5:{id:'S_P2M_5',nm:'Wafdah',ti:'Staf P2M',lv:'L3',par:'SKP_P2M',un:'p2p'},
-  SKP_PTM:{id:'SKP_PTM',nm:'Afriyenti, SKM, MKM',ti:'Sub Kor. PTM, Keswa & NAPZA',lv:'L2',par:'KBD_P2P',un:'p2p'},
+
+  // c. Sub Koord PTM, Kesehatan Jiwa dan NAPZA
+  SKP_PTM:{id:'SKP_PTM',nm:'Afriyenti, SKM, MKM',ti:'Sub Koordinator PTM, Kesehatan Jiwa dan NAPZA',lv:'L2',par:'KBD_P2P',un:'p2p'},
   S_PTM_1:{id:'S_PTM_1',nm:'Indah Martilova, SKM',ti:'Staf PTM',lv:'L3',par:'SKP_PTM',un:'p2p'},
   S_PTM_2:{id:'S_PTM_2',nm:'Kasih Handayani, S.ST',ti:'Staf PTM',lv:'L3',par:'SKP_PTM',un:'p2p'},
-  S_PTM_3:{id:'S_PTM_3',nm:'Refi',ti:'Staf PTM',lv:'L3',par:'SKP_PTM',un:'p2p'},
-  KBD_PLK:{id:'KBD_PLK',nm:'Elsi Risalma Putri, SSi, Apt, MKes',ti:'Kepala Bidang Pelayanan Kesehatan',lv:'L1',par:'KD',un:'plk'},
-  SKP_PKP:{id:'SKP_PKP',nm:'Dian Andriani, SKM',ti:'Sub Kor. Yankes Primer',lv:'L2',par:'KBD_PLK',un:'plk'},
+  S_PTM_3:{id:'S_PTM_3',nm:'Refniwati, Amd.Farm',ti:'Staf PTM',lv:'L3',par:'SKP_PTM',un:'p2p'},
+
+  // ─── BIDANG PELAYANAN KESEHATAN ──────────────────────────────
+  KBD_PLK:{id:'KBD_PLK',nm:'Elsi Risalma Putri, SSi, Apt',ti:'Kepala Bidang Pelayanan Kesehatan',lv:'L1',par:'KD',un:'plk'},
+
+  // a. Sub Koord Pelayanan Kesehatan Primer
+  SKP_PKP:{id:'SKP_PKP',nm:'Dian Andriani, SKM',ti:'Sub Koordinator Pelayanan Kesehatan Primer',lv:'L2',par:'KBD_PLK',un:'plk'},
   S_PKP_1:{id:'S_PKP_1',nm:'Mira Elfianti, S.ST',ti:'Staf Yankes Primer',lv:'L3',par:'SKP_PKP',un:'plk'},
   S_PKP_2:{id:'S_PKP_2',nm:'Ns. Lily Yuliani, S.Kep',ti:'Staf Yankes Primer',lv:'L3',par:'SKP_PKP',un:'plk'},
-  SKP_MUT:{id:'SKP_MUT',nm:'Ns. Trisma Wati B, S.Kep',ti:'Sub Kor. Peningkatan Mutu & Akreditasi',lv:'L2',par:'KBD_PLK',un:'plk'},
+
+  // b. Sub Koord Peningkatan Mutu, Akreditasi dan Pelayanan Kesehatan
+  SKP_MUT:{id:'SKP_MUT',nm:'Ns. Trisma Wati B, S.Kep',ti:'Sub Koordinator Peningkatan Mutu, Akreditasi dan Pelayanan Kesehatan',lv:'L2',par:'KBD_PLK',un:'plk'},
   S_MUT_1:{id:'S_MUT_1',nm:'Susi Yanti, Amd.Keb',ti:'Staf Mutu',lv:'L3',par:'SKP_MUT',un:'plk'},
   S_MUT_2:{id:'S_MUT_2',nm:'Fadila Rahmi, SKM',ti:'Staf Mutu',lv:'L3',par:'SKP_MUT',un:'plk'},
-  SKP_RUJ:{id:'SKP_RUJ',nm:'Ns. Mila Yusna, SKep, Mars',ti:'Sub Kor. Yankes Rujukan, Haji & JKN',lv:'L2',par:'KBD_PLK',un:'plk'},
+
+  // c. Sub Koord Pelayanan Kesehatan Rujukan, Haji dan JKN
+  SKP_RUJ:{id:'SKP_RUJ',nm:'Ns. Mila Yusna, S.Kep, Mars',ti:'Sub Koordinator Yankes Rujukan, Haji dan JKN',lv:'L2',par:'KBD_PLK',un:'plk'},
   S_RUJ_1:{id:'S_RUJ_1',nm:'Ns. M. Yusuf, S.Kep',ti:'Staf Rujukan',lv:'L3',par:'SKP_RUJ',un:'plk'},
   S_RUJ_2:{id:'S_RUJ_2',nm:'Febriana Devita, SKM',ti:'Staf Rujukan',lv:'L3',par:'SKP_RUJ',un:'plk'},
   S_RUJ_3:{id:'S_RUJ_3',nm:'Siseng Oviola Putri, SKM',ti:'Staf Rujukan',lv:'L3',par:'SKP_RUJ',un:'plk'},
-  KBD_KMS:{id:'KBD_KMS',nm:'dr. Edison (Kesmas)',ti:'Kepala Bidang Kesehatan Masyarakat',lv:'L1',par:'KD',un:'kms'},
-  SKP_KSG:{id:'SKP_KSG',nm:'Yulia Eka Fitri, STr.Keb',ti:'Sub Kor. Kesga & Gizi Masyarakat',lv:'L2',par:'KBD_KMS',un:'kms'},
+
+  // ─── BIDANG KESEHATAN MASYARAKAT ─────────────────────────────
+  KBD_KMS:{id:'KBD_KMS',nm:'dr. Edison',ti:'Kepala Bidang Kesehatan Masyarakat',lv:'L1',par:'KD',un:'kms'},
+
+  // a. Sub Koord Kesga dan Gizi Masyarakat
+  SKP_KSG:{id:'SKP_KSG',nm:'Yulia Eka Fitri, STr.Keb',ti:'Sub Koordinator Kesga dan Gizi Masyarakat',lv:'L2',par:'KBD_KMS',un:'kms'},
   S_KSG_1:{id:'S_KSG_1',nm:'Mai Murni, S.ST',ti:'Staf Kesga',lv:'L3',par:'SKP_KSG',un:'kms'},
   S_KSG_2:{id:'S_KSG_2',nm:'Rina Mayani, S.ST',ti:'Staf Kesga',lv:'L3',par:'SKP_KSG',un:'kms'},
   S_KSG_3:{id:'S_KSG_3',nm:'Yessi Syefriani, S.ST',ti:'Staf Kesga',lv:'L3',par:'SKP_KSG',un:'kms'},
   S_KSG_4:{id:'S_KSG_4',nm:'Faulina, SKM',ti:'Staf Kesga',lv:'L3',par:'SKP_KSG',un:'kms'},
   S_KSG_5:{id:'S_KSG_5',nm:'Dila Harmen, S.Tr.Keb',ti:'Staf Kesga',lv:'L3',par:'SKP_KSG',un:'kms'},
   S_KSG_6:{id:'S_KSG_6',nm:'Aulia Rahmi Putri, S.Gz',ti:'Staf Kesga',lv:'L3',par:'SKP_KSG',un:'kms'},
-  SKP_PRO:{id:'SKP_PRO',nm:'Devi Marlina, SKM',ti:'Sub Kor. Promkes & Pemberdayaan Masyarakat',lv:'L2',par:'KBD_KMS',un:'kms'},
+
+  // b. Sub Koord Promkes dan Pemberdayaan Masyarakat
+  SKP_PRO:{id:'SKP_PRO',nm:'Devi Marlina, SKM',ti:'Sub Koordinator Promkes dan Pemberdayaan Masyarakat',lv:'L2',par:'KBD_KMS',un:'kms'},
   S_PRO_1:{id:'S_PRO_1',nm:'Qonita Amalia, S.Farm, Apt',ti:'Staf Promkes',lv:'L3',par:'SKP_PRO',un:'kms'},
   S_PRO_2:{id:'S_PRO_2',nm:'Nur Annisa, SKM',ti:'Staf Promkes',lv:'L3',par:'SKP_PRO',un:'kms'},
-  SKP_KLN:{id:'SKP_KLN',nm:'Rizki Sabri, SKM, M.Si',ti:'Sub Kor. Kesling, Kesker & Olahraga',lv:'L2',par:'KBD_KMS',un:'kms'},
+
+  // c. Sub Koord Kesling, Kesker dan Olahraga
+  SKP_KLN:{id:'SKP_KLN',nm:'Rizki Sabri, SKM, M.Si',ti:'Sub Koordinator Kesling, Kesker dan Olahraga',lv:'L2',par:'KBD_KMS',un:'kms'},
   S_KLN_1:{id:'S_KLN_1',nm:'Yose Octavia Nancy, SKM',ti:'Staf Kesling',lv:'L3',par:'SKP_KLN',un:'kms'},
   S_KLN_2:{id:'S_KLN_2',nm:'Helmiati, SKM',ti:'Staf Kesling',lv:'L3',par:'SKP_KLN',un:'kms'},
   S_KLN_3:{id:'S_KLN_3',nm:'Irvan Anas, SKM',ti:'Staf Kesling',lv:'L3',par:'SKP_KLN',un:'kms'},
   S_KLN_4:{id:'S_KLN_4',nm:'Nora Feri, SKM',ti:'Staf Kesling',lv:'L3',par:'SKP_KLN',un:'kms'},
   S_KLN_5:{id:'S_KLN_5',nm:'Sri Haswiati, SKM',ti:'Staf Kesling',lv:'L3',par:'SKP_KLN',un:'kms'},
+
+  // ─── BIDANG SUMBER DAYA KESEHATAN ────────────────────────────
   KBD_SDK:{id:'KBD_SDK',nm:'Irwan Faisal, SKM',ti:'Kepala Bidang Sumber Daya Kesehatan',lv:'L1',par:'KD',un:'sdk'},
-  SKP_FAR:{id:'SKP_FAR',nm:'Rina Susilawati, SSi, Apt',ti:'Sub Kor. Kefarmasian & Perizinan',lv:'L2',par:'KBD_SDK',un:'sdk'},
+
+  // a. Sub Koord Pelayanan Kefarmasian dan Perizinan
+  SKP_FAR:{id:'SKP_FAR',nm:'Rina Susilawati, SSi, Apt',ti:'Sub Koordinator Pelayanan Kefarmasian dan Perizinan',lv:'L2',par:'KBD_SDK',un:'sdk'},
   S_FAR_1:{id:'S_FAR_1',nm:'Iprino Martin, Amd.Farm',ti:'Staf Farmasi',lv:'L3',par:'SKP_FAR',un:'sdk'},
   S_FAR_2:{id:'S_FAR_2',nm:'Rika Fitri Yeni',ti:'Staf Farmasi',lv:'L3',par:'SKP_FAR',un:'sdk'},
   S_FAR_3:{id:'S_FAR_3',nm:'Esa Fadhillah Syukri, S.Farm, Apt',ti:'Staf Farmasi',lv:'L3',par:'SKP_FAR',un:'sdk'},
-  SKP_ALK:{id:'SKP_ALK',nm:'Eria Erwin, SSi, Apt',ti:'Sub Kor. Alat Kesehatan & Fasyankes',lv:'L2',par:'KBD_SDK',un:'sdk'},
+
+  // b. Sub Koord Alat Kesehatan dan Fasyankes
+  SKP_ALK:{id:'SKP_ALK',nm:'Eria Erwin, SSi, Apt',ti:'Sub Koordinator Alat Kesehatan dan Fasyankes',lv:'L2',par:'KBD_SDK',un:'sdk'},
   S_ALK_1:{id:'S_ALK_1',nm:'Dewi Kartika Sari, SKM, MKM',ti:'Staf Alkes',lv:'L3',par:'SKP_ALK',un:'sdk'},
-  S_ALK_2:{id:'S_ALK_2',nm:'Wenny',ti:'Staf Alkes',lv:'L3',par:'SKP_ALK',un:'sdk'},
+  S_ALK_2:{id:'S_ALK_2',nm:'Wenni Hennia Putri, Amd.Keb',ti:'Staf Alkes',lv:'L3',par:'SKP_ALK',un:'sdk'},
   S_ALK_3:{id:'S_ALK_3',nm:'Rizki Fauzi AN, S.Kom',ti:'Staf Alkes',lv:'L3',par:'SKP_ALK',un:'sdk'},
   S_ALK_4:{id:'S_ALK_4',nm:'Silvia Syaputri, S.Kom',ti:'Staf Alkes',lv:'L3',par:'SKP_ALK',un:'sdk'},
-  SKP_SDM:{id:'SKP_SDM',nm:'Rabwati, STr.Keb',ti:'Sub Kor. Sumber Daya Kesehatan',lv:'L2',par:'KBD_SDK',un:'sdk'},
+
+  // c. Sub Koord Sumber Daya Kesehatan
+  SKP_SDM:{id:'SKP_SDM',nm:'Rabwati, STr.Keb',ti:'Sub Koordinator Sumber Daya Kesehatan',lv:'L2',par:'KBD_SDK',un:'sdk'},
   S_SDM_1:{id:'S_SDM_1',nm:'Elian Sitra, SKM, M.Si',ti:'Staf SDK',lv:'L3',par:'SKP_SDM',un:'sdk'},
   S_SDM_2:{id:'S_SDM_2',nm:'Sri Rahma Indriani, Amd.Kep',ti:'Staf SDK',lv:'L3',par:'SKP_SDM',un:'sdk'},
   S_SDM_3:{id:'S_SDM_3',nm:'Elvy Syukya Meisa, S.Tr.Keb',ti:'Staf SDK',lv:'L3',par:'SKP_SDM',un:'sdk'},
@@ -603,6 +718,7 @@ function defPwd(nm){
   return (n.split(/[\s,]+/)[0]||'user').toLowerCase().replace(/[^a-z0-9]/g,'')+'123';
 }
 function ts(){return new Date().toLocaleString('id-ID',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function nowTs(){ return ts(); }
 
 const GR={L0:'linear-gradient(135deg,#C8941F,#7A5500)',L1:'linear-gradient(135deg,#1DB3A3,#0A6E64)',L2:'linear-gradient(135deg,#4A9EF5,#1A5AAE)',L3:'linear-gradient(135deg,#9B77D9,#5A3AAB)'};
 const UC={kd:'u-kd',sek:'u-sek',p2p:'u-p2p',plk:'u-plk',kms:'u-kms',sdk:'u-sdk'};
@@ -644,7 +760,10 @@ function doLogout(){
 }
 function access(viewId,targId){
   if(viewId===targId) return 'FULL';
+  // Direct subordinate -> can validate
   if(STAFF[targId]?.par===viewId) return 'VALIDATE';
+  // Kepala Dinas can VIEW all staff pages (read-only)
+  if(STAFF[viewId]?.lv==='L0') return 'VIEW';
   return 'NONE';
 }
 
@@ -660,7 +779,7 @@ const getE=(id,tw)=>LS.g(ekey(id,tw));
 const setE=(id,tw,d)=>LS.s(ekey(id,tw),d);
 const getV=(id,tw)=>LS.g(vkey(id,tw));
 const setV=(id,tw,d)=>LS.s(vkey(id,tw),d);
-function evSt(id,tw){if(getV(id,tw)) return 'V';if(getE(id,tw)) return 'P';return 'E';}
+// evStCompat moved to eval section
 
 // ══════════════════════════════════════════════════════════
 // TREE
@@ -671,86 +790,117 @@ let _openNodes=new Set();
 function buildTree(){
   const el=document.getElementById('tree');
   el.innerHTML='';
-  const s=STAFF[CUR];if(!s) return;
-  // Me node
-  el.appendChild(mkNode(s.id,true));
-  // direct children
-  childs(CUR).forEach(c=>{
-    el.appendChild(mkNode(c.id,false));
-  });
+  const me=STAFF[CUR];if(!me) return;
+  if(me.lv==='L0'){
+    // KD: full hierarchy - me at top, then collapsible sections per bidang
+    el.appendChild(mkNode(me.id,true,0));
+    childs(me.id).forEach(l1=>{
+      el.appendChild(mkNode(l1.id,false,1));
+    });
+  } else {
+    // Others: me + direct children only
+    el.appendChild(mkNode(me.id,true,0));
+    childs(me.id).forEach(c=>{
+      el.appendChild(mkNode(c.id,false,1));
+    });
+  }
 }
 
-function mkNode(id,isMe){
+
+// Count items pending validation for staff 'id' by current user
+function countPendingFor(id){
+  // Only atasan langsung can validate
+  if(!STAFF[id] || STAFF[id].par !== CUR) return 0;
+  // KD's own activities don't need validation
+  if(STAFF[id].lv === 'L0') return 0;
+  let n = 0;
+  const today = todayStr();
+  // Kegiatan harian (7 hari terakhir)
+  for(let i=0;i<7;i++){
+    const dt=new Date(today+'T00:00:00'); dt.setDate(dt.getDate()-i);
+    const d=dt.toISOString().slice(0,10);
+    n += getActs(id,d).filter(a=>a.status==='selesai').length;
+  }
+  // Evaluasi poin
+  [1,2,3,4].forEach(tw=>{
+    getEvTW(id,tw).forEach(item=>{
+      if(item.capaian && !getEvTWV(id,tw,item.eid)) n++;
+    });
+  });
+  // Uraian tugas
+  const ut=getUT(id), utv=getUTV(id);
+  if(ut && ut.status==='diserahkan' && !utv) n++;
+  return n;
+}
+
+function mkNode(id,isMe,depth){
   const s=STAFF[id];
+  const me=STAFF[CUR];
   const ch=childs(id);
-  const hasC=ch.length>0;
+  // For KD: all nodes can expand (showing grandchildren)
+  // For others: only own node expands
+  const canExpand = ch.length>0;
   const wrap=document.createElement('div');
   wrap.className='ti'+(isMe?' me':'')+(_selId===id?' sel':'');
   wrap.id='tn_'+id;
-  // Dot: best status across TW1-4
-  const sts=[1,2,3,4].map(tw=>evSt(id,tw));
-  const dc=sts.includes('V')?'background:var(--green)':sts.includes('P')?'background:var(--amber)':'background:var(--dim2)';
+  const sts=[1,2,3,4].map(tw=>evStCompat(id,tw));
+  const dc=sts.includes('V')?'background:var(--grn)':sts.includes('P')?'background:var(--amb)':'background:var(--dim2)';
+  const dp=depth||0;
+  const avSz=dp===0?'24px':dp===1?'22px':'19px';
+  const nmFs=dp===0?'12.5px':dp===1?'12px':'11px';
+  const rlFs='10px';
   const row=document.createElement('div');
   row.className='tir';
+  row.style.paddingLeft=(dp*14+7)+'px';
   row.innerHTML=`
-    <div class="tog ${_openNodes.has(id)?'op':''}" id="tog_${id}">${hasC?'▶':''}</div>
-    <div class="av" style="background:${GR[s.lv]}">${ini(s.nm)}</div>
+    <div class="tog ${_openNodes.has(id)?'op':''}" id="tog_${id}">${canExpand?'▶':''}</div>
+    <div class="av" style="background:${GR[s.lv]};width:${avSz};height:${avSz};font-size:${dp>0?'8px':'9px'}">${ini(s.nm)}</div>
     <div class="tinm">
-      <div class="nm">${s.nm}</div>
-      <div class="rl">${s.ti.length>36?s.ti.slice(0,34)+'…':s.ti}</div>
+      <div class="nm" style="font-size:${nmFs}">${s.nm}</div>
+      <div class="rl" style="font-size:${rlFs}">${s.ti.length>34?s.ti.slice(0,32)+'…':s.ti}</div>
     </div>
     ${isMe?'<span class="me-badge">Saya</span>':''}
     <div class="tid" style="${dc}"></div>`;
-  row.onclick=()=>{selectPerson(id);if(hasC)toggleNode(id,wrap)};
+  // Bubble badge: show pending count for direct subordinates
+  if(!isMe && STAFF[id]?.par === CUR && STAFF[id]?.lv !== 'L0'){
+    const pCount = countPendingFor(id);
+    if(pCount > 0){
+      const bubble = document.createElement('span');
+      bubble.className = 'pending-bubble';
+      bubble.textContent = pCount > 99 ? '99+' : String(pCount);
+      // Wrap av element
+      const avEl = row.querySelector('.av');
+      if(avEl){
+        const wrap = document.createElement('div');
+        wrap.className = 'ti-wrap';
+        avEl.parentNode.insertBefore(wrap, avEl);
+        wrap.appendChild(avEl);
+        wrap.appendChild(bubble);
+      }
+    }
+  }
+  row.onclick=(e)=>{e.stopPropagation();selectPerson(id);if(canExpand)toggleNode(id);};
   wrap.appendChild(row);
-  if(hasC){
+  // Sub-children (collapsible)
+  if(canExpand){
     const sub=document.createElement('div');
     sub.className='ch'+(_openNodes.has(id)?' op':'');
     sub.id='ch_'+id;
-    // Only show grandchildren if I'm viewing my own children (L1 sees L2+L3)
     ch.forEach(c=>{
-      const cn=mkLeafNode(c.id);
-      sub.appendChild(cn);
-      // also add staf under kasubag/subkor as grandchildren
-      childs(c.id).forEach(gc=>{
-        const gn=mkLeafNode(gc.id,true);
-        sub.appendChild(gn);
-      });
+      sub.appendChild(mkNode(c.id,false,dp+1));
     });
     wrap.appendChild(sub);
   }
   return wrap;
 }
 
-function mkLeafNode(id,indent=false){
-  const s=STAFF[id];
-  const wrap=document.createElement('div');
-  wrap.className='ti'+(_selId===id?' sel':'');
-  wrap.id='tn_'+id;
-  const sts=[1,2,3,4].map(tw=>evSt(id,tw));
-  const dc=sts.includes('V')?'background:var(--green)':sts.includes('P')?'background:var(--amber)':'background:var(--dim2)';
-  const row=document.createElement('div');
-  row.className='tir';
-  row.style.paddingLeft=(indent?'8px':'0');
-  row.innerHTML=`
-    <div class="tog"></div>
-    <div class="av" style="background:${GR[s.lv]};width:20px;height:20px;font-size:8px">${ini(s.nm)}</div>
-    <div class="tinm">
-      <div class="nm" style="font-size:11px">${s.nm}</div>
-      <div class="rl" style="font-size:10px">${s.ti}</div>
-    </div>
-    <div class="tid" style="${dc}"></div>`;
-  row.onclick=()=>selectPerson(id);
-  wrap.appendChild(row);
-  return wrap;
-}
 
-function toggleNode(id,wrap){
+function toggleNode(id){
   const ch=document.getElementById('ch_'+id);
   const tog=document.getElementById('tog_'+id);
   if(!ch) return;
-  if(_openNodes.has(id)){_openNodes.delete(id);ch.classList.remove('op');tog.classList.remove('op');}
-  else{_openNodes.add(id);ch.classList.add('op');tog.classList.add('op');}
+  if(_openNodes.has(id)){_openNodes.delete(id);ch.classList.remove('op');if(tog)tog.classList.remove('op');}
+  else{_openNodes.add(id);ch.classList.add('op');if(tog)tog.classList.add('op');}
 }
 
 function selectPerson(id){
@@ -784,11 +934,14 @@ function renderPanel(id,acc){
           ${acc==='VALIDATE'?'<span class="bdg b-t" style="margin-left:8px">👁 Mode Validasi</span>':''}
         </div>
       </div>
+      <div id="valBanner"></div>
       <div class="tnav-wrap" id="tnavWrap"></div>
       <div class="tc"><div class="tc-inner" id="tcInner"></div></div>
     </div>`;
 
   buildPanelTabs(s,acc);
+  // Show validation banner for supervisor viewing subordinate's page
+  if(acc==='VALIDATE') renderValBanner(id);
 }
 
 function buildPanelTabs(s,acc){
@@ -798,6 +951,7 @@ function buildPanelTabs(s,acc){
 
   if(s.lv==='L0'){
     tabs=[
+      {label:'📄 Uraian Tugas',fn:()=>renderUraianTugas(s.id,isOwn)},
       {label:'📋 Kontrak Kinerja',fn:()=>renderDocSection(s.id,'kontrak',isOwn)},
       {label:'📌 Rencana Aksi',fn:()=>renderDocSection(s.id,'rencana_aksi',isOwn)},
       {label:'📅 Kegiatan Harian',fn:()=>renderDailyAct(s.id,isOwn,isV)},
@@ -805,22 +959,25 @@ function buildPanelTabs(s,acc){
     ];
   } else if(s.lv==='L1'){
     tabs=[
+      {label:'📄 Uraian Tugas',fn:()=>renderUraianTugas(s.id,isOwn)},
       {label:'📋 Kontrak Kinerja',fn:()=>renderDocSection(s.id,'kontrak',isOwn)},
       {label:'📌 Rencana Aksi',fn:()=>renderDocSection(s.id,'rencana_aksi',isOwn)},
       {label:'📅 Kegiatan Harian',fn:()=>renderDailyAct(s.id,isOwn,isV)},
       {label:'📊 Evaluasi Triwulan',fn:()=>renderEvalSection(s.id,isOwn,isV)},
-      ...(isOwn?[{label:'👥 Bawahan Langsung',fn:()=>renderChildList(s.id)}]:[]),
+      ...((isOwn||acc==='VIEW')?[{label:'👥 Bawahan Langsung',fn:()=>renderChildList(s.id)}]:[]),
     ];
   } else if(s.lv==='L2'){
     tabs=[
+      {label:'📄 Uraian Tugas',fn:()=>renderUraianTugas(s.id,isOwn)},
       {label:'📋 Perjanjian Kinerja',fn:()=>renderDocSection(s.id,'perjanjian',isOwn)},
       {label:'📌 RKT',fn:()=>renderDocSection(s.id,'rkt',isOwn)},
       {label:'📅 Kegiatan Harian',fn:()=>renderDailyAct(s.id,isOwn,isV)},
       {label:'📊 Evaluasi Triwulan',fn:()=>renderEvalSection(s.id,isOwn,isV)},
-      ...(isOwn?[{label:'👥 Bawahan Langsung',fn:()=>renderChildList(s.id)}]:[]),
+      ...((isOwn||acc==='VIEW')?[{label:'👥 Bawahan Langsung',fn:()=>renderChildList(s.id)}]:[]),
     ];
   } else {
     tabs=[
+      {label:'📄 Uraian Tugas',fn:()=>renderUraianTugas(s.id,isOwn)},
       {label:'📋 Perjanjian Kinerja',fn:()=>renderDocSection(s.id,'perjanjian',isOwn)},
       {label:'📌 RKT',fn:()=>renderDocSection(s.id,'rkt',isOwn)},
       {label:'📅 Kegiatan Harian',fn:()=>renderDailyAct(s.id,isOwn,isV)},
@@ -1113,231 +1270,415 @@ function confirmDelete(id,type,idx){
 // ══════════════════════════════════════════════════════════
 // EVALUASI SECTION
 // ══════════════════════════════════════════════════════════
-let _activeTW=1;
 
-function renderEvalSection(id,isOwn,isV){
-  const tc=document.getElementById('tcInner');
-  const twStrip=[1,2,3,4].map(tw=>{
-    const st=evSt(id,tw);
-    const dot=st==='V'?'<div class="twdot td-v"></div>':st==='P'?'<div class="twdot td-p"></div>':'';
-    return `<button class="twb ${tw===_activeTW?'act':''}" onclick="setTW(${tw},'${id}',${isOwn},${isV})">${dot}Triwulan ${tw}</button>`;
+// ══════════════════════════════════════════════════════════
+// EVALUASI TRIWULAN – TW tetap, poin di dalam TW fleksibel
+// ══════════════════════════════════════════════════════════
+
+// Storage: setiap TW punya array poin evaluasi
+// key: sk_evtw_${id}_${tw}  → array of items
+// key: sk_evtw_v_${id}_${tw}_${eid}  → validation per item
+
+function evtwKey(id,tw){ return 'sk_evtw_'+id+'_'+tw; }
+function evtwVKey(id,tw,eid){ return 'sk_evtw_v_'+id+'_'+tw+'_'+eid; }
+function getEvTW(id,tw){ return LS.g(evtwKey(id,tw))||[]; }
+function setEvTW(id,tw,arr){ LS.s(evtwKey(id,tw),arr); }
+function getEvTWV(id,tw,eid){ return LS.g(evtwVKey(id,tw,eid))||null; }
+function setEvTWV(id,tw,eid,d){ LS.s(evtwVKey(id,tw,eid),d); }
+function delEvTWV(id,tw,eid){ LS.d(evtwVKey(id,tw,eid)); }
+function newEvId(){ return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+
+const TW_LABELS = ['Triwulan I','Triwulan II','Triwulan III','Triwulan IV'];
+
+// Migrate old eval data (sk_evlist_* or sk_e_*) into new tw structure
+function migrateOldEvals(id){
+  // Migrate from old sk_evlist_* (single-level list)
+  const oldList = LS.g('sk_evlist_'+id);
+  if(oldList && oldList.length){
+    // Distribute old items into TW buckets by label match
+    oldList.forEach(item=>{
+      const twIdx = TW_LABELS.findIndex(l=>item.label && item.label.includes(l.split(' ')[1]));
+      const tw = twIdx>=0 ? twIdx+1 : 1;
+      const existing = getEvTW(id,tw);
+      if(!existing.find(e=>e.eid===item.eid)){
+        existing.push({eid:item.eid||newEvId(), label:item.label||('Poin '+(existing.length+1)),
+          capaian:item.capaian||'', fisik:item.fisik||'', keuangan:item.keuangan||'',
+          masalah:item.masalah||'', rtl:item.rtl||'', tgl:item.tgl||'', rev:item.rev||1});
+        setEvTW(id,tw,existing);
+        // Migrate validation
+        if(item.val_status){
+          setEvTWV(id,tw,item.eid,{status:item.val_status,catatan:item.val_catatan||'',by_nm:item.val_by||'',by:item.val_by||'',at:item.val_at||''});
+        }
+      }
+    });
+    LS.d('sk_evlist_'+id);
+  }
+  // Migrate from old sk_e_${id}_${tw}
+  [1,2,3,4].forEach(tw=>{
+    const old = LS.g('sk_e_'+id+'_'+tw);
+    const oldV = LS.g('sk_v_'+id+'_'+tw);
+    if(old && old.capaian){
+      const existing = getEvTW(id,tw);
+      if(!existing.length){
+        const eid = newEvId();
+        existing.push({eid, label:'Evaluasi TW'+tw,
+          capaian:old.capaian||old.cap||'', fisik:old.fisik||old.fis||'',
+          keuangan:old.keuangan||old.keu||'', masalah:old.masalah||old.mas||'',
+          rtl:old.rtl||'', tgl:old.tgl||'', rev:old.rev||1});
+        setEvTW(id,tw,existing);
+        if(oldV){ setEvTWV(id,tw,eid,{status:oldV.status||oldV.val_status,catatan:oldV.catatan||oldV.cat||'',by_nm:oldV.atasNm||oldV.nm||'',by:CUR,at:oldV.tgl||''}); }
+      }
+    }
+  });
+}
+
+// Status of one poin
+function evalPoinSt(item, vl){
+  if(vl && vl.status==='disetujui') return 'V';
+  if(vl && (vl.status==='perlu_revisi'||vl.status==='ditolak')) return 'R';
+  if(item.capaian) return 'P';
+  return 'E';
+}
+
+// Status of one TW (best of its items)
+function evalTWSt(id,tw){
+  const list = getEvTW(id,tw);
+  if(!list.length) return 'E';
+  const sts = list.map(e=>evalPoinSt(e, getEvTWV(id,tw,e.eid)));
+  if(sts.includes('V')) return 'V';
+  if(sts.includes('P')||sts.includes('R')) return 'P';
+  return 'E';
+}
+
+// For tree dot – overall across all TW
+function evStCompat(id, tw){
+  // Called with tw = check specific TW; without tw = check all TW
+  if(tw===undefined||tw===null){
+    const sts = [1,2,3,4].map(t=>evalTWSt(id,t));
+    if(sts.includes('V')) return 'V';
+    if(sts.includes('P')||sts.includes('R')) return 'P';
+    return 'E';
+  }
+  return evalTWSt(id,tw);
+}
+// Short alias used by tree dots
+function evSt(id){ return evStCompat(id); }
+
+let _activeTW = 1;
+let _activeEid = null;
+
+// ── Main render ──────────────────────────────────────────────────────────
+function renderEvalSection(id, isOwn, isV){
+  migrateOldEvals(id);
+  const tc = document.getElementById('tcInner');
+
+  // TW tab strip
+  const twStrip = [1,2,3,4].map(tw=>{
+    const st = evalTWSt(id,tw);
+    const list = getEvTW(id,tw);
+    const dot = st==='V'
+      ? '<div class="twdot" style="background:var(--grn);border:2px solid var(--bg)"></div>'
+      : st==='P'||st==='R'
+      ? '<div class="twdot" style="background:var(--amb);border:2px solid var(--bg)"></div>'
+      : '';
+    const cnt = list.length ? `<span style="font-size:9px;background:var(--c3);border-radius:8px;padding:1px 5px;margin-left:3px;color:var(--dim)">${list.length}</span>` : '';
+    return `<button class="twb ${tw===_activeTW?'act':''}" onclick="setTW(${tw},'${id}',${isOwn},${isV})">${dot}TW ${tw}${cnt}</button>`;
   }).join('');
-  tc.innerHTML=`<div class="tw-strip">${twStrip}</div><div id="twContent"></div>`;
-  renderOneTW(id,_activeTW,isOwn,isV);
+
+  tc.innerHTML = `<div class="tw-strip">${twStrip}</div><div id="twPoinList"></div>`;
+  renderTWPane(id, _activeTW, isOwn, isV);
 }
 
-function setTW(tw,id,isOwn,isV){
-  _activeTW=tw;
-  renderEvalSection(id,isOwn,isV);
+function setTW(tw, id, isOwn, isV){
+  _activeTW = tw;
+  renderEvalSection(id, isOwn, isV);
 }
 
-function renderOneTW(id,tw,isOwn,isV){
-  const ev=getE(id,tw);
-  const vl=getV(id,tw);
-  const el=document.getElementById('twContent');
-  const s=STAFF[id];
+// ── Render pane for one TW ───────────────────────────────────────────────
+function renderTWPane(id, tw, isOwn, isV){
+  const list = getEvTW(id, tw);
+  const el = document.getElementById('twPoinList');
+  if(!el) return;
 
-  // ── INPUT FORM (own, no validation yet or revision) ──
-  let formHTML='';
+  const twLabel = TW_LABELS[tw-1];
+  const addBtn = isOwn
+    ? `<button class="btn btn-gold btn-sm" onclick="addPoin('${id}',${tw},${isOwn},${isV})">+ Tambah Poin Evaluasi</button>`
+    : '';
+
+  if(!list.length){
+    el.innerHTML = `<div style="text-align:center;padding:28px;color:var(--dim)">
+      <div style="font-size:34px;opacity:.25;margin-bottom:10px">📋</div>
+      <p style="font-size:13px;margin-bottom:${isOwn?'14px':'0'}">Belum ada poin evaluasi untuk ${twLabel}.</p>
+      ${addBtn}
+    </div>`;
+    return;
+  }
+
+  // Header of pane
+  const validated = list.filter(e=>{ const vl=getEvTWV(id,tw,e.eid); return vl&&vl.status==='disetujui'; }).length;
+  const paneHeader = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+    <span style="font-family:'Crimson Pro',serif;font-size:15px;font-weight:600;color:var(--gl)">${twLabel}</span>
+    <span class="bdg ${validated===list.length&&list.length?'bg':'bd'}">${validated}/${list.length} tervalidasi</span>
+    <div style="margin-left:auto">${addBtn}</div>
+  </div>`;
+
+  // Poin items
+  const items = list.map((item,i) => buildPoinCard(id, tw, item, i, isOwn, isV)).join('');
+  el.innerHTML = paneHeader + items;
+}
+
+// ── Build one poin card ──────────────────────────────────────────────────
+function buildPoinCard(id, tw, item, idx, isOwn, isV){
+  const vl = getEvTWV(id, tw, item.eid);
+  const st = evalPoinSt(item, vl);
+  const hasData = !!item.capaian;
+
+  const stBadge = st==='V'
+    ? '<span class="bdg bg">✅ Disetujui</span>'
+    : st==='R'
+    ? (vl.status==='perlu_revisi'?'<span class="bdg bb">⚠️ Perlu Revisi</span>':'<span class="bdg br">❌ Ditolak</span>')
+    : hasData ? '<span class="bdg bd">⏳ Menunggu Validasi</span>'
+    : '<span class="bdg bd" style="opacity:.5">Belum diisi</span>';
+
+  const fis = parseFloat(item.fisik)||0;
+  const keu = parseFloat(item.keuangan)||0;
+  const pc  = fis>=85?'var(--grn)':fis>=70?'var(--amb)':'var(--red)';
+  const pcCls = fis>=85?'bg':fis>=70?'bb':'br';
+
+  // Collapsible form (owner)
+  let formSection = '';
   if(isOwn){
-    const e=ev||{};
-    const revLabel=ev?`✏️ Revisi Evaluasi TW${tw} (Revisi ke-${(ev.rev||0)+1})`:`➕ Isi Evaluasi Triwulan ${tw}`;
-    const lockNote=vl?`<div class="warn-box">⚠️ Evaluasi ini sudah divalidasi atasan. Jika Anda merevisi, validasi akan dibatalkan dan harus divalidasi ulang.</div>`:'';
-    formHTML=`
-    <div class="sec-banner" id="evalFormBan_${tw}">
-      <div class="sec-ban-hd ${ev?'':'open'}" id="evalFormBanHd_${tw}" onclick="toggleSec('evalForm_${tw}')">
-        <div class="sec-ban-ico">📝</div>
-        <div class="sec-ban-t">
-          <div class="sbt1">${revLabel}</div>
-          <div class="sbt2">${s.nm} · ${s.ti} · Tahun 2025</div>
+    const openForm = !hasData;
+    const lockNote = vl ? `<div class="wbox" style="margin-bottom:10px">⚠️ Poin ini sudah divalidasi. Menyimpan revisi akan membatalkan validasi.</div>` : '';
+    formSection = `
+    <div class="sb2" id="pfb_${item.eid}" style="margin-bottom:10px">
+      <div class="sbh2 ${openForm?'op':''}" onclick="toggleSB2('${item.eid}')">
+        <div class="sbico" style="font-size:14px">✏️</div>
+        <div class="sbt">
+          <div class="sbt1" style="font-size:13px">${hasData?'Edit':'Isi'} – ${item.label}</div>
+          <div class="sbt2">Klik untuk ${hasData?'merevisi':'mengisi'} poin ini</div>
         </div>
-        <div class="sec-ban-arr ${ev?'':'op'}" id="formBanArr_evalForm_${tw}">▶</div>
+        <div style="display:flex;align-items:center;gap:5px;margin-left:auto">
+          <button class="btn btn-del btn-xs" onclick="event.stopPropagation();delPoin('${id}',${tw},'${item.eid}',${isOwn},${isV})" title="Hapus poin ini">🗑</button>
+          <div class="sbarr ${openForm?'op':''}" id="sarr2_${item.eid}">▶</div>
+        </div>
       </div>
-      <div class="sec-body ${ev?'':'op'}" id="formBody_evalForm_${tw}">
-        <div class="form-area">
+      <div class="sbbd ${openForm?'op':''}" id="sbbd2_${item.eid}">
+        <div class="fa" style="border-radius:0;border:none;background:transparent;margin-bottom:0">
           ${lockNote}
-          <div class="fg">
-            <label class="fl">Capaian Target per Indikator (sesuai bulan berjalan)</label>
-            <textarea class="fc" id="ev_capaian_${tw}" rows="4" placeholder="Uraikan capaian masing-masing indikator kinerja sesuai dengan bulan berjalan pada triwulan ini.&#10;Contoh: IDL 87% dari target 95% (Jan-Mar), AKB 3 kasus dari target 0...">${e.capaian||''}</textarea>
+          <div class="fg2"><label class="fl2">Judul / Label Poin <span style="color:var(--red)">*</span></label>
+            <input class="fc2" id="pi_lbl_${item.eid}" value="${item.label.replace(/"/g,'&quot;')}"
+              placeholder="Cth: Capaian Program Imunisasi, Realisasi Anggaran Q1, Progress TB..."></div>
+          <div class="fg2"><label class="fl2">Capaian Target per Indikator <span style="color:var(--red)">*</span></label>
+            <textarea class="fc2" id="pi_cap_${item.eid}" rows="3"
+              placeholder="Uraikan capaian masing-masing indikator untuk poin ini...">${item.capaian||''}</textarea></div>
+          <div class="g2">
+            <div class="fg2"><label class="fl2">Realisasi Fisik (%)</label>
+              <input class="fc2" type="number" id="pi_fis_${item.eid}" min="0" max="100" step="0.1" value="${item.fisik||''}" placeholder="0–100"></div>
+            <div class="fg2"><label class="fl2">Realisasi Keuangan (%)</label>
+              <input class="fc2" type="number" id="pi_keu_${item.eid}" min="0" max="100" step="0.1" value="${item.keuangan||''}" placeholder="0–100"></div>
           </div>
-          <div class="fc-grid2">
-            <div class="fg">
-              <label class="fl">Realisasi Fisik (%)</label>
-              <input class="fc" type="number" id="ev_fisik_${tw}" min="0" max="100" step="0.1" value="${e.fisik||''}" placeholder="0 – 100">
-            </div>
-            <div class="fg">
-              <label class="fl">Realisasi Keuangan (%)</label>
-              <input class="fc" type="number" id="ev_keuangan_${tw}" min="0" max="100" step="0.1" value="${e.keuangan||''}" placeholder="0 – 100">
-            </div>
-          </div>
-          <div class="fg">
-            <label class="fl">Permasalahan / Hambatan yang Dihadapi</label>
-            <textarea class="fc" id="ev_masalah_${tw}" rows="3" placeholder="Uraikan hambatan/permasalahan yang ditemui dalam pencapaian target triwulan ini...">${e.masalah||''}</textarea>
-          </div>
-          <div class="fg">
-            <label class="fl">Rencana Tindak Lanjut (RTL)</label>
-            <textarea class="fc" id="ev_rtl_${tw}" rows="3" placeholder="Uraikan langkah-langkah konkret yang akan diambil untuk mengatasi permasalahan di atas...">${e.rtl||''}</textarea>
-          </div>
-          <div class="form-acts">
-            <button class="btn btn-gold" onclick="saveEval('${id}',${tw})">💾 Simpan Evaluasi TW${tw}</button>
+          <div class="fg2"><label class="fl2">Permasalahan / Hambatan</label>
+            <textarea class="fc2" id="pi_mas_${item.eid}" rows="2"
+              placeholder="Hambatan yang dihadapi...">${item.masalah||''}</textarea></div>
+          <div class="fg2"><label class="fl2">Rencana Tindak Lanjut (RTL)</label>
+            <textarea class="fc2" id="pi_rtl_${item.eid}" rows="2"
+              placeholder="Langkah-langkah ke depan...">${item.rtl||''}</textarea></div>
+          <div class="facts">
+            <button class="btn btn-gold" onclick="savePoin('${id}',${tw},'${item.eid}',${isOwn},${isV})">💾 Simpan Poin</button>
           </div>
         </div>
       </div>
     </div>`;
   }
 
-  // ── VIEW FILLED EVAL ──
-  let viewHTML='';
-  if(ev){
-    const pct=parseFloat(ev.fisik)||0;
-    const kpct=parseFloat(ev.keuangan)||0;
-    const pc=pct>=85?'var(--green)':pct>=70?'var(--amber)':'var(--red)';
-    const pcCls=pct>=85?'b-g':pct>=70?'b-y':'b-r';
-    const statusBadge=vl?
-      (vl.status==='disetujui'?'<span class="bdg b-g">✅ Disetujui Atasan</span>':vl.status==='perlu_revisi'?'<span class="bdg b-y">⚠️ Perlu Revisi</span>':'<span class="bdg b-r">❌ Ditolak</span>'):
-      '<span class="bdg b-d">⏳ Menunggu Validasi Atasan</span>';
-
-    viewHTML=`
-    <div class="eval-card">
-      <div class="eval-ct"><div class="ebar"></div>Hasil Evaluasi Triwulan ${tw}
-        <span class="bdg ${pcCls}" style="margin-left:auto">Fisik ${pct}%</span>
-        ${statusBadge}
-      </div>
-      <div class="eval-status-bar">
-        <span style="font-size:11px;color:var(--dim)">Diisi: ${ev.tgl||'—'} &nbsp;·&nbsp; Revisi ke-${ev.rev||1}</span>
-        ${isV&&!vl?`<button class="btn btn-teal btn-sm" style="margin-left:auto" onclick="openValidModal('${id}',${tw})">✅ Validasi Sekarang</button>`:''}
-        ${isV&&vl?`<button class="btn btn-out btn-sm" style="margin-left:auto" onclick="openValidModal('${id}',${tw})">✏️ Ubah Validasi</button>`:''}
-      </div>
-      <div class="eval-grid">
-        <div class="ef">
-          <label>Realisasi Fisik</label>
-          <div class="evbig" style="color:${pc}">${pct}%</div>
-          <div class="pgw"><div class="pg" style="width:${Math.min(pct,100)}%;background:${pc}"></div></div>
-        </div>
-        <div class="ef">
-          <label>Realisasi Keuangan</label>
-          <div class="evbig" style="color:var(--teal)">${kpct}%</div>
-          <div class="pgw"><div class="pg" style="width:${Math.min(kpct,100)}%;background:var(--teal)"></div></div>
-        </div>
-        <div class="ef full"><label>Capaian Target per Indikator</label><div class="ev">${ev.capaian||'—'}</div></div>
-        <div class="ef full"><label>Permasalahan / Hambatan</label><div class="ev">${ev.masalah||'—'}</div></div>
-        <div class="ef full"><label>Rencana Tindak Lanjut (RTL)</label><div class="ev">${ev.rtl||'—'}</div></div>
-      </div>
-      ${vl?`<div class="vbox">
-        <div class="vbhd">✅ Catatan & Validasi Atasan Langsung</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-          <strong style="font-size:13px">${vl.atasNm}</strong>
-          <span class="bdg ${vl.status==='disetujui'?'b-g':vl.status==='perlu_revisi'?'b-y':'b-r'}">${vl.status==='disetujui'?'Disetujui':vl.status==='perlu_revisi'?'Perlu Revisi':'Ditolak'}</span>
-          <span style="font-size:10px;color:var(--dim);margin-left:auto">${vl.tgl}</span>
+  // View data (if has data)
+  let viewSection = '';
+  if(hasData){
+    // Supervisor validation form
+    let valBlock = '';
+    if(isV){
+      if(!vl){
+        valBlock = `<div class="vbox" style="margin-top:10px">
+          <div class="vbhd">✅ Validasi Poin Ini</div>
+          <div class="fg2"><label class="fl2">Status</label>
+            <select class="fc2" id="pv_st_${item.eid}">
+              <option value="disetujui">✅ Disetujui</option>
+              <option value="perlu_revisi">⚠️ Perlu Revisi</option>
+              <option value="ditolak">❌ Ditolak</option>
+            </select></div>
+          <div class="fg2"><label class="fl2">Catatan Atasan</label>
+            <textarea class="fc2" id="pv_cat_${item.eid}" rows="2" placeholder="Catatan atau arahan..."></textarea></div>
+          <div class="facts">
+            <button class="btn btn-teal" onclick="validatePoin('${id}',${tw},'${item.eid}',${isOwn},${isV})">✅ Simpan Validasi</button>
+          </div>
+        </div>`;
+      } else {
+        const vlSt = vl.status==='disetujui'?'bg':vl.status==='perlu_revisi'?'bb':'br';
+        const vlLb = vl.status==='disetujui'?'Disetujui':vl.status==='perlu_revisi'?'Perlu Revisi':'Ditolak';
+        valBlock = `<div class="vbox" style="margin-top:10px">
+          <div class="vbhd">✅ Validasi Atasan</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <strong style="font-size:13px">${vl.by_nm||''}</strong>
+            <span class="bdg ${vlSt}">${vlLb}</span>
+            <span style="font-size:10px;color:var(--dim);margin-left:auto">${vl.at||''}</span>
+          </div>
+          <div style="font-size:13px;line-height:1.6;margin-bottom:8px">${vl.catatan||'—'}</div>
+          <button class="btn btn-out btn-xs" onclick="resetPoinVal('${id}',${tw},'${item.eid}',${isOwn},${isV})">✏️ Ubah</button>
+        </div>`;
+      }
+    } else if(vl){
+      const vlSt = vl.status==='disetujui'?'bg':vl.status==='perlu_revisi'?'bb':'br';
+      const vlLb = vl.status==='disetujui'?'Disetujui':vl.status==='perlu_revisi'?'Perlu Revisi':'Ditolak';
+      valBlock = `<div class="vbox" style="margin-top:10px">
+        <div class="vbhd">✅ Validasi Atasan</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <strong style="font-size:13px">${vl.by_nm||''}</strong>
+          <span class="bdg ${vlSt}">${vlLb}</span>
+          <span style="font-size:10px;color:var(--dim);margin-left:auto">${vl.at||''}</span>
         </div>
         <div style="font-size:13px;line-height:1.6">${vl.catatan||'—'}</div>
-      </div>`:`<div style="border:1px dashed var(--b1);border-radius:7px;padding:12px;text-align:center;font-size:12px;color:var(--dim)">
+      </div>`;
+    } else if(!isOwn){
+      valBlock = `<div style="border:1px dashed var(--b1);border-radius:7px;padding:10px;text-align:center;font-size:12px;color:var(--dim);margin-top:10px">
         Belum ada validasi dari atasan langsung.
-        ${isV?`<button class="btn btn-teal btn-sm" style="margin-left:10px" onclick="openValidModal('${id}',${tw})">Validasi Sekarang</button>`:''}
-      </div>`}
+      </div>`;
+    }
+
+    viewSection = `<div style="background:var(--c2);border:1px solid var(--b2);border-radius:9px;padding:13px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <span style="font-family:'Crimson Pro',serif;font-size:14px;font-weight:600;color:var(--gl)">${item.label}</span>
+        <span style="margin-left:auto;display:flex;gap:6px;align-items:center">
+          ${fis?`<span class="bdg ${pcCls}">Fisik ${fis}%</span>`:''}
+          ${stBadge}
+        </span>
+      </div>
+      <div class="evg" style="margin-bottom:10px">
+        ${fis||keu?`<div class="ef"><label>Realisasi Fisik</label><div class="evbig" style="color:${pc}">${fis}%</div>
+          <div class="pgw"><div class="pg" style="width:${Math.min(fis,100)}%;background:${pc}"></div></div></div>
+        <div class="ef"><label>Realisasi Keuangan</label><div class="evbig" style="color:var(--teal)">${keu}%</div>
+          <div class="pgw"><div class="pg" style="width:${Math.min(keu,100)}%;background:var(--teal)"></div></div></div>`:''}
+        <div class="ef full"><label>Capaian Target</label><div class="ev">${item.capaian}</div></div>
+        ${item.masalah?`<div class="ef full"><label>Permasalahan</label><div class="ev">${item.masalah}</div></div>`:''}
+        ${item.rtl?`<div class="ef full"><label>RTL</label><div class="ev">${item.rtl}</div></div>`:''}
+      </div>
+      <div style="font-size:10px;color:var(--dim2)">Diisi: ${item.tgl||'—'} · Revisi ke-${item.rev||1}</div>
+      ${valBlock}
     </div>`;
-  } else if(!isOwn){
-    viewHTML=`<div class="eval-empty"><div class="ei">📋</div><h3>Belum Ada Evaluasi TW${tw}</h3><p style="font-size:12px">Pegawai belum mengisi evaluasi untuk triwulan ini.</p></div>`;
   }
 
-  el.innerHTML=formHTML+viewHTML;
-}
-
-function saveEval(id,tw){
-  const capaian=document.getElementById(`ev_capaian_${tw}`)?.value||'';
-  const fisik=document.getElementById(`ev_fisik_${tw}`)?.value||'0';
-  const keuangan=document.getElementById(`ev_keuangan_${tw}`)?.value||'0';
-  const masalah=document.getElementById(`ev_masalah_${tw}`)?.value||'';
-  const rtl=document.getElementById(`ev_rtl_${tw}`)?.value||'';
-  if(!capaian.trim()){showToast('⚠️ Isian capaian target wajib diisi!','warn');return}
-  const old=getE(id,tw)||{};
-  const data={capaian,fisik,keuangan,masalah,rtl,tgl:ts(),rev:(old.rev||0)+1,uid:CUR};
-  // Jika sudah divalidasi, hapus validasi karena ada revisi
-  if(getV(id,tw)) LS.d(vkey(id,tw));
-  setE(id,tw,data);
-  showToast(`✅ Evaluasi TW${tw} berhasil disimpan!`);
-  buildTree();
-  renderEvalSection(id,_panelAcc==='FULL',_panelAcc==='VALIDATE');
-}
-
-// ══════════════════════════════════════════════════════════
-// VALIDASI MODAL (inline in eval section)
-// ══════════════════════════════════════════════════════════
-let _vTarg=null;let _vTW=null;
-
-function openValidModal(id,tw){
-  if(STAFF[id]?.par!==CUR){showToast('⚠️ Hanya atasan langsung yang bisa memvalidasi!','warn');return}
-  _vTarg=id;_vTW=tw;
-  const el=document.getElementById('twContent');
-  const ev=getE(id,tw);
-  const vl=getV(id,tw)||{};
-  // Inject validation form below eval card
-  const existForm=document.getElementById('validInlineForm');
-  if(existForm) existForm.remove();
-  const div=document.createElement('div');
-  div.id='validInlineForm';
-  div.className='eval-card';
-  div.style.border='1px solid rgba(29,179,163,.3)';
-  div.innerHTML=`
-    <div class="eval-ct"><div class="ebar" style="background:var(--teal)"></div>Form Validasi Atasan – ${STAFF[id].nm} · TW${tw}</div>
-    <div class="info-box"><strong>${STAFF[id].nm}</strong> · ${STAFF[id].ti}<br>
-      Realisasi Fisik: <strong>${ev?.fisik||0}%</strong> &nbsp;·&nbsp; Keuangan: <strong>${ev?.keuangan||0}%</strong></div>
-    <div class="fg"><label class="fl">Status Validasi</label>
-      <select class="fc" id="vStat">
-        <option value="disetujui" ${vl.status==='disetujui'?'selected':''}>✅ Disetujui</option>
-        <option value="perlu_revisi" ${vl.status==='perlu_revisi'?'selected':''}>⚠️ Perlu Revisi</option>
-        <option value="ditolak" ${vl.status==='ditolak'?'selected':''}>❌ Ditolak – Dikembalikan</option>
-      </select>
-    </div>
-    <div class="fg"><label class="fl">Catatan / Arahan Atasan Langsung</label>
-      <textarea class="fc" id="vNote" rows="4" placeholder="Tuliskan catatan, arahan, atau rekomendasi perbaikan untuk pegawai ini...">${vl.catatan||''}</textarea>
-    </div>
-    <div class="form-acts">
-      <button class="btn btn-out btn-sm" onclick="document.getElementById('validInlineForm').remove()">Batal</button>
-      <button class="btn btn-teal" onclick="saveValid()">✅ Simpan Validasi</button>
-    </div>`;
-  el.appendChild(div);
-  div.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function saveValid(){
-  if(!_vTarg||STAFF[_vTarg]?.par!==CUR){showToast('Tidak berhak.','warn');return}
-  const data={
-    status:document.getElementById('vStat').value,
-    catatan:document.getElementById('vNote').value,
-    atasId:CUR,atasNm:STAFF[CUR].nm,tgl:ts()
-  };
-  setV(_vTarg,_vTW,data);
-  document.getElementById('validInlineForm')?.remove();
-  showToast('✅ Validasi berhasil disimpan!');
-  buildTree();
-  renderEvalSection(_vTarg,false,true);
-}
-
-// ══════════════════════════════════════════════════════════
-// CHILDREN LIST
-// ══════════════════════════════════════════════════════════
-function renderChildList(id){
-  const ch=childs(id);
-  const tc=document.getElementById('tcInner');
-  if(!ch.length){tc.innerHTML='<div class="info-box">Tidak ada bawahan langsung.</div>';return}
-  const rows=ch.map(c=>{
-    const sts=[1,2,3,4].map(tw=>{
-      const st=evSt(c.id,tw);
-      return `<span class="bdg ${st==='V'?'b-g':st==='P'?'b-y':'b-d'}" style="font-size:10px">TW${tw}${st==='V'?'✅':st==='P'?'📝':'—'}</span>`;
-    }).join(' ');
-    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b2);cursor:pointer" onclick="selectPerson('${c.id}')">
-      <div class="av" style="background:${GR[c.lv]};width:30px;height:30px;font-size:11px">${ini(c.nm)}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:500;color:var(--txt)">${c.nm}</div>
-        <div style="font-size:11px;color:var(--dim);margin-top:1px">${c.ti}</div>
-        <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">${sts}</div>
+  return `<div class="eval-poin-wrap" id="epw_${item.eid}" style="background:var(--c1);border:1px solid var(--b2);border-radius:10px;overflow:hidden;margin-bottom:12px">
+    <div style="padding:10px 14px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:8px;background:var(--c2)">
+      <span style="font-size:12px;font-weight:700;color:var(--gl);font-family:'Crimson Pro',serif">Poin ${idx+1}</span>
+      ${hasData?`<span style="font-size:12px;color:var(--txt)">${item.label}</span>`:''}
+      <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+        ${stBadge}
       </div>
-      <span style="font-size:11px;color:var(--tealL)">Lihat Halaman →</span>
-    </div>`;
-  }).join('');
-  tc.innerHTML=`<div class="sec-banner"><div class="sec-ban-hd open"><div class="sec-ban-ico">👥</div><div class="sec-ban-t"><div class="sbt1">Bawahan Langsung (${ch.length} orang)</div><div class="sbt2">Klik nama untuk melihat dan memvalidasi evaluasi mereka</div></div></div><div class="sec-body op" style="padding:16px">${rows}</div></div>`;
+    </div>
+    <div style="padding:12px 14px">
+      ${formSection}
+      ${viewSection}
+    </div>
+  </div>`;
 }
+
+// ── Helper: collapsible for poin form ────────────────────────────────────
+function toggleSB(key){
+  var body = document.getElementById('sbbd_'+key) || document.getElementById('fbbody_'+key);
+  var arr  = document.getElementById('sbarr_'+key) || document.getElementById('fbarr_'+key);
+  var hd   = document.getElementById('fbh_'+key);
+  if(!body) return;
+  var op = body.classList.toggle('op');
+  if(arr) arr.classList.toggle('op', op);
+  if(hd) hd.classList.toggle('op', op);
+}
+function toggleSBKey(key){ toggleSB(key); }
+function toggleSB2(eid){
+  const body = document.getElementById('sbbd2_'+eid);
+  const arr  = document.getElementById('sarr2_'+eid);
+  const hd   = document.getElementById('pfb_'+eid);
+  if(!body) return;
+  const op = body.classList.toggle('op');
+  if(arr) arr.classList.toggle('op', op);
+  if(hd) hd.querySelector('.sbh2')?.classList.toggle('op', op);
+}
+
+// ── Add new poin to TW ────────────────────────────────────────────────────
+function addPoin(id, tw, isOwn, isV){
+  const list = getEvTW(id, tw);
+  const n = list.length + 1;
+  const eid = newEvId();
+  list.push({ eid, label:'Poin '+n+' – '+TW_LABELS[tw-1], capaian:'', fisik:'', keuangan:'', masalah:'', rtl:'', tgl:'', rev:0 });
+  setEvTW(id, tw, list);
+  _activeTW = tw;
+  renderEvalSection(id, isOwn, isV);
+  // Auto-open the new form
+  setTimeout(()=>{
+    const b = document.getElementById('sbbd2_'+eid);
+    const a = document.getElementById('sarr2_'+eid);
+    if(b&&!b.classList.contains('op')){ b.classList.add('op'); if(a)a.classList.add('op'); }
+    document.getElementById('pfb_'+eid)?.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 80);
+}
+
+// ── Delete poin ───────────────────────────────────────────────────────────
+function delPoin(id, tw, eid, isOwn, isV){
+  document.getElementById('mDelOk').onclick = ()=>{
+    const list = getEvTW(id,tw).filter(e=>e.eid!==eid);
+    setEvTW(id,tw,list);
+    delEvTWV(id,tw,eid);
+    closeMdl('mDel');
+    showToast('🗑 Poin dihapus.');
+    buildTree(); updateNotifBadge();
+    renderTWPane(id, tw, isOwn, isV);
+  };
+  document.getElementById('mDel').classList.add('show');
+}
+
+// ── Save poin ─────────────────────────────────────────────────────────────
+function savePoin(id, tw, eid, isOwn, isV){
+  const cap = (document.getElementById('pi_cap_'+eid)?.value||'').trim();
+  const lbl = (document.getElementById('pi_lbl_'+eid)?.value||'').trim();
+  if(!lbl){ showToast('⚠️ Judul poin wajib diisi!','warn'); return; }
+  if(!cap){ showToast('⚠️ Capaian target wajib diisi!','warn'); return; }
+  const list = getEvTW(id,tw);
+  const idx  = list.findIndex(e=>e.eid===eid);
+  if(idx<0) return;
+  const old = list[idx];
+  const hadVal = !!getEvTWV(id,tw,eid);
+  if(hadVal){ delEvTWV(id,tw,eid); showToast('⚠️ Tersimpan – validasi sebelumnya dibatalkan karena ada revisi.','warn'); }
+  else { showToast('✅ Poin evaluasi disimpan!'); }
+  list[idx] = { ...old, label:lbl, capaian:cap,
+    fisik:(document.getElementById('pi_fis_'+eid)?.value||'0'),
+    keuangan:(document.getElementById('pi_keu_'+eid)?.value||'0'),
+    masalah:(document.getElementById('pi_mas_'+eid)?.value||''),
+    rtl:(document.getElementById('pi_rtl_'+eid)?.value||''),
+    tgl:nowTs(), rev:(old.rev||0)+1, uid:CUR };
+  setEvTW(id,tw,list);
+  buildTree(); updateNotifBadge();
+  renderTWPane(id, tw, isOwn, isV);
+}
+
+// ── Validate poin (supervisor) ────────────────────────────────────────────
+function validatePoin(id, tw, eid, isOwn, isV){
+  if(!STAFF[id]||STAFF[id].par!==CUR){ showToast('Hanya atasan langsung!','warn'); return; }
+  const st  = document.getElementById('pv_st_'+eid)?.value;
+  const cat = (document.getElementById('pv_cat_'+eid)?.value||'').trim();
+  if(!st){ showToast('Pilih status!','warn'); return; }
+  setEvTWV(id,tw,eid,{status:st,catatan:cat,by_nm:STAFF[CUR].nm,by:CUR,at:nowTs()});
+  showToast('✅ Validasi berhasil!');
+  buildTree(); updateNotifBadge();
+  renderTWPane(id, tw, isOwn, isV);
+}
+
+// ── Reset poin validation ─────────────────────────────────────────────────
+function resetPoinVal(id, tw, eid, isOwn, isV){
+  if(!STAFF[id]||STAFF[id].par!==CUR) return;
+  delEvTWV(id,tw,eid);
+  showToast('✏️ Validasi dibatalkan.');
+  renderTWPane(id, tw, isOwn, isV);
+}
+
 
 // ══════════════════════════════════════════════════════════
 // KEGIATAN HARIAN
@@ -1401,8 +1742,11 @@ function renderDailyAct(id,isOwn,isV){
   const jmlBaru=acts.filter(a=>a.status==='baru').length;
   const jmlSelesai=acts.filter(a=>a.status==='selesai').length;
   const jmlValid=acts.filter(a=>a.status==='validated').length;
+  const jmlLang=acts.filter(a=>a.kaitan_ss==='langsung').length;
+  const jmlTLang=acts.filter(a=>a.kaitan_ss==='tidak_langsung').length;
   const canEdit=isOwn&&!isFuture(_dailyDate);
-  const canValidate=isV&&!isFuture(_dailyDate);
+  // KD (L0) activities do not require supervisor validation
+  const canValidate=isV&&!isFuture(_dailyDate)&&(STAFF[id]?.lv!=='L0');
 
   const summary=`
   <div class="daily-summary">
@@ -1410,6 +1754,7 @@ function renderDailyAct(id,isOwn,isV){
     <div class="ds-card"><div class="ds-v" style="color:var(--blue)">${jmlBaru}</div><div class="ds-l">Belum Selesai</div></div>
     <div class="ds-card"><div class="ds-v" style="color:var(--amber)">${jmlSelesai}</div><div class="ds-l">Menunggu Validasi</div></div>
     <div class="ds-card"><div class="ds-v" style="color:var(--green)">${jmlValid}</div><div class="ds-l">Tervalidasi Atasan</div></div>
+    <div class="ds-card" style="border-color:rgba(46,201,126,.3)"><div class="ds-v" style="color:var(--grn)">${jmlLang}</div><div class="ds-l">Terkait Sasaran</div></div>
   </div>`;
 
   const nav=`
@@ -1441,6 +1786,16 @@ function renderDailyAct(id,isOwn,isV){
           <input class="fc" type="time" id="act_selesai" value="10:00"></div>
         <div class="fg"><label class="fl">Volume</label>
           <input class="fc" id="act_volume" placeholder="Cth: 1 dokumen, 2 sesi, 50 data"></div>
+      </div>
+      <div class="fg"><label class="fl">Kaitan dengan Sasaran Strategis</label>
+        <div class="ks-radio-group">
+          <label class="ks-radio-opt ks-lang">
+            <input type="radio" name="ks_kaitan" id="ks_lang" value="langsung"> Terkait Langsung</label>
+          <label class="ks-radio-opt ks-tidak-lang">
+            <input type="radio" name="ks_kaitan" id="ks_tlang" value="tidak_langsung"> Terkait Tidak Langsung</label>
+          <label class="ks-radio-opt ks-tdk">
+            <input type="radio" name="ks_kaitan" id="ks_tdk" value="tidak_terkait" checked> Tidak Terkait</label>
+        </div>
       </div>
       <div class="form-acts">
         <button class="btn btn-out btn-sm" onclick="closeActForm()">Batal</button>
@@ -1484,12 +1839,13 @@ function renderDailyAct(id,isOwn,isV){
           supervisorBtns='<span style="font-size:11px;color:var(--dim)">&#8212; Tunggu staf</span>';
         }
       }
-      rows+='<tr class="'+(a.status==='validated'?'act-row-done':'')+'"><td class="no" style="width:28px">'+(i+1)+'</td><td><span class="act-nm">'+(a.kegiatan||'&mdash;')+'</span>'+carryTag+subInfo+'</td><td style="white-space:nowrap;color:var(--dim);font-size:12px">'+(a.waktu_mulai||'&mdash;')+' &ndash; '+(a.waktu_selesai||'&mdash;')+'</td><td>'+(a.output||'&mdash;')+'</td><td style="font-size:12px;color:var(--tealL)">'+(a.volume||'&mdash;')+'</td><td><span class="act-status '+stClass+'">'+stLabel+'</span></td><td style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;padding-top:8px">'+(isOwn?staffBtns:supervisorBtns)+'</td></tr>';
+      const ksBadge=(()=>{const k=a.kaitan_ss||'tidak_terkait';if(k==='langsung')return '<span class="ks-bdg ks-lang-bdg" title="Terkait Langsung dengan Sasaran Strategis">🎯 Langsung</span>';if(k==='tidak_langsung')return '<span class="ks-bdg ks-tidak-lang-bdg" title="Terkait Tidak Langsung dengan Sasaran Strategis">↗ Tdk Langsung</span>';return '';})();
+      rows+='<tr class="'+(a.status==='validated'?'act-row-done':'')+'"><td class="no" style="width:28px">'+(i+1)+'</td><td><div style="display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap"><span class="act-nm">'+(a.kegiatan||'&mdash;')+'</span>'+ksBadge+'</div>'+carryTag+subInfo+'</td><td style="white-space:nowrap;color:var(--dim);font-size:12px">'+(a.waktu_mulai||'&mdash;')+' &ndash; '+(a.waktu_selesai||'&mdash;')+'</td><td>'+(a.output||'&mdash;')+'</td><td style="font-size:12px;color:var(--tealL)">'+(a.volume||'&mdash;')+'</td><td><span class="act-status '+stClass+'">'+stLabel+'</span></td><td style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;padding-top:8px">'+(isOwn?staffBtns:supervisorBtns)+'</td></tr>';
     });
   }
   const lastColHdr=isOwn?'Aksi Staf':isV?'Aksi Atasan':'';
   const infoBar=isOwn?'<div class="info-box" style="margin-bottom:10px;border-color:rgba(46,201,126,.2)">&#128161; Tekan <strong style="color:var(--green)">&#10003; Selesai</strong> pada kegiatan yang sudah Anda kerjakan. Atasan langsung akan menerima notifikasi untuk memvalidasi.</div>':isV?'<div class="info-box" style="margin-bottom:10px;border-color:rgba(29,179,163,.2)">&#128161; Tombol <strong style="color:var(--teal)">&#10003; Validasi</strong> muncul setelah staf menandai kegiatannya selesai.</div>':'';
-  const printBtnHtml=isOwn||isV?'<button class="btn btn-out btn-sm no-print" onclick="openPrintMonthly(\'' + id + '\')">🖨️ Cetak Bulanan</button>':'';
+  const printBtnHtml=isOwn||isV?'<button class="btn btn-out btn-sm no-print" onclick="openPrintMonthly(\''+id+'\')">🖨️ Cetak Bulanan</button> <button class="btn btn-grn btn-sm no-print" onclick="exportExcelHarian(\''+id+'\')">📥 Export Excel</button>':'';
   const table='<div class="sec-banner"><div class="sec-ban-hd open"><div class="sec-ban-ico">&#128203;</div><div class="sec-ban-t"><div class="sbt1">Daftar Kegiatan &ndash; '+fmtDate(_dailyDate)+'</div><div class="sbt2">'+STAFF[id].nm+' &middot; '+STAFF[id].ti+'</div></div><span class="sec-ban-badge">'+jmlValid+'/'+total+' tervalidasi</span>'+printBtnHtml+'</div><div class="sec-body op">'+infoBar+'<div style="overflow-x:auto"><table class="act-table"><thead><tr><th>No</th><th>Kegiatan</th><th>Jam</th><th>Output / Hasil</th><th style="width:100px">Volume</th><th>Status</th><th style="min-width:130px">'+lastColHdr+'</th></tr></thead><tbody>'+rows+'</tbody></table></div></div></div>';
   tc.innerHTML=nav+summary+form+table;
 }
@@ -1514,6 +1870,9 @@ function openActForm(){
   ['act_kegiatan','act_output'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('act_mulai').value='08:00';
   document.getElementById('act_selesai').value='10:00';
+  // Reset kaitan to default
+  const ksDefault = document.getElementById('ks_tdk');
+  if(ksDefault) ksDefault.checked=true;
   document.getElementById('actFormWrap').style.display='block';
   document.getElementById('actFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -1531,6 +1890,10 @@ function editAct(idx){
   document.getElementById('act_volume').value=a.volume||'';
   document.getElementById('act_mulai').value=a.waktu_mulai||'08:00';
   document.getElementById('act_selesai').value=a.waktu_selesai||'10:00';
+  // Load kaitan
+  const ksVal = a.kaitan_ss||'tidak_terkait';
+  const ksEl = document.querySelector(`input[name="ks_kaitan"][value="${ksVal}"]`);
+  if(ksEl) ksEl.checked = true;
   document.getElementById('actFormWrap').style.display='block';
   document.getElementById('actFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -1538,12 +1901,15 @@ function saveAct(){
   const keg=(document.getElementById('act_kegiatan').value||'').trim();
   if(!keg){showToast('⚠️ Nama kegiatan wajib diisi!','warn');return}
   const acts=getActs(_dailyId,_dailyDate);
+  const kaitanEl = document.querySelector('input[name="ks_kaitan"]:checked');
+  const kaitan = kaitanEl ? kaitanEl.value : 'tidak_terkait';
   const row={
     kegiatan:keg,
     output:(document.getElementById('act_output').value||'').trim(),
     volume:(document.getElementById('act_volume').value||'').trim(),
     waktu_mulai:document.getElementById('act_mulai').value,
     waktu_selesai:document.getElementById('act_selesai').value,
+    kaitan_ss:kaitan,
     status:'baru', carry:false,
     created_at:new Date().toISOString(),
   };
@@ -1576,6 +1942,11 @@ function deleteAct(idx){
 // Atasan validasi kegiatan (mengakui kegiatan sudah dilakukan)
 // Staf tandai kegiatannya sendiri sudah selesai dikerjakan
 function stafSelesai(idx){
+  // KD activities are informational – no validation workflow
+  if(STAFF[_dailyId]?.lv==='L0'){
+    showToast('Kegiatan Kepala Dinas tidak memerlukan validasi atasan.','warn');
+    return;
+  }
   const acts=getActs(_dailyId,_dailyDate);
   if(!acts[idx]||acts[idx].status!=='baru'){showToast('Kegiatan sudah ditandai selesai.','warn');return}
   acts[idx].status='selesai';
@@ -1590,6 +1961,7 @@ function stafSelesai(idx){
 // Atasan memvalidasi kegiatan bawahan yang sudah ditandai selesai oleh staf
 function validateAct(id,date,idx){
   if(STAFF[id]?.par!==CUR){showToast('Hanya atasan langsung yang bisa memvalidasi!','warn');return}
+  if(STAFF[id]?.lv==='L0'){showToast('Kegiatan Kepala Dinas tidak memerlukan validasi.','warn');return}
   const acts=getActs(id,date);
   if(!acts[idx]||acts[idx].status!=='selesai'){showToast('Kegiatan belum ditandai selesai oleh staf.','warn');return}
   acts[idx].status='validated';
@@ -1663,14 +2035,106 @@ function closeExecView(){
 }
 
 function getAllScope(){
-  // Semua pegawai yang terlihat oleh pengguna ini (diri sendiri + semua bawahan rekursif)
-  const result=[];
-  function collect(id){
-    result.push(id);
-    childs(id).forEach(c=>collect(c.id));
+  // Exec view: semua staff (bisa dilihat semua orang)
+  return Object.keys(STAFF);
+}
+
+function getCstatEff(id,type){
+  const cst=getCstat(id,type);
+  const data=getC(id,type);
+  if(data.length>0&&cst.status==='belum') return Object.assign({},cst,{status:'diisi'});
+  return cst;
+}
+function getMedalCache(){ return LS.g('sk_medals')||{}; }
+function setMedalCache(d){ LS.s('sk_medals',d); }
+
+function computeMedals(){
+  // Count validated tasks per staff for different periods
+  const today = todayStr();
+
+  // Yesterday
+  const yest = prevDay(today);
+
+  // Last week Mon-Fri
+  const todayDt = new Date(today+'T00:00:00');
+  const dow = todayDt.getDay(); // 0=Sun
+  // Most recent Friday
+  const daysToFri = dow===0 ? 2 : dow===6 ? 1 : (dow+2)%7===0 ? 7 : dow-5+7*(dow<5?1:0);
+  const lastFri = new Date(todayDt); lastFri.setDate(todayDt.getDate() - (dow===0?2:dow===6?1:dow===5?0:dow));
+  // Actually: find last Friday simply
+  const tmp = new Date(todayDt);
+  while(tmp.getDay()!==5) tmp.setDate(tmp.getDate()-1);
+  const lastFriStr = tmp.toISOString().slice(0,10);
+  const lastMonStr = (()=>{const m=new Date(tmp);m.setDate(m.getDate()-4);return m.toISOString().slice(0,10);})();
+
+  // Last month
+  const lastMonthEnd = new Date(todayDt.getFullYear(), todayDt.getMonth(), 0);
+  const lastMonthStart = new Date(todayDt.getFullYear(), todayDt.getMonth()-1, 1);
+  const lmStartStr = lastMonthStart.toISOString().slice(0,10);
+  const lmEndStr = lastMonthEnd.toISOString().slice(0,10);
+
+  const allIds = Object.keys(STAFF);
+
+  function countValidated(id, startDate, endDate){
+    let count = 0;
+    const s = new Date(startDate+'T00:00:00');
+    const e = new Date(endDate+'T00:00:00');
+    for(let d=new Date(s); d<=e; d.setDate(d.getDate()+1)){
+      const ds = d.toISOString().slice(0,10);
+      const acts = getActs(id, ds);
+      count += acts.filter(a=>a.status==='validated').length;
+    }
+    return count;
   }
-  collect(CUR);
-  return result;
+
+  function topStaff(startDate, endDate){
+    let best = null, bestCount = 0;
+    allIds.forEach(id=>{
+      const c = countValidated(id, startDate, endDate);
+      if(c > bestCount){ bestCount=c; best=id; }
+    });
+    return best && bestCount>0 ? {id:best, count:bestCount} : null;
+  }
+
+  // Use cache if already computed today (avoid slow re-computation)
+  const cache = getMedalCache();
+  const cacheDate = cache.computedOn||'';
+
+  let bronze = cache.bronze, silver = cache.silver, gold = cache.gold;
+
+  // Recompute if today changed
+  if(cacheDate !== today){
+    bronze = topStaff(yest, yest);
+    silver = topStaff(lastMonStr, lastFriStr);
+    gold   = topStaff(lmStartStr, lmEndStr);
+    setMedalCache({computedOn:today, bronze, silver, gold,
+      yest, lastMonStr, lastFriStr, lmStartStr, lmEndStr});
+  }
+
+  const periods = cache.computedOn===today
+    ? {yest:cache.yest||yest, lastMonStr:cache.lastMonStr||lastMonStr,
+       lastFriStr:cache.lastFriStr||lastFriStr,
+       lmStartStr:cache.lmStartStr||lmStartStr, lmEndStr:cache.lmEndStr||lmEndStr}
+    : {yest, lastMonStr, lastFriStr, lmStartStr, lmEndStr};
+
+  return { bronze, silver, gold, ...periods };
+}
+
+
+function buildMedalCard(medal, s, count, period, label, cls){
+  if(!s) return `<div class="medal-card ${cls}"><div class="medal-empty">${label}<br><span style="font-size:10px">Belum ada data</span></div></div>`;
+  return `<div class="medal-card ${cls}">
+    <div class="mav" style="background:${GR[s.lv]}">
+      ${ini(s.nm)}
+      <div class="mbadge">${medal}</div>
+    </div>
+    <div class="medal-info">
+      <div class="mnm" title="${s.nm}">${s.nm}</div>
+      <div class="mti">${s.ti.length>34?s.ti.slice(0,32)+'…':s.ti}</div>
+      <div class="mstat">${count} ✅</div>
+      <div class="mperiod">${period}</div>
+    </div>
+  </div>`;
 }
 
 function renderExecView(){
@@ -1688,129 +2152,338 @@ function renderExecView(){
     const t=s.lv==='L0'||s.lv==='L1'?'rencana_aksi':s.lv==='L2'||s.lv==='L3'?'rkt':null;
     return t&&getC(s.id,t).length>0;
   }).length;
-  const evalFilled=allStaff.filter(s=>[1,2,3,4].some(tw=>getE(s.id,tw))).length;
-  const evalValidated=allStaff.filter(s=>[1,2,3,4].some(tw=>getV(s.id,tw))).length;
+  const evalFilled=allStaff.filter(s=>[1,2,3,4].some(tw=>getEvTW(s.id,tw).some(e=>e.capaian))).length;
+  const evalValidated=allStaff.filter(s=>[1,2,3,4].some(tw=>getEvTW(s.id,tw).some(e=>{const vl=getEvTWV(s.id,tw,e.eid);return vl&&vl.status==='disetujui';}))).length;
+
+  // ── Medal computation
+  const medals = computeMedals();
+  const bronzeStaff = medals.bronze ? STAFF[medals.bronze.id] : null;
+  const silverStaff = medals.silver ? STAFF[medals.silver.id] : null;
+  const goldStaff   = medals.gold   ? STAFF[medals.gold.id]   : null;
+  const fmtShortDate = d => new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+  const bronzePeriod = medals.yest ? 'Tugas selesai · kemarin '+fmtShortDate(medals.yest) : 'Kemarin';
+  const silverPeriod = medals.lastMonStr && medals.lastFriStr
+    ? 'Tugas selesai · '+fmtShortDate(medals.lastMonStr)+' – '+fmtShortDate(medals.lastFriStr)
+    : 'Senin – Jumat lalu';
+  const goldPeriod = medals.lmStartStr
+    ? 'Tugas selesai · '+new Date(medals.lmStartStr+'T00:00:00').toLocaleDateString('id-ID',{month:'long',year:'numeric'})
+    : 'Bulan lalu';
+  const bronzeCard = buildMedalCard('🥉', bronzeStaff, medals.bronze?.count||0, bronzePeriod, '🥉 Terbaik Kemarin', 'medal-bronze');
+  const silverCard = buildMedalCard('🥈', silverStaff, medals.silver?.count||0, silverPeriod, '🥈 Terbaik Minggu Ini', 'medal-silver');
+  const goldCard   = buildMedalCard('🥇', goldStaff,   medals.gold?.count||0,   goldPeriod,   '🥇 Terbaik Bulan Ini',  'medal-gold');
 
   // ── Today activities summary
-  const todayActSummary=allStaff.filter(s=>s.id!==CUR).map(s=>{
+  const todayActSummary=allStaff.map(s=>{
     const acts=getActs(s.id,today);
     if(!acts.length) return null;
     const jmlValid=acts.filter(a=>a.status==='validated').length;
+    const jmlLang=acts.filter(a=>a.kaitan_ss==='langsung').length;
+    const jmlTLang=acts.filter(a=>a.kaitan_ss==='tidak_langsung').length;
     const jmlSelesai=acts.filter(a=>a.status==='selesai').length;
     const jmlBaru=acts.filter(a=>a.status==='baru').length;
-    return {s,acts,jmlBaru,jmlSelesai,jmlValid,total:acts.length};
+    return {s,acts,jmlBaru,jmlSelesai,jmlValid,jmlLang,jmlTLang,total:acts.length};
   }).filter(Boolean);
 
+  // ── Kaitan SS aggregation (kegiatan TERVALIDASI hari ini)
+  const allActsToday = allStaff.flatMap(s=>getActs(s.id,today));
+  const valToday     = allActsToday.filter(a=>a.status==='validated');
+  const totalVal     = valToday.length;
+  const ksLang       = valToday.filter(a=>a.kaitan_ss==='langsung').length;
+  const ksTLang      = valToday.filter(a=>a.kaitan_ss==='tidak_langsung').length;
+  const ksTdk        = valToday.filter(a=>!a.kaitan_ss||a.kaitan_ss==='tidak_terkait').length;
+  const pct = n => totalVal>0 ? Math.round(n/totalVal*100) : 0;
+
   // ── Contract table
-  const cRows=allStaff.filter(s=>s.id!==CUR).map(s=>{
+  const cRows=allStaff.map(s=>{
     const kt=s.lv==='L0'||s.lv==='L1'?'kontrak':'perjanjian';
     const rat=s.lv==='L0'||s.lv==='L1'?'rencana_aksi':'rkt';
-    const kdata=getC(s.id,kt);
-    const rdata=getC(s.id,rat);
-    const kst=getCstat(s.id,kt);
-    const rst=getCstat(s.id,rat);
-    const kstatus=kdata.length>0&&kst.status==='belum'?'diisi':kst.status;
-    const rstatus=rdata.length>0&&rst.status==='belum'?'diisi':rst.status;
+    const kst=getCstatEff(s.id,kt);
+    const rst=getCstatEff(s.id,rat);
     const kCell=(st)=>{
-      const cls=st==='tervalidasi'?'cell-ok':st==='diserahkan'?'cell-mid':st==='diisi'?'cell-mid':'cell-no';
+      const cls=st==='tervalidasi'?'cell-ok':st==='diserahkan'||st==='diisi'?'cell-mid':'cell-no';
       const ico=st==='tervalidasi'?'✅':st==='diserahkan'?'📤':st==='diisi'?'📝':'—';
-      return `<td class="${cls}">${ico}</td>`;
+      return `<td class="${cls}" style="text-align:center">${ico}</td>`;
     };
     return `<tr>
-      <td style="font-size:12px">${s.nm}</td>
-      <td style="font-size:11px;color:var(--dim)">${s.ti.length>36?s.ti.slice(0,34)+'…':s.ti}</td>
-      ${kCell(kstatus)}
-      ${kCell(rstatus)}
+      <td style="font-size:12px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.nm}">${s.nm}</td>
+      ${kCell(kst.status)}
+      ${kCell(rst.status)}
     </tr>`;
   }).join('');
 
   // ── Eval table
-  const eRows=allStaff.filter(s=>s.id!==CUR).map(s=>{
+  const eRows=allStaff.map(s=>{
     const twCells=[1,2,3,4].map(tw=>{
-      const ev=getE(s.id,tw);
-      const vl=getV(s.id,tw);
-      let pill,cls;
-      if(vl){pill='V';cls='ep-v';}
-      else if(ev){pill='P';cls='ep-p';}
-      else{pill='—';cls='ep-n';}
-      return `<td class="tw-cell"><span class="ev-pill ${cls}">${pill}</span></td>`;
+      const list=getEvTW(s.id,tw);
+      const val=list.filter(e=>{const vl=getEvTWV(s.id,tw,e.eid);return vl&&vl.status==='disetujui';}).length;
+      const fil=list.filter(e=>e.capaian).length;
+      const st=val>0&&val===fil&&fil>0?'V':fil>0?'P':'E';
+      const lbl=list.length?`${val}/${list.length}`:'—';
+      return `<td class="tw-cell"><span class="ep ${st==='V'?'epv':st==='P'?'epp':'epn'}" title="${list.length} poin">${lbl}</span></td>`;
     }).join('');
-    return `<tr><td style="font-size:12px">${s.nm}</td><td style="font-size:11px;color:var(--dim)">${UL[s.un]||s.un}</td>${twCells}</tr>`;
+    return `<tr><td style="font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.nm}">${s.nm}</td>${twCells}</tr>`;
   }).join('');
 
   // ── Today rows
-  const todayRows=todayActSummary.length?todayActSummary.map(({s,total,jmlBaru,jmlSelesai,jmlValid})=>`
-    <div class="act-today-row">
-      <div class="av" style="background:${GR[s.lv]};width:24px;height:24px;font-size:9px;flex-shrink:0">${ini(s.nm)}</div>
+  const todayRows=todayActSummary.length?todayActSummary.map(({s,total,jmlBaru,jmlSelesai,jmlValid,jmlLang,jmlTLang})=>`
+    <div class="act-today-row" onclick="closeExecView();_dailyDate=todayStr();selectPerson('${s.id}')">
+      <div class="av" style="background:${GR[s.lv]};width:28px;height:28px;font-size:10px;flex-shrink:0">${ini(s.nm)}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:500">${s.nm}</div>
-        <div style="font-size:10px;color:var(--dim)">${s.ti}</div>
+        <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.nm}</div>
+        <div style="font-size:11px;color:var(--dim);margin-top:2px;display:flex;gap:5px;flex-wrap:wrap">
+          <span>${s.ti.length>36?s.ti.slice(0,34)+'…':s.ti}</span>
+          ${jmlLang?`<span class="ks-bdg ks-lang-bdg">🎯${jmlLang}</span>`:''}
+          ${jmlTLang?`<span class="ks-bdg ks-tidak-lang-bdg">↗${jmlTLang}</span>`:''}
+        </div>
       </div>
-      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
-        <span class="ev-pill ep-n" title="Total">${total} keg</span>
-        ${jmlSelesai?`<span class="ev-pill ep-p" title="Menunggu validasi">⏳${jmlSelesai}</span>`:''}
-        ${jmlValid?`<span class="ev-pill ep-v" title="Tervalidasi">✅${jmlValid}</span>`:''}
-        ${jmlBaru?`<span style="font-size:10px;color:var(--dim)">🔵${jmlBaru} belum</span>`:''}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;margin-left:8px">
+        <span class="ev-pill ep-n" style="font-size:12px">${total} keg</span>
+        <div style="display:flex;gap:4px">
+          ${jmlSelesai?`<span class="ev-pill ep-p">⏳${jmlSelesai}</span>`:''}
+          ${jmlValid?`<span class="ev-pill ep-v">✅${jmlValid}</span>`:''}
+        </div>
       </div>
     </div>`).join('')
-    :'<div style="text-align:center;padding:20px;color:var(--dim);font-size:12px">Tidak ada kegiatan hari ini dari bawahan.</div>';
+    :'<div style="text-align:center;padding:36px 20px;color:var(--dim)"><div style="font-size:34px;opacity:.25;margin-bottom:10px">📅</div><div style="font-size:14px">Tidak ada kegiatan hari ini.</div></div>';
 
   document.getElementById('execBody').innerHTML=`
-    <!-- Statistik -->
-    <div class="exec-card full">
-      <div class="exec-card-hd"><span class="eico">📊</span><h3>Ringkasan Umum – ${fmtDate(today)}</h3></div>
+  <!-- MEDAL STRIP -->
+  <div class="medal-strip">
+    ${goldCard}
+    ${silverCard}
+    ${bronzeCard}
+  </div>
+
+  <!-- ROW 1: Statistik Strip -->
+  <div class="exec-stat-strip">
+    <div class="estat"><div class="estat-v">${totalPeg}</div><div class="estat-l">Total Pegawai</div></div>
+    <div class="estat"><div class="estat-v" style="color:var(--amber)">${hasKontrak}</div><div class="estat-l">Isi Kontrak/Perjanjian</div></div>
+    <div class="estat"><div class="estat-v" style="color:var(--blue)">${hasRenaksi}</div><div class="estat-l">Isi Rencana Aksi/RKT</div></div>
+    <div class="estat"><div class="estat-v" style="color:var(--green)">${evalValidated}</div><div class="estat-l">Evaluasi Tervalidasi</div></div>
+  </div>
+
+  <!-- ROW 2: Kaitan SS Comparison Strip -->
+  <div style="flex-shrink:0">
+    <div style="font-size:13px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">
+      🎯 Kegiatan Tervalidasi Hari Ini – Kaitan dengan Sasaran Strategis
+      <span style="font-weight:400;color:var(--dim2);font-size:12px;margin-left:8px">${totalVal} kegiatan tervalidasi</span>
+    </div>
+    <div class="ks-comp-strip">
+      <div class="ksc-card ksc-lang">
+        <div class="ksc-icon">🎯</div>
+        <div class="ksc-info">
+          <div class="ksc-v">${ksLang}</div>
+          <div class="ksc-l">Terkait Langsung</div>
+          <div class="ksc-sub">Mendukung sasaran strategis secara langsung</div>
+        </div>
+        <div class="ksc-pct">${pct(ksLang)}%</div>
+        <div class="ksc-bar-wrap"><div class="ksc-bar" style="width:${pct(ksLang)}%"></div></div>
+      </div>
+      <div class="ksc-card ksc-tlang">
+        <div class="ksc-icon">↗</div>
+        <div class="ksc-info">
+          <div class="ksc-v">${ksTLang}</div>
+          <div class="ksc-l">Terkait Tidak Langsung</div>
+          <div class="ksc-sub">Mendukung sasaran secara tidak langsung</div>
+        </div>
+        <div class="ksc-pct">${pct(ksTLang)}%</div>
+        <div class="ksc-bar-wrap"><div class="ksc-bar" style="width:${pct(ksTLang)}%"></div></div>
+      </div>
+      <div class="ksc-card ksc-tdk">
+        <div class="ksc-icon">➡</div>
+        <div class="ksc-info">
+          <div class="ksc-v">${ksTdk}</div>
+          <div class="ksc-l">Tidak Terkait</div>
+          <div class="ksc-sub">Kegiatan administratif / rutin lainnya</div>
+        </div>
+        <div class="ksc-pct">${pct(ksTdk)}%</div>
+        <div class="ksc-bar-wrap"><div class="ksc-bar" style="width:${pct(ksTdk)}%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: 3 equal-height scrollable panels -->
+  <div class="exec-panels">
+
+    <!-- PANEL 1: Kontrak & Rencana Aksi -->
+    <div class="exec-card">
+      <div class="exec-card-hd">
+        <span class="eico">📋</span>
+        <h3>Kontrak & Rencana Aksi</h3>
+        <span class="echd-right">${fmtDate(today)}</span>
+      </div>
       <div class="exec-card-body">
-        <div class="exec-stat-row">
-          <div class="estat"><div class="estat-v">${totalPeg}</div><div class="estat-l">Total Pegawai</div></div>
-          <div class="estat"><div class="estat-v" style="color:var(--amber)">${hasKontrak}</div><div class="estat-l">Isi Kontrak/Perjanjian</div></div>
-          <div class="estat"><div class="estat-v" style="color:var(--blue)">${hasRenaksi}</div><div class="estat-l">Isi Rencana Aksi/RKT</div></div>
-          <div class="estat"><div class="estat-v" style="color:var(--green)">${evalValidated}</div><div class="estat-l">Evaluasi Tervalidasi</div></div>
-        </div>
+        <table class="exec-table">
+          <thead><tr>
+            <th>Nama Pegawai</th>
+            <th style="width:48px;text-align:center">Kontrak</th>
+            <th style="width:48px;text-align:center">Ren.Aksi</th>
+          </tr></thead>
+          <tbody>${cRows||'<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--dim)">—</td></tr>'}</tbody>
+        </table>
+      </div>
+      <div class="exec-card-foot">
+        <span>✅ Tervalidasi</span><span>📤 Diserahkan</span><span>📝 Diisi</span><span>— Belum</span>
       </div>
     </div>
 
-    <!-- Kontrak & Rencana Aksi -->
+    <!-- PANEL 2: Evaluasi Triwulan -->
     <div class="exec-card">
-      <div class="exec-card-hd"><span class="eico">📋</span><h3>Status Kontrak & Rencana Aksi</h3></div>
-      <div class="exec-card-body" style="padding:0">
-        <div style="overflow-x:auto">
-          <table class="exec-table">
-            <thead><tr><th>Nama</th><th>Jabatan</th><th style="width:80px;text-align:center">Kontrak/Perjanjian</th><th style="width:80px;text-align:center">Rencana Aksi/RKT</th></tr></thead>
-            <tbody>${cRows||'<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--dim)">Tidak ada data bawahan.</td></tr>'}</tbody>
-          </table>
-        </div>
-        <div style="padding:10px 14px;font-size:11px;color:var(--dim);display:flex;gap:12px;border-top:1px solid var(--b2)">
-          <span>✅ Tervalidasi</span><span>📤 Diserahkan</span><span>📝 Diisi</span><span>— Belum</span>
-        </div>
+      <div class="exec-card-hd">
+        <span class="eico">📊</span>
+        <h3>Evaluasi Triwulan</h3>
+        <span class="echd-right">${evalValidated} tervalidasi</span>
+      </div>
+      <div class="exec-card-body">
+        <table class="exec-table">
+          <thead><tr>
+            <th>Nama Pegawai</th>
+            <th class="tw-cell">TW I</th>
+            <th class="tw-cell">TW II</th>
+            <th class="tw-cell">TW III</th>
+            <th class="tw-cell">TW IV</th>
+          </tr></thead>
+          <tbody>${eRows||'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--dim)">—</td></tr>'}</tbody>
+        </table>
+      </div>
+      <div class="exec-card-foot">
+        <span class="ev-pill ep-v">V</span> Tervalidasi &nbsp;
+        <span class="ev-pill ep-p">P</span> Diisi &nbsp;
+        <span class="ev-pill ep-n">—</span> Belum
       </div>
     </div>
 
-    <!-- Evaluasi Triwulan -->
+    <!-- PANEL 3: Kegiatan Hari Ini -->
     <div class="exec-card">
-      <div class="exec-card-hd"><span class="eico">📊</span><h3>Hasil Evaluasi Triwulan</h3></div>
-      <div class="exec-card-body" style="padding:0">
-        <div style="overflow-x:auto">
-          <table class="exec-table">
-            <thead><tr><th>Nama</th><th>Unit</th><th class="tw-cell">TW I</th><th class="tw-cell">TW II</th><th class="tw-cell">TW III</th><th class="tw-cell">TW IV</th></tr></thead>
-            <tbody>${eRows||'<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--dim)">—</td></tr>'}</tbody>
-          </table>
-        </div>
-        <div style="padding:10px 14px;font-size:11px;color:var(--dim);display:flex;gap:12px;border-top:1px solid var(--b2)">
-          <span class="ev-pill ep-v">V</span> Tervalidasi &nbsp;
-          <span class="ev-pill ep-p">P</span> Diisi &nbsp;
-          <span class="ev-pill ep-n">—</span> Belum
-        </div>
+      <div class="exec-card-hd">
+        <span class="eico">📅</span>
+        <h3>Kegiatan Hari Ini</h3>
+        <span class="echd-right">${todayActSummary.length} pegawai aktif</span>
+      </div>
+      <div class="exec-card-body">
+        ${todayRows}
       </div>
     </div>
 
-    <!-- Kegiatan Hari Ini -->
-    <div class="exec-card full">
-      <div class="exec-card-hd"><span class="eico">📅</span><h3>Kegiatan Hari Ini – ${fmtDate(today)}</h3>
-        <span style="font-size:11px;color:var(--dim);margin-left:auto">${todayActSummary.length} pegawai memiliki kegiatan</span>
-      </div>
-      <div class="exec-card-body">${todayRows}</div>
-    </div>`;
+  </div>`;
 }
+
+// ══════════════════════════════════════════════════════════
+// EXPORT EXCEL – KEGIATAN HARIAN
+// ══════════════════════════════════════════════════════════
+function exportExcelHarian(id){
+  const s = STAFF[id];
+  const inp = prompt('Masukkan bulan yang ingin diekspor (format YYYY-MM, contoh 2025-06):', todayStr().slice(0,7));
+  if(!inp) return;
+  if(!/^\d{4}-\d{2}$/.test(inp)){ showToast('Format tidak valid. Gunakan YYYY-MM','warn'); return; }
+
+  const [yr, mo] = inp.split('-').map(Number);
+  const days = new Date(yr, mo, 0).getDate();
+  const moName = new Date(yr, mo-1, 1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+
+  // Build CSV rows
+  const BOM = '\uFEFF'; // UTF-8 BOM for Excel
+  const esc = v => '"' + String(v||'').replace(/"/g,'""') + '"';
+  const kaitanLabel = k => k==='langsung'?'Terkait Langsung':k==='tidak_langsung'?'Terkait Tidak Langsung':'Tidak Terkait';
+  const statusLabel = st => st==='validated'?'Tervalidasi':st==='selesai'?'Selesai (blm validasi)':st==='baru'?'Belum Selesai':'Lanjutan';
+
+  const headers = ['No','Tanggal','Hari','Nama Kegiatan','Jam Mulai','Jam Selesai','Output / Hasil','Volume','Kaitan Sasaran Strategis','Status','Divalidasi Oleh','Waktu Validasi'];
+
+  const rows = [headers];
+  let no = 1;
+
+  for(let d=1; d<=days; d++){
+    const ds = yr+'-'+(mo<10?'0':'')+mo+'-'+(d<10?'0':'')+d;
+    const acts = getActs(id, ds);
+    if(!acts.length) continue;
+    const sorted = acts.slice().sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||''));
+    const hariNm = new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long'});
+    sorted.forEach(a=>{
+      rows.push([
+        no++,
+        ds,
+        hariNm,
+        a.kegiatan||'',
+        a.waktu_mulai||'',
+        a.waktu_selesai||'',
+        a.output||'',
+        a.volume||'',
+        kaitanLabel(a.kaitan_ss||'tidak_terkait'),
+        statusLabel(a.status),
+        a.valid_by||'',
+        a.valid_at||'',
+      ]);
+    });
+  }
+
+  if(rows.length <= 1){
+    showToast('Tidak ada data kegiatan pada bulan '+moName,'warn');
+    return;
+  }
+
+  // Add summary rows
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama Pegawai', s.nm]);
+  rows.push(['Jabatan', s.ti]);
+  rows.push(['Unit Kerja', UL[s.un]||s.un]);
+  rows.push(['Bulan', moName]);
+  rows.push(['Total Kegiatan', rows.length - 6]);
+
+  // Generate CSV
+  const csv = BOM + rows.map(r => r.map(esc).join(',')).join('\r\n');
+
+  // Download
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'Kegiatan_'+s.nm.replace(/[^a-zA-Z0-9]/g,'_').slice(0,20)+'_'+inp+'.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ File Excel berhasil diunduh!');
+}
+
+function exportExcelBulkHarian(){
+  // Export all staff for a given month (for admin use)
+  const inp = prompt('Ekspor semua staf – masukkan bulan (YYYY-MM):', todayStr().slice(0,7));
+  if(!inp) return;
+  if(!/^\d{4}-\d{2}$/.test(inp)){ showToast('Format tidak valid','warn'); return; }
+  const [yr, mo] = inp.split('-').map(Number);
+  const days = new Date(yr, mo, 0).getDate();
+  const moName = new Date(yr, mo-1, 1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  const BOM = '\uFEFF';
+  const esc = v => '"' + String(v||'').replace(/"/g,'""') + '"';
+  const kLabel = k => k==='langsung'?'Terkait Langsung':k==='tidak_langsung'?'Terkait Tidak Langsung':'Tidak Terkait';
+  const stLabel = st => st==='validated'?'Tervalidasi':st==='selesai'?'Selesai (blm validasi)':st==='baru'?'Belum Selesai':'Lanjutan';
+  const headers = ['No','Nama Pegawai','Jabatan','Tanggal','Hari','Kegiatan','Jam Mulai','Jam Selesai','Output','Volume','Kaitan SS','Status','Divalidasi Oleh'];
+  const rows = [headers];
+  let no = 1;
+  Object.values(STAFF).forEach(s=>{
+    for(let d=1;d<=days;d++){
+      const ds = yr+'-'+(mo<10?'0':'')+mo+'-'+(d<10?'0':'')+d;
+      const acts = getActs(s.id, ds);
+      if(!acts.length) continue;
+      acts.slice().sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||'')).forEach(a=>{
+        const hari = new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long'});
+        rows.push([no++, s.nm, s.ti, ds, hari, a.kegiatan||'', a.waktu_mulai||'', a.waktu_selesai||'', a.output||'', a.volume||'', kLabel(a.kaitan_ss||''), stLabel(a.status), a.valid_by||'']);
+      });
+    }
+  });
+  if(rows.length<=1){ showToast('Tidak ada data','warn'); return; }
+  const csv = BOM + rows.map(r=>r.map(esc).join(',')).join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'Kegiatan_Semua_'+inp+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ File Excel semua staf berhasil diunduh!');
+}
+
 
 // ══════════════════════════════════════════════════════════
 // PRINT MONTHLY
@@ -1853,6 +2526,7 @@ function openPrintMonthly(id){
       <td>${a.waktu_mulai||'—'} – ${a.waktu_selesai||'—'}</td>
       <td>${a.output||'—'}</td>
       <td>${a.volume||'—'}</td>
+      <td>${a.kaitan_ss==='langsung'?'Terkait Langsung':a.kaitan_ss==='tidak_langsung'?'Terkait Tidak Langsung':'Tidak Terkait'}</td>
       <td><span class="print-status">${stLabel}</span></td>
       <td>${a.valid_by?a.valid_by+'\n'+a.valid_at:a.status==='selesai'?'Menunggu':'—'}</td>
     </tr>`;
@@ -1945,10 +2619,10 @@ function buildNotifications(){
     const dt=new Date(today+'T00:00:00');
     dt.setDate(dt.getDate()-i);
     const d=dt.toISOString().slice(0,10);
-    myChildren.forEach(child=>{
+    myChildren.filter(child=>child.lv!=='L0').forEach(child=>{
       const acts=getActs(child.id,d);
       acts.forEach((a,idx)=>{
-        // Tipe 1: staf sudah selesai, menunggu validasi atasan
+        // Tipe 1: staf sudah selesai, menunggu validasi atasan (bukan KD)
         if(a.status==='selesai'){
           notifs.push({
             type:'validasi_awal',
@@ -1973,6 +2647,38 @@ function buildNotifications(){
     if(a.actDate===today&&b.actDate!==today) return -1;
     if(b.actDate===today&&a.actDate!==today) return 1;
     return b.actDate.localeCompare(a.actDate);
+  });
+  // Eval poin pending validations
+  myChildren.filter(kid=>kid.lv!=='L0').forEach(function(kid){
+    [1,2,3,4].forEach(function(tw){
+      var list = getEvTW(kid.id,tw);
+      list.forEach(function(item){
+        var vl = getEvTWV(kid.id,tw,item.eid);
+        if(item.capaian && !vl){
+          notifs.push({
+            type:'evaluasi',
+            targetId:kid.id, targetNm:kid.nm, targetTi:kid.ti,
+            actDate:todayStr(),
+            kegiatan:(item.label||'Poin Evaluasi')+' (TW'+tw+') menunggu validasi',
+            notifId:'evtw_'+kid.id+'_'+tw+'_'+item.eid,
+          });
+        }
+      });
+    });
+  });
+  // UT pending validations
+  myChildren.filter(kid=>kid.lv!=='L0').forEach(function(kid){
+    var ut = getUT(kid.id);
+    var utv = getUTV(kid.id);
+    if(ut && ut.status==='diserahkan' && !utv){
+      notifs.push({
+        type:'uraian_tugas',
+        targetId:kid.id, targetNm:kid.nm, targetTi:kid.ti,
+        actDate:todayStr(),
+        kegiatan:'Uraian Tugas menunggu validasi',
+        notifId:'ut_'+kid.id,
+      });
+    }
   });
   return notifs;
 }
@@ -2012,6 +2718,8 @@ function updateNotifBadge(){
     cnt.style.display='none';
     bell.classList.remove('has-new');
   }
+  // Refresh tree to update bubble badges
+  buildTree();
 }
 
 function fmtRelDate(dateStr){
@@ -2023,52 +2731,127 @@ function fmtRelDate(dateStr){
 }
 
 function renderNotifPanel(){
-  const notifs=buildNotifications();
-  const read=getReadIds();
-  const list=document.getElementById('notifList');
-  if(!notifs.length){
-    list.innerHTML=`<div class="np-empty"><div class="ne-i">🔔</div>Tidak ada notifikasi saat ini.<br>Semua kegiatan bawahan Anda sudah ditangani.</div>`;
+  const notifs = buildNotifications();
+  const read   = getReadIds();
+  const list   = document.getElementById('notifList');
+  const today  = todayStr();
+
+  // Split by type
+  const grpAct  = notifs.filter(n=>n.type==='validasi_awal');
+  const grpEval = notifs.filter(n=>n.type==='evaluasi');
+  const grpUT   = notifs.filter(n=>n.type==='uraian_tugas');
+  const total   = notifs.length;
+  const unreadCnt = notifs.filter(n=>!read.has(n.notifId)).length;
+
+  // Update header badge
+  const badge = document.getElementById('npTotalBadge');
+  if(badge) badge.textContent = unreadCnt > 0 ? unreadCnt : '';
+  if(badge) badge.style.display = unreadCnt > 0 ? 'inline' : 'none';
+
+  // Update summary cards
+  const sAct  = document.getElementById('npsAct');
+  const sEval = document.getElementById('npsEval');
+  const sUT   = document.getElementById('npsUT');
+  if(sAct)  sAct.textContent  = grpAct.length;
+  if(sEval) sEval.textContent = grpEval.length;
+  if(sUT)   sUT.textContent   = grpUT.length;
+
+  if(!total){
+    list.innerHTML = `<div class="np-empty">
+      <div class="ne-i">✅</div>
+      <p>Semua sudah ditangani!</p>
+      <p style="font-size:12px;margin-top:6px;color:var(--dim2)">Tidak ada item yang menunggu validasi Anda.</p>
+    </div>`;
     return;
   }
-  // Group by date
-  const today=todayStr();
-  const groups={};
-  notifs.forEach(n=>{
-    const label=n.actDate===today?'Hari Ini':fmtDate(n.actDate);
-    if(!groups[label]) groups[label]=[];
-    groups[label].push(n);
-  });
-  let html='';
-  Object.entries(groups).forEach(([label,items])=>{
-    html+=`<div class="np-section">${label}</div>`;
+
+  let html = '';
+
+  // ─ Section builder
+  const buildSection = (items, sectionLabel, sectionIcon, typeClass, icoClass, icoEmoji, msgFn) => {
+    if(!items.length) return '';
+    const unreadInSection = items.filter(n=>!read.has(n.notifId)).length;
+    html += `<div class="np-section">
+      <span class="nps-ico">${sectionIcon}</span>
+      ${sectionLabel}
+      ${unreadInSection > 0 ? `<span class="nps-cnt">${unreadInSection} baru</span>` : ''}
+    </div>`;
     items.forEach(n=>{
-      const isRead=read.has(n.notifId);
-      const isVal=n.type==='validasi_awal';
-      const ico=isVal?'⏳':'🏁';
-      const icoClass=isVal?'np-ico-val':'np-ico-sel';
-      const msg=isVal
-        ?`<strong>${n.targetNm}</strong> menandai kegiatan <strong>selesai</strong> – menunggu validasi Anda`
-        :`Kegiatan <strong>${n.targetNm}</strong> menunggu tindakan Anda`;
-      html+=`<div class="np-item ${isRead?'':'unread'}" onclick="notifClick('${n.notifId}','${n.targetId}','${n.actDate}')">
-        <div class="np-ico ${icoClass}">${ico}</div>
+      const isRead = read.has(n.notifId);
+      const dateLabel = n.actDate===today ? 'Hari ini' : fmtRelDate(n.actDate);
+      const tags = [
+        n.waktu ? `⏰ ${n.waktu}` : '',
+        dateLabel,
+        n.targetTi ? n.targetTi.length>30 ? n.targetTi.slice(0,28)+'…' : n.targetTi : '',
+      ].filter(Boolean).map(t=>`<span class="np-dtag">${t}</span>`).join('');
+
+      html += `<div class="np-item ${isRead?'':'unread'} ${typeClass}"
+          onclick="notifClick('${n.notifId}','${n.targetId}','${n.actDate}')">
+        <div class="np-ico ${icoClass}">${icoEmoji}</div>
         <div class="np-body">
-          <div class="np-msg">${msg}</div>
-          <div class="np-sub">📋 ${n.kegiatan||'Kegiatan'} ${n.waktu?'· ⏰ '+n.waktu:''}</div>
-          <div class="np-time">${n.targetTi} &nbsp;·&nbsp; ${fmtRelDate(n.actDate)}</div>
+          <div class="np-who">${n.targetNm}</div>
+          <div class="np-what">${msgFn(n)}</div>
+          <div class="np-detail">${tags}</div>
         </div>
-        <div class="np-dot ${isRead?'read':''}"></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+          <div class="np-dot ${isRead?'read':''}"></div>
+          <button class="np-act-btn" onclick="event.stopPropagation();notifClick('${n.notifId}','${n.targetId}','${n.actDate}')">
+            Validasi →
+          </button>
+        </div>
       </div>`;
     });
-  });
-  list.innerHTML=html;
+  };
+
+  buildSection(
+    grpAct,
+    'Kegiatan Harian – Menunggu Validasi',
+    '📅',
+    'type-kegiatan',
+    'ico-kegiatan',
+    '⏳',
+    n => `Menandai <strong>${n.kegiatan||'kegiatan'}</strong> sudah selesai`
+  );
+
+  buildSection(
+    grpEval,
+    'Evaluasi Triwulan – Menunggu Validasi',
+    '📊',
+    'type-evaluasi',
+    'ico-evaluasi',
+    '📋',
+    n => `Mengisi <strong>${n.kegiatan}</strong>`
+  );
+
+  buildSection(
+    grpUT,
+    'Uraian Tugas – Menunggu Validasi',
+    '📄',
+    'type-uraian',
+    'ico-uraian',
+    '📄',
+    n => `Menyerahkan <strong>uraian tugas</strong> untuk divalidasi`
+  );
+
+  list.innerHTML = html;
+}
+
+function scrollNPSection(keyword){
+  const list = document.getElementById('notifList');
+  if(!list) return;
+  const sections = list.querySelectorAll('.np-section');
+  for(const s of sections){
+    if(s.textContent.includes(keyword)){
+      s.scrollIntoView({behavior:'smooth',block:'start'});
+      break;
+    }
+  }
 }
 
 function toggleNotifPanel(){
   const panel=document.getElementById('notifPanel');
   const isOpen=panel.classList.toggle('show');
-  if(isOpen){
-    renderNotifPanel();
-  }
+  if(isOpen) renderNotifPanel();
 }
 
 function notifClick(notifId,targetId,actDate){
@@ -2113,6 +2896,411 @@ function startNotifTimer(){
 }
 
 // ══════════════════════════════════════════════════════════
+// VALIDATION BANNER (shown on supervisor's view of subordinate)
+// ══════════════════════════════════════════════════════════
+function buildPendingValidations(id){
+  // Returns list of things needing validation for staff 'id'
+  const pending = [];
+  const s = STAFF[id];
+  if(!s) return pending;
+
+  // 1. Contracts / Documents
+  const docTypes = s.lv==='L0'||s.lv==='L1'
+    ? [['kontrak','Kontrak Kinerja'],['rencana_aksi','Rencana Aksi']]
+    : [['perjanjian','Perjanjian Kinerja'],['rkt','RKT']];
+  docTypes.forEach(([type, label])=>{
+    const cst = getCstat(id, type);
+    const data = getC(id, type);
+    const eff = (data.length>0 && cst.status==='belum') ? 'diisi' : cst.status;
+    if(eff === 'diserahkan'){
+      pending.push({
+        type:'contract', icon:'📋', ico_cls:'contract',
+        title: label + ' menunggu validasi',
+        sub: s.nm + ' telah menyerahkan dokumen',
+        action: ()=>{ selectPerson(id); setTimeout(()=>{ const t=_tabs.findIndex(x=>x.label.includes(label.split(' ')[0])); if(t>=0)swTab(t); },120); },
+        actionLabel: 'Validasi →'
+      });
+    }
+  });
+
+  // 2. Evaluasi – poin per TW
+  [1,2,3,4].forEach(tw=>{
+    const list = getEvTW(id,tw);
+    list.forEach(item=>{
+      const vl = getEvTWV(id,tw,item.eid);
+      if(item.capaian && !vl){
+        pending.push({
+          type:'eval', icon:'📊', ico_cls:'eval',
+          title: (item.label||'Poin Evaluasi')+' (TW '+tw+') menunggu validasi',
+          sub: 'Fisik '+(parseFloat(item.fisik)||0)+'% · '+(item.tgl||''),
+          action: ()=>{ _activeTW=tw; selectPerson(id); setTimeout(()=>{ const t=_tabs.findIndex(x=>x.label.includes('Evaluasi')); if(t>=0)swTab(t); },120); },
+          actionLabel: 'Validasi →'
+        });
+      }
+    });
+  });
+
+  // 3. Kegiatan Harian (last 7 days with status=selesai)
+  const today = todayStr();
+  for(let i=0;i<7;i++){
+    const dt = new Date(today+'T00:00:00'); dt.setDate(dt.getDate()-i);
+    const d = dt.toISOString().slice(0,10);
+    const acts = getActs(id, d);
+    const needVal = acts.filter(a=>a.status==='selesai');
+    if(needVal.length){
+      pending.push({
+        type:'daily', icon:'📅', ico_cls:'daily',
+        title: needVal.length + ' kegiatan selesai menunggu validasi',
+        sub: fmtDate(d).split(",")[1]?.trim()||d + ' · ' + needVal.map(a=>a.kegiatan||'Kegiatan').slice(0,2).join(', ') + (needVal.length>2?'…':''),
+        action: ()=>{ _dailyDate=d; selectPerson(id); setTimeout(()=>{ const t=_tabs.findIndex(x=>x.label.includes('Kegiatan')); if(t>=0)swTab(t); },120); },
+        actionLabel: 'Lihat →'
+      });
+    }
+  }
+
+  // 4. Uraian Tugas
+  const ut = getUT(id);
+  const utv = getUTV(id);
+  if(ut && ut.status==='diserahkan' && !utv){
+    pending.push({
+      type:'ut', icon:'📄', ico_cls:'contract',
+      title: 'Uraian Tugas menunggu validasi',
+      sub: s.nm+' telah menyerahkan uraian tugas / job description',
+      action: ()=>{ selectPerson(id); setTimeout(()=>{ const t=_tabs.findIndex(x=>x.label.includes('Uraian')); if(t>=0)swTab(t); },120); },
+      actionLabel: 'Validasi →'
+    });
+  }
+
+  return pending;
+}
+
+function renderValBanner(id){
+  // Only render if current user is direct supervisor
+  if(!STAFF[id] || STAFF[id].par !== CUR) return;
+  const pending = buildPendingValidations(id);
+  const el = document.getElementById('valBanner');
+  if(!el) return;
+
+  if(!pending.length){
+    el.innerHTML = `<div class="valbanner">
+      <div class="vb-hd" onclick="toggleVB()">
+        <span style="font-size:15px">✅</span>
+        <h4>Status Validasi Bawahan</h4>
+        <div class="vb-arr op" id="vbarr">▶</div>
+      </div>
+      <div class="vb-body op" id="vbbody">
+        <div class="vb-none">✅ Tidak ada item yang menunggu validasi Anda.</div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  const items = pending.map((p,i)=>`
+    <div class="vb-item" onclick="vbClick(${i})">
+      <div class="vb-ico ${p.ico_cls}">${p.icon}</div>
+      <div class="vb-info">
+        <div class="vb-title">${p.title}</div>
+        <div class="vb-sub">${p.sub}</div>
+      </div>
+      <div class="vb-act">${p.actionLabel}</div>
+    </div>`).join('');
+
+  el.innerHTML = `<div class="valbanner">
+    <div class="vb-hd" onclick="toggleVB()">
+      <span style="font-size:15px">🔔</span>
+      <h4>Menunggu Validasi Anda</h4>
+      <span class="vb-badge">${pending.length}</span>
+      <div class="vb-arr op" id="vbarr">▶</div>
+    </div>
+    <div class="vb-body op" id="vbbody">${items}</div>
+  </div>`;
+
+  // Store actions for onclick
+  window._vbActions = pending.map(p=>p.action);
+}
+
+function vbClick(i){
+  if(window._vbActions && window._vbActions[i]) window._vbActions[i]();
+}
+
+function toggleVB(){
+  const body = document.getElementById('vbbody');
+  const arr = document.getElementById('vbarr');
+  if(!body) return;
+  const op = body.classList.toggle('op');
+  if(arr) arr.classList.toggle('op', op);
+}
+
+
+// ══════════════════════════════════════════════════════════
+// URAIAN TUGAS / JOB DESCRIPTION
+// ══════════════════════════════════════════════════════════
+function utkey(id){ return 'sk_ut_'+id; }
+function utvkey(id){ return 'sk_utv_'+id; }
+function getUT(id){ return LS.g(utkey(id))||null; }
+function setUT(id,d){ LS.s(utkey(id),d); }
+function getUTV(id){ return LS.g(utvkey(id))||null; }
+function setUTV(id,d){ LS.s(utvkey(id),d); }
+
+// ── Render ───────────────────────────────────────────────────────────────
+function renderUraianTugas(id, canEdit){
+  const ut  = getUT(id);
+  const utv = getUTV(id);
+  const tc  = document.getElementById('tcInner');
+  const isV = (_panelAcc==='VALIDATE');
+  tc.innerHTML = '';
+
+  if(canEdit)  tc.innerHTML += buildUTForm(id, ut, utv);
+  if(ut)       tc.innerHTML += buildUTView(id, ut, utv, canEdit, isV);
+  else if(!canEdit)
+    tc.innerHTML = '<div class="ut-empty"><div class="ut-empty-i">📄</div><p style="font-size:13px">Uraian tugas belum diisi oleh pegawai ini.</p></div>';
+}
+
+// ── FORM (hanya pemilik halaman) ─────────────────────────────────────────
+function buildUTForm(id, ut, utv){
+  const u    = ut||{};
+  const open = !ut;
+  const locked = utv && utv.status==='disetujui';
+
+  // Buat baris input tugas
+  const tugas = (u.tugas && u.tugas.length) ? u.tugas : [''];
+  const tugasRows = tugas.map((t,i) =>
+    `<div class="ut-input-row" id="utr_${i}">
+      <span class="ut-num">${i+1}</span>
+      <input class="fc2" id="ut_t_${i}" value="${t.replace(/"/g,'&quot;')}" placeholder="Uraian rincian tugas ke-${i+1}...">
+      <button class="ut-rm-btn" onclick="utRemove(${i})" title="Hapus">×</button>
+    </div>`).join('');
+
+  return `<div class="sb2" id="utFormBan" style="margin-bottom:12px">
+    <div class="sbh2 ${open?'op':''}" onclick="toggleSB('utFormBan')">
+      <div class="sbico">✏️</div>
+      <div class="sbt">
+        <div class="sbt1">${ut?'Edit':'Isi'} Uraian Tugas</div>
+        <div class="sbt2">${locked?'⚠️ Sudah divalidasi – simpan ulang akan membatalkan validasi.':'Isi nama jabatan, ikhtisar, dan rincian tugas, lalu serahkan ke atasan.'}</div>
+      </div>
+      <div class="sbarr ${open?'op':''}" id="sbarr_utFormBan">▶</div>
+    </div>
+    <div class="sbbd ${open?'op':''}" id="sbbd_utFormBan">
+      ${locked?'<div class="wbox" style="margin:12px 14px 0">⚠️ Uraian tugas sudah divalidasi atasan. Menyimpan perubahan akan membatalkan validasi dan perlu divalidasi ulang.</div>':''}
+      <div class="fa" style="border-radius:0;border:none;background:transparent;margin-bottom:0">
+
+        <div class="g2">
+          <div class="fg2"><label class="fl2">Nama Jabatan</label>
+            <input class="fc2" id="ut_nama" value="${u.nama_jabatan||STAFF[id].ti}"></div>
+          <div class="fg2"><label class="fl2">Unit Kerja</label>
+            <input class="fc2" id="ut_unit" value="${u.unit_kerja||UL[STAFF[id].un]||''}"></div>
+        </div>
+
+        <div class="fg2"><label class="fl2">Ikhtisar Jabatan <span style="color:var(--red)">*</span></label>
+          <textarea class="fc2" id="ut_ikhtisar" rows="2"
+            placeholder="Ringkasan fungsi utama jabatan ini, misal: Melaksanakan perencanaan, evaluasi, dan pelaporan program kesehatan di lingkungan dinas..."
+          >${u.ikhtisar||''}</textarea></div>
+
+        <div class="fg2">
+          <label class="fl2">Rincian Tugas <span style="color:var(--red)">*</span>
+            <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--dim)"> – tambah baris untuk setiap tugas</span></label>
+          <div class="ut-input-list" id="ut_tugas_list">${tugasRows}</div>
+          <button class="ut-add-btn" onclick="utAdd()">+ Tambah Rincian Tugas</button>
+        </div>
+
+        <div class="facts" style="margin-top:10px">
+          <button class="btn btn-out btn-sm" onclick="toggleSB('utFormBan')">Tutup</button>
+          <button class="btn btn-gold" onclick="saveUT('${id}')">💾 Simpan</button>
+          <button class="btn btn-blu" onclick="submitUT('${id}')">📤 Serahkan ke Atasan</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Tambah / hapus baris tugas ───────────────────────────────────────────
+function utAdd(){
+  const list = document.getElementById('ut_tugas_list');
+  if(!list) return;
+  const n = list.querySelectorAll('.ut-input-row').length;
+  const div = document.createElement('div');
+  div.className = 'ut-input-row';
+  div.id = 'utr_'+n;
+  div.innerHTML = '<span class="ut-num">'+(n+1)+'</span>'
+    + '<input class="fc2" id="ut_t_'+n+'" placeholder="Uraian rincian tugas ke-'+(n+1)+'...">'
+    + '<button class="ut-rm-btn" onclick="utRemove('+n+')" title="Hapus">×</button>';
+  list.appendChild(div);
+  document.getElementById('ut_t_'+n)?.focus();
+}
+
+function utRemove(idx){
+  const row = document.getElementById('utr_'+idx);
+  if(!row) return;
+  const list = row.parentElement;
+  row.remove();
+  list.querySelectorAll('.ut-input-row').forEach((r,i)=>{
+    r.id = 'utr_'+i;
+    const num = r.querySelector('.ut-num'); if(num) num.textContent = i+1;
+    const inp = r.querySelector('input');
+    if(inp){ inp.id = 'ut_t_'+i; }
+    const btn = r.querySelector('button');
+    if(btn){ btn.setAttribute('onclick','utRemove('+i+')'); }
+  });
+}
+
+function collectTugas(){
+  const list = document.getElementById('ut_tugas_list');
+  if(!list) return [];
+  return Array.from(list.querySelectorAll('input'))
+    .map(el=>el.value.trim()).filter(Boolean);
+}
+
+// ── Simpan ───────────────────────────────────────────────────────────────
+function saveUT(id){
+  const v = el => (document.getElementById(el)?.value||'').trim();
+  const tugas = collectTugas();
+  if(!v('ut_ikhtisar')){ showToast('⚠️ Ikhtisar jabatan wajib diisi!','warn'); return; }
+  if(!tugas.length){ showToast('⚠️ Minimal satu rincian tugas wajib diisi!','warn'); return; }
+  const data = {
+    nama_jabatan: v('ut_nama')||STAFF[id].ti,
+    unit_kerja:   v('ut_unit')||UL[STAFF[id].un]||'',
+    ikhtisar:     v('ut_ikhtisar'),
+    tugas:        tugas,
+    status:       'diisi',
+    updated:      nowTs(),
+    by:           CUR,
+  };
+  if(getUTV(id)){ LS.d(utvkey(id)); showToast('⚠️ Tersimpan – validasi sebelumnya dibatalkan.','warn'); }
+  else { showToast('✅ Uraian tugas berhasil disimpan!'); }
+  setUT(id, data);
+  renderUraianTugas(id, true);
+}
+
+// ── Serahkan ke atasan ───────────────────────────────────────────────────
+function submitUT(id){
+  const ut = getUT(id);
+  if(!ut){ showToast('⚠️ Simpan dulu sebelum menyerahkan!','warn'); return; }
+  if(ut.status==='diserahkan'){ showToast('Sudah diserahkan ke atasan.','warn'); return; }
+  setUT(id, Object.assign({},ut,{status:'diserahkan', submitted_at:nowTs()}));
+  showToast('📤 Uraian tugas berhasil diserahkan ke atasan!');
+  updateNotifBadge();
+  renderUraianTugas(id, true);
+}
+
+// ── VIEW (tampilan hasil) ────────────────────────────────────────────────
+function buildUTView(id, ut, utv, canEdit, isV){
+  const s = STAFF[id];
+  const stMap = {belum:'usp-b',diisi:'usp-d',diserahkan:'usp-s',tervalidasi:'usp-v'};
+  const stLbl = {belum:'⬜ Belum',diisi:'📝 Tersimpan',diserahkan:'📤 Diserahkan',tervalidasi:'✅ Tervalidasi'};
+  const stCls = stMap[ut.status]||'usp-d';
+  const stTxt = stLbl[ut.status]||'📝 Tersimpan';
+  const vBadge = !utv ? ''
+    : utv.status==='disetujui'   ? '<span class="bdg bg">✅ Tervalidasi</span>'
+    : utv.status==='perlu_revisi'? '<span class="bdg bb">⚠️ Perlu Revisi</span>'
+    :                              '<span class="bdg br">❌ Ditolak</span>';
+
+  // Nomor urut tugas
+  const tugasList = (ut.tugas||[]).map((t,i)=>
+    `<div class="ut-tugas-row">
+      <span class="ut-num">${i+1}</span>
+      <span class="ut-tugas-txt">${t}</span>
+    </div>`).join('');
+
+  // Form validasi (atasan langsung)
+  let valSection = '';
+  if(isV){
+    if(!utv){
+      valSection = ut.status==='diserahkan'
+        ? `<div class="ut-val-box">
+            <div class="ut-val-hd">✅ Validasi Uraian Tugas</div>
+            <div class="fg2"><label class="fl2">Status Validasi</label>
+              <select class="fc2" id="utv_st">
+                <option value="disetujui">✅ Disetujui</option>
+                <option value="perlu_revisi">⚠️ Perlu Revisi</option>
+                <option value="ditolak">❌ Ditolak</option>
+              </select></div>
+            <div class="fg2"><label class="fl2">Catatan / Arahan Atasan</label>
+              <textarea class="fc2" id="utv_cat" rows="3" placeholder="Tuliskan catatan atau arahan perbaikan..."></textarea></div>
+            <div class="facts">
+              <button class="btn btn-teal" onclick="validateUT('${id}')">✅ Simpan Validasi</button>
+            </div>
+          </div>`
+        : `<div class="wbox">⚠️ Tombol validasi muncul setelah pegawai menekan "📤 Serahkan ke Atasan".</div>`;
+    } else {
+      const vSt = utv.status==='disetujui'?'bg':utv.status==='perlu_revisi'?'bb':'br';
+      const vLb = utv.status==='disetujui'?'Disetujui':utv.status==='perlu_revisi'?'Perlu Revisi':'Ditolak';
+      valSection = `<div class="ut-val-box">
+        <div class="ut-val-hd">✅ Validasi Atasan Langsung</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+          <strong style="font-size:13px">${utv.by_nm||''}</strong>
+          <span class="bdg ${vSt}">${vLb}</span>
+          <span style="font-size:10px;color:var(--dim);margin-left:auto">${utv.at||''}</span>
+        </div>
+        <div style="font-size:13px;line-height:1.6;margin-bottom:10px">${utv.catatan||'—'}</div>
+        <button class="btn btn-out btn-sm" onclick="revalidateUT('${id}')">✏️ Ubah Validasi</button>
+      </div>`;
+    }
+  }
+
+  return `<div class="ut-card">
+    <div class="ut-hd">
+      <span style="font-size:17px">📄</span>
+      <h4>Uraian Tugas</h4>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+        ${vBadge}
+        <span class="ut-status-pill ${stCls}">${stTxt}</span>
+      </div>
+    </div>
+    <div class="ut-body">
+
+      <div class="ut-section">
+        <div class="ut-row">
+          <div class="ut-key">Nama Jabatan</div>
+          <div class="ut-val"><strong>${ut.nama_jabatan||s.ti}</strong></div>
+        </div>
+        <div class="ut-row">
+          <div class="ut-key">Unit Kerja</div>
+          <div class="ut-val">${ut.unit_kerja||UL[s.un]||'—'}</div>
+        </div>
+        <div class="ut-row">
+          <div class="ut-key">Ikhtisar Jabatan</div>
+          <div class="ut-val" style="font-style:italic;color:var(--txt)">${ut.ikhtisar||'—'}</div>
+        </div>
+      </div>
+
+      <div class="ut-section">
+        <div class="ut-section-hd">📋 Rincian Tugas</div>
+        <div style="padding:12px 15px;display:flex;flex-direction:column;gap:4px">
+          ${tugasList||'<span style="color:var(--dim);font-size:12px">Belum ada rincian tugas.</span>'}
+        </div>
+      </div>
+
+    </div>
+    ${valSection?`<div style="padding:13px 15px 15px">${valSection}</div>`:''}
+    <div class="ut-status-bar">
+      <span style="font-size:11px;color:var(--dim)">Diperbarui: ${ut.updated||'—'}</span>
+      ${ut.submitted_at?`<span style="font-size:11px;color:var(--dim)">Diserahkan: ${ut.submitted_at}</span>`:''}
+      ${utv?`<span style="font-size:11px;color:${utv.status==='disetujui'?'var(--grn)':'var(--amb)'}">Divalidasi: ${utv.at||'—'}</span>`:''}
+    </div>
+  </div>`;
+}
+
+// ── Validasi oleh atasan ─────────────────────────────────────────────────
+function validateUT(id){
+  if(!STAFF[id]||STAFF[id].par!==CUR){ showToast('Hanya atasan langsung yang bisa memvalidasi!','warn'); return; }
+  const st  = document.getElementById('utv_st')?.value;
+  const cat = (document.getElementById('utv_cat')?.value||'').trim();
+  if(!st){ showToast('Pilih status validasi!','warn'); return; }
+  setUTV(id,{status:st, catatan:cat, by_nm:STAFF[CUR].nm, by:CUR, at:nowTs()});
+  const ut = getUT(id);
+  if(ut) setUT(id, Object.assign({},ut,{status:st==='disetujui'?'tervalidasi':'diserahkan'}));
+  showToast('✅ Validasi berhasil disimpan!');
+  updateNotifBadge();
+  renderUraianTugas(id, _panelAcc==='FULL');
+}
+
+function revalidateUT(id){
+  if(!STAFF[id]||STAFF[id].par!==CUR) return;
+  LS.d(utvkey(id));
+  renderUraianTugas(id, _panelAcc==='FULL');
+}
+
+// ══════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════
 function initApp(){
@@ -2126,7 +3314,14 @@ function initApp(){
   updateNotifBadge();
   startNotifTimer();
   // Auto-open own page
-  setTimeout(()=>selectPerson(CUR),50);
+  setTimeout(()=>{
+    selectPerson(CUR);
+    // KD: auto-expand all L1 nodes so full tree is visible
+    if(STAFF[CUR]&&STAFF[CUR].lv==='L0'){
+      Object.values(STAFF).filter(s=>s.lv==='L1').forEach(s=>{_openNodes.add(s.id);});
+      buildTree();
+    }
+  },100);
 }
 
 // Fill login dropdown
