@@ -2,12 +2,15 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIMKK – Kinerja Berjenjang | Dinkes Kab. Lima Puluh Kota</title>
+<title>SIMKK v5.3 – Kinerja Berjenjang | Dinkes Kab. Lima Puluh Kota</title>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#07111E;--nav:#0C1A2E;--card:#111F35;--card2:#162540;--card3:#1A2D4A;
+  --bg:#07111E;--ff-serif:'Crimson Pro',serif;
+  --nav:#0C1A2E;--card:#111F35;--card2:#162540;--card3:#1A2D4A;
   --gold:#C8941F;--goldl:#E5B54A;--goldd:#7A5500;
   --teal:#1DB3A3;--tealL:#3DD0C0;--tealD:#0A6E64;
   --red:#E25555;--green:#2EC97E;--amber:#F59E0B;--blue:#4A9EF5;
@@ -302,14 +305,15 @@ select.fc option{background:var(--card3)}
 
 
 /* ── EXECUTIVE VIEW ── */
-.exec-overlay{position:fixed;inset:0;background:var(--bg);z-index:400;display:none;flex-direction:column;overflow:hidden}
+.exec-overlay{position:fixed;inset:0;background:var(--bg);z-index:400;display:none;flex-direction:column;overflow:hidden;min-height:0}
 .exec-overlay.show{display:flex}
 .exec-hd{background:var(--nav);border-bottom:1px solid var(--b1);padding:14px 24px;display:flex;align-items:center;gap:14px;flex-shrink:0}
 .exec-hd h2{font-family:'Crimson Pro',serif;font-size:20px;font-weight:600;color:var(--goldl);flex:1}
 /* Exec body: 2 rows – stat strip + 3-col panels */
-.exec-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 20px;display:flex;flex-direction:column;gap:12px}
+.exec-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:14px 20px;display:flex;flex-direction:column;gap:12px}
 .exec-body::-webkit-scrollbar{width:4px}
 .exec-body::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+/* exec-panels no longer needed as main layout */
 /* Top stats strip */
 .exec-stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-shrink:0}
 .estat{background:var(--card);border:1px solid var(--b2);border-radius:12px;padding:18px 20px;text-align:center}
@@ -415,6 +419,134 @@ select.fc option{background:var(--card3)}
   border:2px solid var(--nav);
   pointer-events:none;z-index:2;
 }
+
+.st-lanjut{background:rgba(155,119,217,.15);color:#C4A3F5}
+.st-batal{background:rgba(96,122,156,.1);color:var(--dim)}
+
+/* ── DAILY ACTIVITY ── */
+.day-nav{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.day-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--b2);background:transparent;color:var(--dim);font-size:12px;cursor:pointer;transition:.15s}
+.day-btn:hover:not([disabled]){border-color:var(--goldl);color:var(--goldl)}
+.day-title{font-family:'Crimson Pro',serif;font-size:15px;font-weight:600;color:var(--gl)}
+.day-sub{font-size:10px;color:var(--dim);margin-top:1px}
+.day-inp{padding:5px 8px;border-radius:7px;border:1px solid var(--b2);background:var(--card);color:var(--txt);font-size:12px}
+.daily-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.ds-card{background:var(--card2);border:1px solid var(--b2);border-radius:8px;padding:10px 12px;text-align:center}
+.ds-v{font-family:'Crimson Pro',serif;font-size:22px;font-weight:600}
+.ds-l{font-size:10px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.act-table{width:100%;border-collapse:collapse}
+.act-table thead th{background:var(--card2);color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.4px;padding:7px 9px;text-align:left;border-bottom:1px solid var(--b2);font-weight:600;position:sticky;top:0;z-index:1}
+.act-table tbody tr{border-bottom:1px solid var(--b3)}
+.act-table tbody tr:last-child{border:none}
+.act-table tbody tr:hover td{background:rgba(255,255,255,.01)}
+.act-table td{padding:8px 9px;font-size:13px;vertical-align:top}
+.act-table td.no{color:var(--dim2);font-size:11px;width:28px}
+.act-table td.vol{font-size:11px;color:var(--dim)}
+.act-row-done td{opacity:.7}
+.act-nm{font-weight:500;color:var(--txt)}
+.no-act{text-align:center;padding:24px;color:var(--dim);font-size:12px;font-style:italic}
+/* Activity status pills */
+.actst{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}
+.st-val{background:rgba(46,201,126,.15);color:var(--green)}
+.st-sel{background:rgba(245,158,11,.12);color:var(--amber)}
+.st-baru{background:rgba(74,158,245,.12);color:var(--blue)}
+.st-lanjut{background:rgba(155,119,217,.15);color:#C4A3F5}
+.st-batal{background:rgba(96,122,156,.1);color:var(--dim)}
+.st-car{background:rgba(29,179,163,.1);color:var(--teal)}
+/* Button sizes */
+.btn-xs{padding:3px 8px;font-size:11px;border-radius:5px}
+.btn-grn{background:rgba(46,201,126,.15);color:var(--green);border:1px solid rgba(46,201,126,.3)}
+.btn-grn:hover{background:rgba(46,201,126,.25)}
+.btn-blu{background:rgba(74,158,245,.12);color:var(--blue);border:1px solid rgba(74,158,245,.3)}
+.btn-blu:hover{background:rgba(74,158,245,.22)}
+.btn-del{background:rgba(226,85,85,.1);color:var(--red);border:1px solid rgba(226,85,85,.25)}
+.btn-del:hover{background:rgba(226,85,85,.2)}
+/* Eval pills in exec/kids */
+.ev-pill{display:inline-block;padding:2px 7px;border-radius:8px;font-size:11px;font-weight:600}
+.ep-v{background:rgba(46,201,126,.15);color:var(--green)}
+.ep-p{background:rgba(245,158,11,.12);color:var(--amber)}
+.ep-n{background:rgba(96,122,156,.1);color:var(--dim2)}
+/* Exec view header row */
+.exchd{padding:13px 16px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.exchd h3{font-family:'Crimson Pro',serif;font-size:16px;font-weight:600;color:var(--goldl)}
+.exchd .eico{font-size:18px}
+.exchd .echd-right{margin-left:auto;font-size:12px;color:var(--dim)}
+/* Info box */
+.ibox{background:rgba(200,148,31,.06);border:1px solid rgba(200,148,31,.2);border-radius:8px;padding:10px 13px;font-size:12px;color:var(--dim);margin-bottom:10px;line-height:1.5}
+/* Warn box */
+.wbox{background:rgba(226,85,85,.07);border:1px solid rgba(226,85,85,.2);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--red);margin-bottom:8px}
+/* Form grid */
+.fc-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fc-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+
+/* ── SECTION BANNER 2 (sb2 / sbh2 / sbbd) ── */
+.sb2{background:var(--card);border:1px solid var(--b2);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.sbh2{display:flex;align-items:center;gap:10px;padding:12px 15px;cursor:pointer;user-select:none;transition:.15s}
+.sbh2:hover{background:var(--card2)}
+.sbh2.op{background:var(--card2);border-bottom:1px solid var(--b2)}
+.sbico{font-size:17px;flex-shrink:0}
+.sbt{flex:1;min-width:0}
+.sbt1{font-size:13px;font-weight:600;color:var(--txt)}
+.sbt2{font-size:11px;color:var(--dim);margin-top:2px}
+.sbarr{font-size:12px;color:var(--dim);flex-shrink:0;transition:transform .2s}
+.sbarr.op{transform:rotate(90deg)}
+.sbbd{display:none;padding:14px 15px}
+.sbbd.op{display:block}
+/* Section banner form area */
+.fa{background:var(--card2);border:1px solid var(--b2);border-radius:10px;padding:16px;margin-bottom:12px}
+.fat{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--b2)}
+.fatb{width:4px;height:18px;border-radius:2px;background:var(--goldl);flex-shrink:0}
+.fat span{font-family:'Crimson Pro',serif;font-size:15px;font-weight:600;color:var(--goldl)}
+.fg{margin-bottom:12px}
+.fg2{margin-bottom:12px}
+.fl{display:block;font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fl2{display:block;font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fc{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--b2);background:var(--card);color:var(--txt);font-size:13px;font-family:'Barlow',sans-serif;outline:none;box-sizing:border-box;transition:.15s}
+.fc2{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--b2);background:var(--card);color:var(--txt);font-size:13px;font-family:'Barlow',sans-serif;outline:none;box-sizing:border-box;transition:.15s}
+.fc:focus,.fc2:focus{border-color:var(--goldl);background:var(--card2)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.facts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+/* Eval section */
+.tw-strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.twb{padding:5px 12px;border-radius:7px;border:1px solid var(--b2);background:transparent;color:var(--dim);font-size:12px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:5px}
+.twb:hover{border-color:var(--goldl);color:var(--goldl)}
+.twb.act{border-color:var(--goldl);background:rgba(200,148,31,.1);color:var(--goldl);font-weight:600}
+.twdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* Eval card */
+.evg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ef{background:var(--card2);border-radius:8px;padding:10px 12px}
+.ef.full{grid-column:1/-1}
+.ef label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);font-weight:600;margin-bottom:5px;display:block}
+.evbig{font-family:'Crimson Pro',serif;font-size:26px;font-weight:600}
+.ev{font-size:12px;color:var(--txt);line-height:1.5;white-space:pre-wrap}
+.pgw{background:var(--card3);border-radius:4px;height:5px;overflow:hidden;margin-top:5px}
+.pg{height:100%;border-radius:4px;transition:width .5s}
+/* Eval badge */
+.bdg{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.bg{background:rgba(46,201,126,.15);color:var(--green)}
+.bb{background:rgba(245,158,11,.12);color:var(--amber)}
+.br{background:rgba(226,85,85,.12);color:var(--red)}
+.bd{background:rgba(96,122,156,.1);color:var(--dim)}
+.b-g{background:rgba(46,201,126,.15);color:var(--green)}
+.b-y{background:rgba(245,158,11,.12);color:var(--amber)}
+.b-r{background:rgba(226,85,85,.12);color:var(--red)}
+/* Validation box */
+.vbox{background:rgba(29,179,163,.07);border:1px solid rgba(29,179,163,.25);border-radius:8px;padding:12px 14px;margin-top:10px}
+.vbhd{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--teal);font-weight:600;margin-bottom:8px}
+/* Eval empty */
+.eval-empty{text-align:center;padding:32px 20px}
+.eval-empty .ei{font-size:36px;opacity:.3;margin-bottom:10px}
+.eval-empty h3{font-family:'Crimson Pro',serif;font-size:17px;font-weight:600;color:var(--goldl);margin-bottom:6px}
+/* Eval poin wrap */
+.eval-poin-wrap{}
+/* Form area buttons */
+.btn-teal{background:rgba(29,179,163,.15);color:var(--teal);border:1px solid rgba(29,179,163,.3)}
+.btn-teal:hover{background:rgba(29,179,163,.25)}
+.btn-gold{background:rgba(200,148,31,.15);color:var(--goldl);border:1px solid rgba(200,148,31,.3)}
+.btn-gold:hover{background:rgba(200,148,31,.25)}
+
 </style>
 </head>
 <body>
@@ -551,7 +683,7 @@ select.fc option{background:var(--card3)}
     <div class="mb"><div class="warn-box">⚠️ Data ini akan dihapus permanen. Lanjutkan?</div></div>
     <div class="mft">
       <button class="btn btn-out" onclick="closeMdl('mDel')">Batal</button>
-      <button class="btn btn-danger" id="mDelConfirm">Hapus</button>
+      <button class="btn btn-danger" id="mDelOk" onclick="runPendingDelete()">🗑 Hapus</button>
     </div>
   </div>
 </div>
@@ -606,7 +738,7 @@ const STAFF={
   S_UMU_11:{id:'S_UMU_11',nm:'Anggawan Putra',ti:'Staf Umum',lv:'L3',par:'KSB_UMU',un:'sek'},
 
   // ─── BIDANG P2P ─────────────────────────────────────────────
-  KBD_P2P:{id:'KBD_P2P',nm:'dr. Edison',ti:'Kepala Bidang Pencegahan dan Pengendalian Penyakit',lv:'L1',par:'KD',un:'p2p'},
+  KBD_P2P:{id:'KBD_P2P',nm:'dr. Erdison',ti:'Kepala Bidang Pencegahan dan Pengendalian Penyakit',lv:'L1',par:'KD',un:'p2p'},
 
   // a. Sub Koord Surveilans, Imunisasi dan PPK
   SKP_SUR:{id:'SKP_SUR',nm:'Suriani Wahyuni S, SKM',ti:'Sub Koordinator Surveilans, Imunisasi dan PPK',lv:'L2',par:'KBD_P2P',un:'p2p'},
@@ -647,7 +779,7 @@ const STAFF={
   S_RUJ_3:{id:'S_RUJ_3',nm:'Siseng Oviola Putri, SKM',ti:'Staf Rujukan',lv:'L3',par:'SKP_RUJ',un:'plk'},
 
   // ─── BIDANG KESEHATAN MASYARAKAT ─────────────────────────────
-  KBD_KMS:{id:'KBD_KMS',nm:'dr. Edison',ti:'Kepala Bidang Kesehatan Masyarakat',lv:'L1',par:'KD',un:'kms'},
+  KBD_KMS:{id:'KBD_KMS',nm:'dr. Erdison',ti:'Kepala Bidang Kesehatan Masyarakat',lv:'L1',par:'KD',un:'kms'},
 
   // a. Sub Koord Kesga dan Gizi Masyarakat
   SKP_KSG:{id:'SKP_KSG',nm:'Yulia Eka Fitri, STr.Keb',ti:'Sub Koordinator Kesga dan Gizi Masyarakat',lv:'L2',par:'KBD_KMS',un:'kms'},
@@ -719,6 +851,21 @@ function defPwd(nm){
 }
 function ts(){return new Date().toLocaleString('id-ID',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function nowTs(){ return ts(); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function prevDay(d){ const dt=new Date(d+'T00:00:00'); dt.setDate(dt.getDate()-1); return dt.toISOString().slice(0,10); }
+function nextDay(d){ const dt=new Date(d+'T00:00:00'); dt.setDate(dt.getDate()+1); return dt.toISOString().slice(0,10); }
+function fmtDate(d){ return new Date(d+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+function fmtDateShort(d){ return new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
+function showToast(msg, type){
+  const t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=msg;
+  t.style.background=(type==='warn')?'var(--amber)':'var(--green)';
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+let _toastTimer=null;
 
 const GR={L0:'linear-gradient(135deg,#C8941F,#7A5500)',L1:'linear-gradient(135deg,#1DB3A3,#0A6E64)',L2:'linear-gradient(135deg,#4A9EF5,#1A5AAE)',L3:'linear-gradient(135deg,#9B77D9,#5A3AAB)'};
 const UC={kd:'u-kd',sek:'u-sek',p2p:'u-p2p',plk:'u-plk',kms:'u-kms',sdk:'u-sdk'};
@@ -729,6 +876,13 @@ const childs=id=>Object.values(STAFF).filter(s=>s.par===id);
 // AUTH
 // ══════════════════════════════════════════════════════════
 function initPwds(){
+  // Clear old daily activity data from previous sessions (schema migration)
+  const DATA_VER='v5r1';
+  if(LS.g('sk_data_ver')!==DATA_VER){
+    // Remove all old act data
+    Object.keys(localStorage).forEach(k=>{ if(k.startsWith('sk_act_')||k.startsWith('sk_a_')) localStorage.removeItem(k); });
+    LS.s('sk_data_ver',DATA_VER);
+  }
   if(LS.g('sk_pwds')) return;
   const p={};Object.values(STAFF).forEach(s=>{p[s.id]=defPwd(s.nm)});LS.s('sk_pwds',p);
 }
@@ -771,6 +925,7 @@ function access(viewId,targId){
 // DATA KEYS
 // ══════════════════════════════════════════════════════════
 const ckey=(id,t)=>`sk_c_${id}_${t}`;
+const cskey=(id,t)=>`sk_cst_${id}_${t}`;
 const ekey=(id,tw)=>`sk_e_${id}_${tw}`;
 const vkey=(id,tw)=>`sk_v_${id}_${tw}`;
 const getC=(id,t)=>LS.g(ckey(id,t))||[];
@@ -1100,13 +1255,23 @@ function renderDocSection(id,type,canEdit){
   const def=DOCS[type];
   const data=getC(id,type);
   const tc=document.getElementById('tcInner');
+  // preserve form open state AND typed values
+  const _formWas=document.getElementById('formBody_'+type);
+  const _formOpen=_formWas&&_formWas.classList.contains('op');
+  const _tblWas=document.getElementById('formBody_tbl_'+type);
+  const _tblOpen=_tblWas&&_tblWas.classList.contains('op');
+  // Save all input values in the form
+  const _savedDocVals={};
+  if(_formWas) _formWas.querySelectorAll('input,textarea,select').forEach(el=>{
+    if(el.id||el.name) _savedDocVals[el.id||el.name]=el.value;
+  });
 
   // ── Form for adding ──
   let formHTML='';
   if(canEdit){
     formHTML=`
     <div class="sec-banner" id="formBan_${type}">
-      <div class="sec-ban-hd" id="formBanHd_${type}" onclick="toggleSec('${type}')">
+      <div class="sec-ban-hd" id="formBanHd_${type}" onclick=\"toggleSec('${type}', event)\">
         <div class="sec-ban-ico">${def.icon}</div>
         <div class="sec-ban-t">
           <div class="sbt1">Tambah Data – ${def.label}</div>
@@ -1175,7 +1340,7 @@ function renderDocSection(id,type,canEdit){
   tc.innerHTML=`
     ${formHTML}
     <div class="sec-banner" style="margin-top:0">
-      <div class="sec-ban-hd open" onclick="toggleSec('tbl_${type}')">
+      <div class="sec-ban-hd open" onclick=\"toggleSec('tbl_${type}', event)\">
         <div class="sec-ban-ico">📊</div>
         <div class="sec-ban-t">
           <div class="sbt1">Data ${def.label}</div>
@@ -1195,9 +1360,23 @@ function renderDocSection(id,type,canEdit){
       </div>
     </div>
     ${cstatBar}`;
+  // restore form open states AND typed values
+  if(_formOpen){
+    const b=document.getElementById('formBody_'+type);
+    const h=document.getElementById('formBanHd_'+type);
+    const a=document.getElementById('formBanArr_'+type);
+    if(b&&!b.classList.contains('op')){b.classList.add('op');if(h)h.classList.add('open');if(a)a.classList.add('op');}
+    // Restore typed values
+    Object.keys(_savedDocVals).forEach(fid=>{
+      const el=document.getElementById(fid);
+      if(el) el.value=_savedDocVals[fid];
+    });
+  }
+  if(_tblOpen){const b2=document.getElementById('formBody_tbl_'+type);if(b2&&!b2.classList.contains('op'))b2.classList.add('op');}
 }
 
-function toggleSec(key){
+function toggleSec(key, evt){
+  if(evt && _isInteractive(evt.target)) return;
   const hd=document.getElementById(`formBanHd_${key}`);
   const body=document.getElementById(`formBody_${key}`);
   const arr=document.getElementById(`formBanArr_${key}`);
@@ -1371,6 +1550,20 @@ let _activeEid = null;
 function renderEvalSection(id, isOwn, isV){
   migrateOldEvals(id);
   const tc = document.getElementById('tcInner');
+  // preserve open poin forms AND their typed values
+  const _openPoin = [];
+  _savedPoinFields = {};
+  document.querySelectorAll('[id^="sbbd2_"]').forEach(el=>{
+    if(el.classList.contains('op')){
+      const eid = el.id.replace('sbbd2_','');
+      _openPoin.push(eid);
+      _savedPoinFields[eid] = {};
+      ['pi_lbl_','pi_cap_','pi_fis_','pi_keu_','pi_mas_','pi_rtl_'].forEach(pfx=>{
+        const f = document.getElementById(pfx+eid);
+        if(f) _savedPoinFields[eid][pfx] = f.value;
+      });
+    }
+  });
 
   // TW tab strip
   const twStrip = [1,2,3,4].map(tw=>{
@@ -1387,6 +1580,12 @@ function renderEvalSection(id, isOwn, isV){
 
   tc.innerHTML = `<div class="tw-strip">${twStrip}</div><div id="twPoinList"></div>`;
   renderTWPane(id, _activeTW, isOwn, isV);
+  // restore open poin forms
+  _openPoin.forEach(eid=>{
+    const b=document.getElementById('sbbd2_'+eid);
+    const a=document.getElementById('sarr2_'+eid);
+    if(b&&!b.classList.contains('op')){b.classList.add('op');if(a)a.classList.add('op');}
+  });
 }
 
 function setTW(tw, id, isOwn, isV){
@@ -1395,10 +1594,29 @@ function setTW(tw, id, isOwn, isV){
 }
 
 // ── Render pane for one TW ───────────────────────────────────────────────
+var _savedPoinFields = null;
+
 function renderTWPane(id, tw, isOwn, isV){
   const list = getEvTW(id, tw);
   const el = document.getElementById('twPoinList');
   if(!el) return;
+  // Save typed content in open poin forms
+  _savedPoinFields = {};
+  list.forEach(item=>{
+    const b = document.getElementById('sbbd2_'+item.eid);
+    if(b && b.classList.contains('op')){
+      _savedPoinFields[item.eid] = {};
+      ['pi_lbl_','pi_cap_','pi_fis_','pi_keu_','pi_mas_','pi_rtl_'].forEach(pfx=>{
+        const el2 = document.getElementById(pfx+item.eid);
+        if(el2) _savedPoinFields[item.eid][pfx] = el2.value;
+      });
+    }
+  });
+  // Preserve which poin form was open
+  const openEids = list.map(e=>e.eid).filter(eid=>{
+    const b = document.getElementById('sbbd2_'+eid);
+    return b && b.classList.contains('op');
+  });
 
   const twLabel = TW_LABELS[tw-1];
   const addBtn = isOwn
@@ -1417,7 +1635,7 @@ function renderTWPane(id, tw, isOwn, isV){
   // Header of pane
   const validated = list.filter(e=>{ const vl=getEvTWV(id,tw,e.eid); return vl&&vl.status==='disetujui'; }).length;
   const paneHeader = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-    <span style="font-family:'Crimson Pro',serif;font-size:15px;font-weight:600;color:var(--gl)">${twLabel}</span>
+    <span style="font-family:var(--ff-serif);font-size:15px;font-weight:600;color:var(--gl)">${twLabel}</span>
     <span class="bdg ${validated===list.length&&list.length?'bg':'bd'}">${validated}/${list.length} tervalidasi</span>
     <div style="margin-left:auto">${addBtn}</div>
   </div>`;
@@ -1425,6 +1643,21 @@ function renderTWPane(id, tw, isOwn, isV){
   // Poin items
   const items = list.map((item,i) => buildPoinCard(id, tw, item, i, isOwn, isV)).join('');
   el.innerHTML = paneHeader + items;
+  // Restore open poin forms AND their typed content
+  openEids.forEach(eid=>{
+    const b = document.getElementById('sbbd2_'+eid);
+    const a = document.getElementById('sarr2_'+eid);
+    if(b&&!b.classList.contains('op')){ b.classList.add('op'); if(a)a.classList.add('op'); }
+    // Restore typed values
+    if(_savedPoinFields && _savedPoinFields[eid]){
+      const sf = _savedPoinFields[eid];
+      ['pi_lbl_','pi_cap_','pi_fis_','pi_keu_','pi_mas_','pi_rtl_'].forEach(pfx=>{
+        const el2 = document.getElementById(pfx+eid);
+        if(el2 && sf[pfx]) el2.value = sf[pfx];
+      });
+    }
+  });
+  _savedPoinFields = null;
 }
 
 // ── Build one poin card ──────────────────────────────────────────────────
@@ -1452,14 +1685,13 @@ function buildPoinCard(id, tw, item, idx, isOwn, isV){
     const lockNote = vl ? `<div class="wbox" style="margin-bottom:10px">⚠️ Poin ini sudah divalidasi. Menyimpan revisi akan membatalkan validasi.</div>` : '';
     formSection = `
     <div class="sb2" id="pfb_${item.eid}" style="margin-bottom:10px">
-      <div class="sbh2 ${openForm?'op':''}" onclick="toggleSB2('${item.eid}')">
+      <div class="sbh2 ${openForm?'op':''}" onclick=\"toggleSB2('${item.eid}', event)\">
         <div class="sbico" style="font-size:14px">✏️</div>
         <div class="sbt">
           <div class="sbt1" style="font-size:13px">${hasData?'Edit':'Isi'} – ${item.label}</div>
           <div class="sbt2">Klik untuk ${hasData?'merevisi':'mengisi'} poin ini</div>
         </div>
         <div style="display:flex;align-items:center;gap:5px;margin-left:auto">
-          <button class="btn btn-del btn-xs" onclick="event.stopPropagation();delPoin('${id}',${tw},'${item.eid}',${isOwn},${isV})" title="Hapus poin ini">🗑</button>
           <div class="sbarr ${openForm?'op':''}" id="sarr2_${item.eid}">▶</div>
         </div>
       </div>
@@ -1544,10 +1776,16 @@ function buildPoinCard(id, tw, item, idx, isOwn, isV){
         Belum ada validasi dari atasan langsung.
       </div>`;
     }
+    // Non-owner (KD) edit button for poin that's not owner
+    const kdEditBtn = !isOwn && !isV && STAFF[CUR]?.lv==='L0' && hasData
+      ? `<div style="margin-top:8px;text-align:right">
+          <button class="btn btn-out btn-xs" onclick="delPoin('${id}',${tw},'${item.eid}',false,false)" title="Hapus poin ini">🗑 Hapus Poin</button>
+        </div>`
+      : '';
 
     viewSection = `<div style="background:var(--c2);border:1px solid var(--b2);border-radius:9px;padding:13px;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-        <span style="font-family:'Crimson Pro',serif;font-size:14px;font-weight:600;color:var(--gl)">${item.label}</span>
+        <span style="font-family:var(--ff-serif);font-size:14px;font-weight:600;color:var(--gl)">${item.label}</span>
         <span style="margin-left:auto;display:flex;gap:6px;align-items:center">
           ${fis?`<span class="bdg ${pcCls}">Fisik ${fis}%</span>`:''}
           ${stBadge}
@@ -1567,12 +1805,15 @@ function buildPoinCard(id, tw, item, idx, isOwn, isV){
     </div>`;
   }
 
+  // Validators and KD can also delete poin
+  const canDelPoin = isOwn || isV || STAFF[CUR]?.lv==='L0';
   return `<div class="eval-poin-wrap" id="epw_${item.eid}" style="background:var(--c1);border:1px solid var(--b2);border-radius:10px;overflow:hidden;margin-bottom:12px">
     <div style="padding:10px 14px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:8px;background:var(--c2)">
       <span style="font-size:12px;font-weight:700;color:var(--gl);font-family:'Crimson Pro',serif">Poin ${idx+1}</span>
       ${hasData?`<span style="font-size:12px;color:var(--txt)">${item.label}</span>`:''}
       <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
         ${stBadge}
+        ${canDelPoin?`<button class="btn btn-del btn-xs" onclick="delPoin('${id}',${tw},'${item.eid}',${isOwn},${isV})" title="Hapus poin ini">🗑 Hapus</button>`:''}
       </div>
     </div>
     <div style="padding:12px 14px">
@@ -1583,7 +1824,15 @@ function buildPoinCard(id, tw, item, idx, isOwn, isV){
 }
 
 // ── Helper: collapsible for poin form ────────────────────────────────────
-function toggleSB(key){
+function _isInteractive(el){
+  if(!el) return false;
+  var tag = el.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||tag==='BUTTON'||tag==='A') return true;
+  if(el.contentEditable==='true') return true;
+  return false;
+}
+function toggleSB(key, evt){
+  if(evt && _isInteractive(evt.target)) return;
   var body = document.getElementById('sbbd_'+key) || document.getElementById('fbbody_'+key);
   var arr  = document.getElementById('sbarr_'+key) || document.getElementById('fbarr_'+key);
   var hd   = document.getElementById('fbh_'+key);
@@ -1592,8 +1841,9 @@ function toggleSB(key){
   if(arr) arr.classList.toggle('op', op);
   if(hd) hd.classList.toggle('op', op);
 }
-function toggleSBKey(key){ toggleSB(key); }
-function toggleSB2(eid){
+function toggleSBKey(key, evt){ toggleSB(key, evt); }
+function toggleSB2(eid, evt){
+  if(evt && _isInteractive(evt.target)) return;
   const body = document.getElementById('sbbd2_'+eid);
   const arr  = document.getElementById('sarr2_'+eid);
   const hd   = document.getElementById('pfb_'+eid);
@@ -1623,16 +1873,14 @@ function addPoin(id, tw, isOwn, isV){
 
 // ── Delete poin ───────────────────────────────────────────────────────────
 function delPoin(id, tw, eid, isOwn, isV){
-  document.getElementById('mDelOk').onclick = ()=>{
-    const list = getEvTW(id,tw).filter(e=>e.eid!==eid);
-    setEvTW(id,tw,list);
-    delEvTWV(id,tw,eid);
-    closeMdl('mDel');
-    showToast('🗑 Poin dihapus.');
+  confirmDelete('⚠️ Poin evaluasi ini akan dihapus permanen. Lanjutkan?', function(){
+    var list = getEvTW(id, tw).filter(function(e){ return e.eid !== eid; });
+    setEvTW(id, tw, list);
+    delEvTWV(id, tw, eid);
+    showToast('🗑 Poin evaluasi dihapus.');
     buildTree(); updateNotifBadge();
     renderTWPane(id, tw, isOwn, isV);
-  };
-  document.getElementById('mDel').classList.add('show');
+  });
 }
 
 // ── Save poin ─────────────────────────────────────────────────────────────
@@ -1682,807 +1930,693 @@ function resetPoinVal(id, tw, eid, isOwn, isV){
 
 // ══════════════════════════════════════════════════════════
 // KEGIATAN HARIAN
+
 // ══════════════════════════════════════════════════════════
-function todayStr(){return new Date().toISOString().slice(0,10)}
-function prevDay(d){const dt=new Date(d);dt.setDate(dt.getDate()-1);return dt.toISOString().slice(0,10)}
-function nextDay(d){const dt=new Date(d);dt.setDate(dt.getDate()+1);return dt.toISOString().slice(0,10)}
-function fmtDate(d){
-  const dt=new Date(d+'T00:00:00');
-  return dt.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-}
-function isToday(d){return d===todayStr()}
-function isFuture(d){return d>todayStr()}
+// KEGIATAN HARIAN – REVISI LENGKAP
+// Status: baru → selesai | lanjut | batal
+// Validasi: atasan langsung → atasan diatasnya → KD
+// ══════════════════════════════════════════════════════════
 
-const akey=(id,d)=>`sk_daily_${id}_${d}`;
-function getActs(id,d){return LS.g(akey(id,d))||[]}
-function setActs(id,d,arr){LS.s(akey(id,d),arr)}
-function uid6(){return Math.random().toString(36).slice(2,8)}
+// ── Storage ─────────────────────────────────────────────
+function actKey(id,d){ return 'sk_act_'+id+'_'+d; }
+function getActs(id,d){ return LS.g(actKey(id,d))||[]; }
+function setActs(id,d,arr){ LS.s(actKey(id,d),arr); }
+function newActId(){ return 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 
-// Carry-over: bawa kegiatan yg belum selesai dari hari sebelumnya ke hari ini
-function runCarryOver(id, viewDate){
-  if(isFuture(viewDate)) return;
-  // Cari max 7 hari ke belakang yang punya kegiatan belum selesai
-  let d=prevDay(viewDate);
-  for(let i=0;i<7;i++){
-    const acts=getActs(id,d);
-    if(!acts.length){d=prevDay(d);continue}
-    const today=getActs(id,viewDate);
-    const todayIds=new Set(today.map(a=>a.srcId||a.id));
-    let changed=false;
-    acts.forEach(a=>{
-      if(a.status!=='validated' && !todayIds.has(a.id)){
-        today.push({
-          id:uid6(), srcId:a.id,
+// ── Carry-over (lanjut besok) ────────────────────────────
+function runCarryOver(id,d){
+  // Move acts with status='lanjut' from previous days to today if not already here
+  if(d > todayStr()) return;
+  const todayActs = getActs(id,d);
+  const existSrc = new Set(todayActs.map(a=>a.srcId||a.id));
+  let prev = prevDay(d);
+  for(let i=0;i<14;i++){
+    const prevActs = getActs(id,prev);
+    let changed = false;
+    prevActs.forEach(a=>{
+      if(a.status==='lanjut' && !existSrc.has(a.id)){
+        todayActs.push({
+          id:newActId(), srcId:a.id,
           kegiatan:a.kegiatan, waktu_mulai:a.waktu_mulai, waktu_selesai:a.waktu_selesai,
-          output:a.output, status:'baru',
-          carry:true, from_date:d,
-          created_at:new Date().toISOString()
+          output:a.output, volume:a.volume, kaitan_ss:a.kaitan_ss||'tidak_terkait',
+          status:'baru', lanjut_dari:prev, created_at:new Date().toISOString()
         });
-        changed=true;
+        existSrc.add(a.id);
+        changed = true;
       }
     });
-    if(changed) setActs(id,viewDate,today);
-    d=prevDay(d);
+    if(changed) setActs(id,d,todayActs);
+    prev = prevDay(prev);
   }
 }
 
-let _dailyDate=todayStr();
-let _dailyId=null;
-let _dailyOwn=false;
-let _dailyV=false;
-let _editActIdx=null;
+// ── Permission: who can validate act of staff 'id' ───────
+function canValidateAct(id){
+  if(!STAFF[id]) return false;
+  if(STAFF[CUR]?.lv==='L0') return true; // KD bisa validasi semua
+  // atasan langsung
+  if(STAFF[id].par===CUR) return true;
+  // atasan diatasnya (grandparent)
+  const par = STAFF[id].par;
+  if(par && STAFF[par]?.par===CUR) return true;
+  return false;
+}
+
+// ── Status label helpers ─────────────────────────────────
+function actStLabel(a){
+  if(a.status==='validated') return {cls:'st-val',  txt:'✅ Tervalidasi'};
+  if(a.status==='selesai')   return {cls:'st-sel',  txt:'⏳ Menunggu Validasi'};
+  if(a.status==='lanjut')    return {cls:'st-lanjut',txt:'⏩ Lanjut Besok'};
+  if(a.status==='batal')     return {cls:'st-batal', txt:'❌ Dibatalkan'};
+  if(a.lanjut_dari)          return {cls:'st-car',   txt:'🔄 Dari '+fmtShortDate(a.lanjut_dari)};
+  return {cls:'st-baru', txt:'🔵 Belum Selesai'};
+}
+function fmtShortDate(d){ return new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}); }
+
+// ── Render main ──────────────────────────────────────────
+let _dailyId=null,_dailyOwn=false,_dailyV=false;
+let _dailyDate = null;
+let _editActId = null;
+let _dailyRealtime = null;
+
+function _renderTableOnly(id){
+  // Lightweight refresh: only update the table rows without touching the form
+  const acts = getActs(id, _dailyDate);
+  const tbody = document.querySelector('#tcInner .act-table tbody');
+  if(!tbody) return;
+  const isKD = STAFF[id]?.lv==='L0';
+  const canEdit = _dailyOwn && !(_dailyDate > todayStr());
+  const canVal  = !_dailyOwn && canValidateAct(id) && !(_dailyDate > todayStr());
+  tbody.innerHTML = _buildActRows(acts, id, canEdit, canVal, isKD);
+  // Update summary numbers
+  const total=acts.length;
+  const jmlBaru=acts.filter(a=>a.status==='baru').length;
+  const jmlSelesai=acts.filter(a=>a.status==='selesai').length;
+  const jmlVal=acts.filter(a=>a.status==='validated').length;
+  const jmlLang=acts.filter(a=>a.kaitan_ss==='langsung').length;
+  const ds = document.querySelectorAll('#tcInner .ds-v');
+  if(ds[0]) ds[0].textContent=total;
+  if(ds[1]) ds[1].textContent=jmlBaru;
+  if(ds[2]) ds[2].textContent=jmlSelesai;
+  if(ds[3]) ds[3].textContent=jmlVal;
+  if(ds[4]) ds[4].textContent=jmlLang;
+}
 
 function renderDailyAct(id,isOwn,isV){
   _dailyId=id; _dailyOwn=isOwn; _dailyV=isV;
   if(!_dailyDate) _dailyDate=todayStr();
-  if(isOwn||isV) runCarryOver(id,_dailyDate);
-  const acts=getActs(id,_dailyDate);
-  const tc=document.getElementById('tcInner');
+  runCarryOver(id,_dailyDate);
+  _renderDailyInner();
+  // Realtime: refresh every 30s if viewing today
+  clearInterval(_dailyRealtime);
+  if(_dailyDate===todayStr()){
+    _dailyRealtime = setInterval(()=>{
+      if(_dailyId!==id) return;
+      // Only refresh the TABLE ROWS, not the whole form
+      // Check if user is actively typing (form open) - if so, skip
+      const formEl = document.getElementById('actFormWrap');
+      const formOpen = formEl && formEl.style.display !== 'none';
+      if(formOpen) return; // user is filling form, don't interrupt
+      _renderTableOnly(id);
+    }, 30000);
+  }
+}
+
+function _renderDailyInner(){
+  const id=_dailyId, isOwn=_dailyOwn, isV=_dailyV;
+  const acts = getActs(id,_dailyDate);
+  const tc = document.getElementById('tcInner');
+  if(!tc) return;
+  // Preserve COMPLETE form state (including user-typed values)
+  const formWas = document.getElementById('actFormWrap');
+  const formWasOpen = formWas && formWas.style.display !== 'none';
+  const editWas = _editActId;
+  // Save all input values before rebuild
+  const savedFields = {};
+  if(formWasOpen){
+    ['act_kegiatan','act_output','act_volume','act_mulai','act_selesai'].forEach(fid=>{
+      const el = document.getElementById(fid);
+      if(el) savedFields[fid] = el.value;
+    });
+    const ksEl = document.querySelector('input[name="ks_kaitan"]:checked');
+    if(ksEl) savedFields['ks_kaitan'] = ksEl.value;
+  }
+
+  const today = todayStr();
+  const isPast = _dailyDate < today;
+  const isFuture = _dailyDate > today;
+  const isKD = STAFF[id]?.lv==='L0';
+  const canEdit = isOwn && !isFuture;
+  const canVal = !isOwn && canValidateAct(id) && !isFuture;
+
+  // Stats
   const total=acts.length;
   const jmlBaru=acts.filter(a=>a.status==='baru').length;
   const jmlSelesai=acts.filter(a=>a.status==='selesai').length;
-  const jmlValid=acts.filter(a=>a.status==='validated').length;
+  const jmlVal=acts.filter(a=>a.status==='validated').length;
+  const jmlLanjut=acts.filter(a=>a.status==='lanjut').length;
   const jmlLang=acts.filter(a=>a.kaitan_ss==='langsung').length;
-  const jmlTLang=acts.filter(a=>a.kaitan_ss==='tidak_langsung').length;
-  const canEdit=isOwn&&!isFuture(_dailyDate);
-  // KD (L0) activities do not require supervisor validation
-  const canValidate=isV&&!isFuture(_dailyDate)&&(STAFF[id]?.lv!=='L0');
 
-  const summary=`
-  <div class="daily-summary">
-    <div class="ds-card"><div class="ds-v">${total}</div><div class="ds-l">Total Kegiatan</div></div>
+  // Navigation
+  const nav = `<div class="day-nav">
+    <button class="day-btn" onclick="dailyChDay(-1)">◀ Sebelumnya</button>
+    <div>
+      <div class="day-title">${fmtDate(_dailyDate)}</div>
+      <div class="day-sub">${_dailyDate===today?'Hari ini':isPast?'Hari lalu':'Hari ke depan'}</div>
+    </div>
+    <button class="day-btn" onclick="dailyChDay(1)"${_dailyDate>=today?' disabled style="opacity:.4"':''}>Berikutnya ▶</button>
+    <input type="date" class="day-inp" value="${_dailyDate}" max="${today}" onchange="dailyJump(this.value)">
+    <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+      ${canEdit?'<button class="btn btn-gold btn-sm" onclick="openActForm()">+ Tambah Kegiatan</button>':''}
+      ${isOwn||canVal?'<button class="btn btn-out btn-sm no-print" onclick="openPrintMonthly(\''+id+'\')">🖨️ Cetak</button><button class="btn btn-grn btn-sm no-print" onclick="exportExcelHarian(\''+id+'\')">📥 Excel</button>':''}
+    </div>
+  </div>`;
+
+  // Summary strip
+  const sum = `<div class="daily-summary">
+    <div class="ds-card"><div class="ds-v">${total}</div><div class="ds-l">Total</div></div>
     <div class="ds-card"><div class="ds-v" style="color:var(--blue)">${jmlBaru}</div><div class="ds-l">Belum Selesai</div></div>
     <div class="ds-card"><div class="ds-v" style="color:var(--amber)">${jmlSelesai}</div><div class="ds-l">Menunggu Validasi</div></div>
-    <div class="ds-card"><div class="ds-v" style="color:var(--green)">${jmlValid}</div><div class="ds-l">Tervalidasi Atasan</div></div>
-    <div class="ds-card" style="border-color:rgba(46,201,126,.3)"><div class="ds-v" style="color:var(--grn)">${jmlLang}</div><div class="ds-l">Terkait Sasaran</div></div>
+    <div class="ds-card"><div class="ds-v" style="color:var(--green)">${jmlVal}</div><div class="ds-l">Tervalidasi</div></div>
+    <div class="ds-card" style="border-color:rgba(46,201,126,.3)"><div class="ds-v" style="color:var(--green)">${jmlLang}</div><div class="ds-l">Terkait Sasaran</div></div>
   </div>`;
 
-  const nav=`
-  <div class="day-nav">
-    <button class="day-btn" onclick="changeDay(-1)">&#9664; Sebelumnya</button>
-    <div>
-      <div class="day-nav-date">${fmtDate(_dailyDate)}</div>
-      <div class="day-nav-sub">${isToday(_dailyDate)?'Hari ini':''}</div>
+  // Form (add/edit)
+  const form = canEdit ? _buildActForm() : '';
+
+  // Info bar
+  const info = isKD
+    ? '<div class="ibox" style="border-color:rgba(200,148,31,.2)">ℹ️ Kegiatan Kepala Dinas dicatat sebagai log aktivitas. Gunakan tombol <strong>✅ Selesai</strong>, <strong>⏩ Lanjut Besok</strong>, atau <strong>❌ Batal</strong> pada setiap kegiatan.</div>'
+    : canVal
+    ? '<div class="ibox" style="border-color:rgba(29,179,163,.2)">💡 Anda dapat memvalidasi kegiatan staf yang sudah ditandai <strong>Selesai</strong>.</div>'
+    : canEdit && !isKD
+    ? '<div class="ibox" style="border-color:rgba(46,201,126,.2)">💡 Tandai kegiatan <strong>✅ Selesai</strong> setelah selesai dikerjakan, lalu atasan Anda akan memvalidasi.</div>'
+    : '';
+
+  // Table
+  const rows = _buildActRows(acts, id, canEdit, canVal, isKD);
+
+  // Log section
+  const logHtml = _buildActLog(acts, id);
+
+  tc.innerHTML = nav + sum + form + `<div class="sb2">
+    <div class="sbh2 op">
+      <div class="sbico">📋</div>
+      <div class="sbt">
+        <div class="sbt1">Kegiatan – ${fmtDate(_dailyDate)}</div>
+        <div class="sbt2">${STAFF[id]?.nm} · ${jmlVal}/${total} tervalidasi${_dailyDate===today?' · <span style="color:var(--green);font-size:11px">● Live</span>':''}</div>
+      </div>
     </div>
-    <button class="day-btn" onclick="changeDay(1)" ${isToday(_dailyDate)?'disabled style="opacity:.4;cursor:default"':''}>Berikutnya &#9654;</button>
-    <input type="date" class="day-input-date" value="${_dailyDate}" max="${todayStr()}" onchange="jumpDay(this.value)">
-    ${canEdit?'<button class="btn btn-gold btn-sm" style="margin-left:auto" onclick="openActForm()">+ Tambah Kegiatan</button>':''}
-  </div>`;
+    <div class="sbbd op">${info}<div style="overflow-x:auto">
+      <table class="act-table">
+        <thead><tr><th>No</th><th>Kegiatan</th><th>Jam</th><th>Output</th><th style="width:80px">Volume</th><th>Kaitan SS</th><th>Status</th><th>Aksi</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div></div></div>` + logHtml;
+  // Restore form with ALL values if it was open
+  if(formWasOpen){
+    const newForm = document.getElementById('actFormWrap');
+    if(newForm) newForm.style.display = 'block';
+    if(editWas) _editActId = editWas;
+    // Restore typed values
+    Object.keys(savedFields).forEach(fid=>{
+      if(fid==='ks_kaitan'){
+        const el = document.querySelector('input[name="ks_kaitan"][value="'+savedFields[fid]+'"]');
+        if(el) el.checked = true;
+      } else {
+        const el = document.getElementById(fid);
+        if(el) el.value = savedFields[fid];
+      }
+    });
+  }
+}
 
-  const form=canEdit?`
-  <div id="actFormWrap" style="display:none;margin-bottom:14px">
-    <div class="form-area">
-      <div class="form-area-t"><div class="fat-bar"></div><span id="actFormTitle">&#10133; Tambah Kegiatan</span></div>
+function _buildActForm(){
+  return `<div id="actFormWrap" style="display:none;margin-bottom:12px">
+    <div class="fa" style="border-radius:10px">
+      <div class="fat"><div class="fatb"></div><span id="actFormTitle">➕ Tambah Kegiatan</span></div>
       <div class="fc-grid2">
-        <div class="fg"><label class="fl">Nama Kegiatan</label>
-          <input class="fc" id="act_kegiatan" placeholder="Uraian kegiatan yang dilakukan"></div>
+        <div class="fg"><label class="fl">Nama Kegiatan *</label>
+          <input class="fc" id="act_kegiatan" placeholder="Uraian kegiatan yang dilakukan..."></div>
         <div class="fg"><label class="fl">Output / Hasil</label>
-          <input class="fc" id="act_output" placeholder="Dokumen, laporan, notulen, dst."></div>
+          <input class="fc" id="act_output" placeholder="Dokumen, laporan, notulen, dll."></div>
       </div>
       <div class="fc-grid3">
-        <div class="fg"><label class="fl">Jam Mulai</label>
-          <input class="fc" type="time" id="act_mulai" value="08:00"></div>
-        <div class="fg"><label class="fl">Jam Selesai</label>
-          <input class="fc" type="time" id="act_selesai" value="10:00"></div>
-        <div class="fg"><label class="fl">Volume</label>
-          <input class="fc" id="act_volume" placeholder="Cth: 1 dokumen, 2 sesi, 50 data"></div>
+        <div class="fg"><label class="fl">Jam Mulai</label><input class="fc" type="time" id="act_mulai" value="08:00"></div>
+        <div class="fg"><label class="fl">Jam Selesai</label><input class="fc" type="time" id="act_selesai" value="10:00"></div>
+        <div class="fg"><label class="fl">Volume</label><input class="fc" id="act_volume" placeholder="Cth: 1 laporan"></div>
       </div>
       <div class="fg"><label class="fl">Kaitan dengan Sasaran Strategis</label>
         <div class="ks-radio-group">
-          <label class="ks-radio-opt ks-lang">
-            <input type="radio" name="ks_kaitan" id="ks_lang" value="langsung"> Terkait Langsung</label>
-          <label class="ks-radio-opt ks-tidak-lang">
-            <input type="radio" name="ks_kaitan" id="ks_tlang" value="tidak_langsung"> Terkait Tidak Langsung</label>
-          <label class="ks-radio-opt ks-tdk">
-            <input type="radio" name="ks_kaitan" id="ks_tdk" value="tidak_terkait" checked> Tidak Terkait</label>
+          <label class="ks-radio-opt ks-lang"><input type="radio" name="ks_kaitan" id="ks_lang" value="langsung"> Terkait Langsung</label>
+          <label class="ks-radio-opt ks-tidak-lang"><input type="radio" name="ks_kaitan" id="ks_tlang" value="tidak_langsung"> Terkait Tidak Langsung</label>
+          <label class="ks-radio-opt ks-tdk"><input type="radio" name="ks_kaitan" id="ks_tdk" value="tidak_terkait" checked> Tidak Terkait</label>
         </div>
       </div>
-      <div class="form-acts">
+      <div class="facts">
         <button class="btn btn-out btn-sm" onclick="closeActForm()">Batal</button>
-        <button class="btn btn-gold" onclick="saveAct()">&#128190; Simpan Kegiatan</button>
+        <button class="btn btn-gold" onclick="saveAct()">💾 Simpan</button>
       </div>
     </div>
-  </div>`:'';
-
-  let rows='';
-  if(!acts.length){
-    rows='<tr><td colspan="6" class="no-act">Belum ada kegiatan untuk tanggal ini.'+(canEdit?' Klik "+ Tambah Kegiatan" untuk menambahkan.':'')+'</td></tr>';
-  } else {
-    [...acts].sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||'')).forEach((a,i)=>{
-      const origIdx=acts.indexOf(a);
-      let stClass,stLabel;
-      if(a.status==='validated'){stClass='st-selesai';stLabel='&#10003; Tervalidasi';}
-      else if(a.status==='selesai'){stClass='st-valid';stLabel='&#9203; Menunggu Validasi';}
-      else if(a.carry){stClass='st-lanjut';stLabel='&#128260; Lanjutan';}
-      else{stClass='st-baru';stLabel='&#128309; Belum Selesai';}
-      const carryTag=a.carry?'<span class="carry-tag">dari '+( fmtDate(a.from_date).split(',')[1]?.trim()||a.from_date)+'</span>':'';
-      let subInfo='';
-      if(a.status==='selesai') subInfo='<div style="font-size:10px;color:var(--amber);margin-top:2px">Ditandai selesai oleh staf &middot; '+(a.selesai_at||'')+'</div>';
-      if(a.status==='validated') subInfo='<div style="font-size:10px;color:var(--green);margin-top:2px">Divalidasi: '+(a.valid_by||'')+' &middot; '+(a.valid_at||'')+'</div>';
-      let staffBtns='';
-      if(canEdit){
-        if(a.status==='baru'){
-          staffBtns='<button class="btn btn-green btn-xs" onclick="stafSelesai('+origIdx+')" title="Tandai kegiatan ini selesai">&#10003; Selesai</button> <button class="btn btn-blue btn-xs" onclick="editAct('+origIdx+')" title="Edit">&#9999;&#65039;</button> <button class="btn btn-danger btn-xs" onclick="deleteAct('+origIdx+')" title="Hapus">&#128465;</button>';
-        } else if(a.status==='selesai'){
-          staffBtns='<span style="font-size:11px;color:var(--amber)">&#9203; Menunggu validasi</span>';
-        } else {
-          staffBtns='<span style="font-size:11px;color:var(--green)">&#10003; Tervalidasi</span>';
-        }
-      }
-      let supervisorBtns='';
-      if(canValidate){
-        if(a.status==='selesai'){
-          supervisorBtns='<button class="btn btn-teal btn-xs" onclick="validateAct(\''+id+'\',\''+_dailyDate+'\','+origIdx+')">&#10003; Validasi</button>';
-        } else if(a.status==='validated'){
-          supervisorBtns='<span style="font-size:11px;color:var(--green)">&#10003; Tervalidasi</span>';
-        } else {
-          supervisorBtns='<span style="font-size:11px;color:var(--dim)">&#8212; Tunggu staf</span>';
-        }
-      }
-      const ksBadge=(()=>{const k=a.kaitan_ss||'tidak_terkait';if(k==='langsung')return '<span class="ks-bdg ks-lang-bdg" title="Terkait Langsung dengan Sasaran Strategis">🎯 Langsung</span>';if(k==='tidak_langsung')return '<span class="ks-bdg ks-tidak-lang-bdg" title="Terkait Tidak Langsung dengan Sasaran Strategis">↗ Tdk Langsung</span>';return '';})();
-      rows+='<tr class="'+(a.status==='validated'?'act-row-done':'')+'"><td class="no" style="width:28px">'+(i+1)+'</td><td><div style="display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap"><span class="act-nm">'+(a.kegiatan||'&mdash;')+'</span>'+ksBadge+'</div>'+carryTag+subInfo+'</td><td style="white-space:nowrap;color:var(--dim);font-size:12px">'+(a.waktu_mulai||'&mdash;')+' &ndash; '+(a.waktu_selesai||'&mdash;')+'</td><td>'+(a.output||'&mdash;')+'</td><td style="font-size:12px;color:var(--tealL)">'+(a.volume||'&mdash;')+'</td><td><span class="act-status '+stClass+'">'+stLabel+'</span></td><td style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;padding-top:8px">'+(isOwn?staffBtns:supervisorBtns)+'</td></tr>';
-    });
-  }
-  const lastColHdr=isOwn?'Aksi Staf':isV?'Aksi Atasan':'';
-  const infoBar=isOwn?'<div class="info-box" style="margin-bottom:10px;border-color:rgba(46,201,126,.2)">&#128161; Tekan <strong style="color:var(--green)">&#10003; Selesai</strong> pada kegiatan yang sudah Anda kerjakan. Atasan langsung akan menerima notifikasi untuk memvalidasi.</div>':isV?'<div class="info-box" style="margin-bottom:10px;border-color:rgba(29,179,163,.2)">&#128161; Tombol <strong style="color:var(--teal)">&#10003; Validasi</strong> muncul setelah staf menandai kegiatannya selesai.</div>':'';
-  const printBtnHtml=isOwn||isV?'<button class="btn btn-out btn-sm no-print" onclick="openPrintMonthly(\''+id+'\')">🖨️ Cetak Bulanan</button> <button class="btn btn-grn btn-sm no-print" onclick="exportExcelHarian(\''+id+'\')">📥 Export Excel</button>':'';
-  const table='<div class="sec-banner"><div class="sec-ban-hd open"><div class="sec-ban-ico">&#128203;</div><div class="sec-ban-t"><div class="sbt1">Daftar Kegiatan &ndash; '+fmtDate(_dailyDate)+'</div><div class="sbt2">'+STAFF[id].nm+' &middot; '+STAFF[id].ti+'</div></div><span class="sec-ban-badge">'+jmlValid+'/'+total+' tervalidasi</span>'+printBtnHtml+'</div><div class="sec-body op">'+infoBar+'<div style="overflow-x:auto"><table class="act-table"><thead><tr><th>No</th><th>Kegiatan</th><th>Jam</th><th>Output / Hasil</th><th style="width:100px">Volume</th><th>Status</th><th style="min-width:130px">'+lastColHdr+'</th></tr></thead><tbody>'+rows+'</tbody></table></div></div></div>';
-  tc.innerHTML=nav+summary+form+table;
+  </div>`;
 }
 
-function changeDay(delta){
-  const dt=new Date(_dailyDate+'T00:00:00');
-  dt.setDate(dt.getDate()+delta);
+function _buildActRows(acts, id, canEdit, canVal, isKD){
+  if(!acts.length) return '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--dim);font-style:italic">Tidak ada kegiatan.' + (canEdit?' Klik "+ Tambah Kegiatan".':'') + '</td></tr>';
+
+  // Anyone who can edit OR validate OR is KD can delete
+  const canDel = canEdit || canVal || STAFF[CUR]?.lv==='L0';
+  const sorted = acts.slice().sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||''));
+
+  return sorted.map((a,i)=>{
+    const {cls,txt} = actStLabel(a);
+    const isDone = a.status==='validated';
+    const ksBdg = a.kaitan_ss==='langsung'
+      ? '<span class="ks-bdg ks-lang-bdg">🎯 Langsung</span>'
+      : a.kaitan_ss==='tidak_langsung'
+      ? '<span class="ks-bdg ks-tidak-lang-bdg">↗ Tdk Langsung</span>' : '';
+
+    let sub = '';
+    if(a.status==='validated') sub=`<div style="font-size:10px;color:var(--green);margin-top:2px">✅ ${a.valid_by||''} · ${a.valid_at||''}</div>`;
+    else if(a.status==='selesai') sub=`<div style="font-size:10px;color:var(--amber);margin-top:2px">Ditandai selesai · ${a.selesai_at||''}</div>`;
+    else if(a.lanjut_dari) sub=`<div style="font-size:10px;color:var(--pur,#9B77D9);margin-top:2px">🔄 Dilanjutkan dari ${fmtShortDate(a.lanjut_dari)}</div>`;
+
+    // ── Owner buttons ────────────────────────────────────
+    let ownerBtns = '';
+    if(canEdit || isKD){
+      if(a.status==='baru'){
+        if(isKD){
+          ownerBtns = `
+            <button class="btn btn-grn btn-xs" onclick="actKDSelesai('${a.id}')">✅ Selesai</button>
+            <button class="btn btn-blu btn-xs" onclick="actLanjut('${a.id}')">⏩ Lanjut</button>
+            <button class="btn btn-out btn-xs" onclick="actEdit('${a.id}')">✏️ Edit</button>
+            <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+        } else {
+          ownerBtns = `
+            <button class="btn btn-grn btn-xs" onclick="actSelesai('${a.id}')">✅ Selesai</button>
+            <button class="btn btn-blu btn-xs" onclick="actLanjut('${a.id}')">⏩ Lanjut</button>
+            <button class="btn btn-out btn-xs" onclick="actEdit('${a.id}')">✏️ Edit</button>
+            <button class="btn btn-del btn-xs" onclick="actBatal('${a.id}')">❌ Batal</button>`;
+        }
+      } else if(a.status==='lanjut'){
+        ownerBtns = `
+          <button class="btn btn-grn btn-xs" onclick="actSelesai('${a.id}')">✅ Selesai</button>
+          <button class="btn btn-out btn-xs" onclick="actEdit('${a.id}')">✏️ Edit</button>
+          <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      } else if(a.status==='selesai'){
+        ownerBtns = `
+          <span style="font-size:11px;color:var(--amber)">⏳ Menunggu validasi</span>
+          <button class="btn btn-out btn-xs" onclick="actEdit('${a.id}')">✏️ Edit</button>
+          <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      } else if(a.status==='batal'){
+        ownerBtns = `
+          <span style="font-size:11px;color:var(--red)">Dibatalkan</span>
+          <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      } else if(a.status==='validated'){
+        ownerBtns = `
+          <span style="font-size:11px;color:var(--green)">✅ Tervalidasi</span>
+          <button class="btn btn-out btn-xs" onclick="actEdit('${a.id}')">✏️ Edit</button>
+          <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      }
+    }
+
+    // ── Validator buttons (atasan, grandparent, KD) ──────
+    let valBtns = '';
+    if(canVal){
+      if(a.status==='selesai'){
+        valBtns = `
+          <button class="btn btn-teal btn-xs" onclick="actValidate('${id}','${_dailyDate}','${a.id}')">✅ Validasi</button>
+          <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      } else if(a.status==='validated'){
+        valBtns = `
+          <span style="font-size:11px;color:var(--green)">✅ Tervalidasi</span>
+          <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      } else if(a.status==='baru'){
+        valBtns = `
+          <span style="font-size:11px;color:var(--dim)">Staf belum selesai</span>
+          <button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      } else {
+        valBtns = `<button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+      }
+    }
+
+    // KD not owner not validator – still can delete/view
+    let kdOnlyBtns = '';
+    if(!canEdit && !canVal && STAFF[CUR]?.lv==='L0'){
+      kdOnlyBtns = `<button class="btn btn-del btn-xs" onclick="actDelete('${a.id}')">🗑</button>`;
+    }
+
+    const btnCell = canEdit||isKD ? ownerBtns : canVal ? valBtns : kdOnlyBtns;
+
+    return `<tr class="${isDone?'act-row-done':''}">
+      <td class="no">${i+1}</td>
+      <td><div style="display:flex;align-items:flex-start;gap:5px;flex-wrap:wrap"><span class="act-nm">${a.kegiatan||'—'}</span>${ksBdg}</div>${sub}</td>
+      <td style="white-space:nowrap;color:var(--dim);font-size:12px">${a.waktu_mulai||'—'} – ${a.waktu_selesai||'—'}</td>
+      <td style="font-size:12px">${a.output||'—'}</td>
+      <td class="vol">${a.volume||'—'}</td>
+      <td>${ksBdg?'':''}</td>
+      <td><span class="actst ${cls}">${txt}</span></td>
+      <td style="display:flex;gap:3px;flex-wrap:wrap;align-items:center;min-width:160px">${btnCell}</td>
+    </tr>`;
+  }).join('');
+}
+
+function _buildActLog(acts, id){
+  if(!acts.length) return '';
+  const log = acts.filter(a=>a.status!=='baru').sort((a,b)=>(b.updated_at||b.created_at||'').localeCompare(a.updated_at||a.created_at||''));
+  if(!log.length) return '';
+  const rows = log.map(a=>{
+    const ts = a.updated_at||a.selesai_at||a.valid_at||a.created_at||'';
+    const {txt} = actStLabel(a);
+    return `<tr><td style="font-size:12px;padding:5px 10px">${a.kegiatan||'—'}</td>
+      <td style="font-size:11px;color:var(--dim);padding:5px 10px">${txt}</td>
+      <td style="font-size:11px;color:var(--dim2);padding:5px 10px;white-space:nowrap">${ts.slice(0,16)||'—'}</td>
+      <td style="font-size:11px;color:var(--dim);padding:5px 10px">${a.valid_by||a.log_by||''}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="sb2" style="margin-top:12px">
+    <div class="sbh2" onclick=\"toggleSB('actLog', event)\">
+      <div class="sbico">📜</div>
+      <div class="sbt"><div class="sbt1">Log Kegiatan</div><div class="sbt2">Riwayat status kegiatan hari ini</div></div>
+      <div class="sbarr" id="sbarr_actLog">▶</div>
+    </div>
+    <div class="sbbd" id="sbbd_actLog">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead><tr>
+          <th style="background:var(--card3);color:var(--dim);font-size:10px;padding:6px 10px;text-align:left;border-bottom:1px solid var(--b2)">Kegiatan</th>
+          <th style="background:var(--card3);color:var(--dim);font-size:10px;padding:6px 10px;text-align:left;border-bottom:1px solid var(--b2)">Status</th>
+          <th style="background:var(--card3);color:var(--dim);font-size:10px;padding:6px 10px;text-align:left;border-bottom:1px solid var(--b2)">Waktu</th>
+          <th style="background:var(--card3);color:var(--dim);font-size:10px;padding:6px 10px;text-align:left;border-bottom:1px solid var(--b2)">Oleh</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── Navigation ───────────────────────────────────────────
+function dailyChDay(d){
+  const dt=new Date(_dailyDate+'T00:00:00'); dt.setDate(dt.getDate()+d);
   const nd=dt.toISOString().slice(0,10);
   if(nd>todayStr()) return;
   _dailyDate=nd;
   renderDailyAct(_dailyId,_dailyOwn,_dailyV);
 }
-function jumpDay(d){
-  if(d>todayStr()) return;
-  _dailyDate=d;
-  renderDailyAct(_dailyId,_dailyOwn,_dailyV);
+function dailyJump(d){ if(d>todayStr())return; _dailyDate=d; renderDailyAct(_dailyId,_dailyOwn,_dailyV); }
+
+// ── Form ─────────────────────────────────────────────────
+function openActForm(){
+  _editActId=null;
+  document.getElementById('actFormTitle').textContent='➕ Tambah Kegiatan';
+  ['act_kegiatan','act_output','act_volume'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+  const m=document.getElementById('act_mulai'); if(m)m.value='08:00';
+  const s=document.getElementById('act_selesai'); if(s)s.value='10:00';
+  const def=document.getElementById('ks_tdk'); if(def)def.checked=true;
+  document.getElementById('actFormWrap').style.display='block';
+  document.getElementById('actFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function closeActForm(){ document.getElementById('actFormWrap').style.display='none'; _editActId=null; }
+
+function actEdit(actId){
+  const acts=getActs(_dailyId,_dailyDate);
+  const a=acts.find(x=>x.id===actId); if(!a)return;
+  _editActId=actId;
+
+  // If form is available (owner), fill inline form
+  const formWrap=document.getElementById('actFormWrap');
+  if(formWrap && formWrap.style.display!==undefined){
+    document.getElementById('actFormTitle').textContent='✏️ Edit Kegiatan';
+    const setV=(id,v)=>{ const el=document.getElementById(id); if(el)el.value=v||''; };
+    setV('act_kegiatan',a.kegiatan); setV('act_output',a.output);
+    setV('act_volume',a.volume); setV('act_mulai',a.waktu_mulai||'08:00');
+    setV('act_selesai',a.waktu_selesai||'10:00');
+    const ksEl=document.querySelector(`input[name="ks_kaitan"][value="${a.kaitan_ss||'tidak_terkait'}"]`);
+    if(ksEl) ksEl.checked=true;
+    formWrap.style.display='block';
+    formWrap.scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    // Non-owner: use popup modal
+    _openActEditModal(a);
+  }
 }
 
-function openActForm(){
-  _editActIdx=null;
-  document.getElementById('actFormTitle').textContent='➕ Tambah Kegiatan';
-  ['act_kegiatan','act_output'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('act_mulai').value='08:00';
-  document.getElementById('act_selesai').value='10:00';
-  // Reset kaitan to default
-  const ksDefault = document.getElementById('ks_tdk');
-  if(ksDefault) ksDefault.checked=true;
-  document.getElementById('actFormWrap').style.display='block';
-  document.getElementById('actFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function closeActForm(){
-  document.getElementById('actFormWrap').style.display='none';
-  _editActIdx=null;
-}
-function editAct(idx){
-  const acts=getActs(_dailyId,_dailyDate);
-  const a=acts[idx];
-  _editActIdx=idx;
-  document.getElementById('actFormTitle').textContent=`✏️ Edit Kegiatan ${idx+1}`;
-  document.getElementById('act_kegiatan').value=a.kegiatan||'';
-  document.getElementById('act_output').value=a.output||'';
-  document.getElementById('act_volume').value=a.volume||'';
-  document.getElementById('act_mulai').value=a.waktu_mulai||'08:00';
-  document.getElementById('act_selesai').value=a.waktu_selesai||'10:00';
-  // Load kaitan
-  const ksVal = a.kaitan_ss||'tidak_terkait';
-  const ksEl = document.querySelector(`input[name="ks_kaitan"][value="${ksVal}"]`);
+function _openActEditModal(a){
+  // Build/reuse a modal for editing
+  let modal = document.getElementById('actEditModal');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = 'actEditModal';
+    modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;display:flex;align-items:center;justify-content:center;padding:16px';
+    modal.innerHTML=`<div style="background:var(--nav);border:1px solid var(--b1);border-radius:14px;width:100%;max-width:520px;padding:20px;display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:var(--ff-serif);font-size:17px;font-weight:600;color:var(--goldl)">✏️ Edit Kegiatan</div>
+      <div><label class="fl">Nama Kegiatan *</label><input class="fc" id="aem_keg" placeholder="Uraian kegiatan..."></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="fl">Jam Mulai</label><input class="fc" type="time" id="aem_mulai"></div>
+        <div><label class="fl">Jam Selesai</label><input class="fc" type="time" id="aem_selesai"></div>
+      </div>
+      <div><label class="fl">Output / Hasil</label><input class="fc" id="aem_out" placeholder="Dokumen, laporan, dll."></div>
+      <div><label class="fl">Volume</label><input class="fc" id="aem_vol" placeholder="Cth: 1 laporan"></div>
+      <div><label class="fl">Kaitan Sasaran Strategis</label>
+        <div class="ks-radio-group">
+          <label class="ks-radio-opt ks-lang"><input type="radio" name="aem_ks" value="langsung"> Terkait Langsung</label>
+          <label class="ks-radio-opt ks-tidak-lang"><input type="radio" name="aem_ks" value="tidak_langsung"> Terkait Tidak Langsung</label>
+          <label class="ks-radio-opt ks-tdk"><input type="radio" name="aem_ks" value="tidak_terkait" checked> Tidak Terkait</label>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-out btn-sm" onclick="document.getElementById('actEditModal').style.display='none'">Batal</button>
+        <button class="btn btn-gold" onclick="_saveActEditModal()">💾 Simpan Perubahan</button>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+  }
+  // Fill values
+  document.getElementById('aem_keg').value = a.kegiatan||'';
+  document.getElementById('aem_mulai').value = a.waktu_mulai||'08:00';
+  document.getElementById('aem_selesai').value = a.waktu_selesai||'10:00';
+  document.getElementById('aem_out').value = a.output||'';
+  document.getElementById('aem_vol').value = a.volume||'';
+  const ksEl = document.querySelector(`input[name="aem_ks"][value="${a.kaitan_ss||'tidak_terkait'}"]`);
   if(ksEl) ksEl.checked = true;
-  document.getElementById('actFormWrap').style.display='block';
-  document.getElementById('actFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
+  modal.style.display = 'flex';
+  modal.dataset.actId = a.id;
 }
-function saveAct(){
-  const keg=(document.getElementById('act_kegiatan').value||'').trim();
-  if(!keg){showToast('⚠️ Nama kegiatan wajib diisi!','warn');return}
-  const acts=getActs(_dailyId,_dailyDate);
-  const kaitanEl = document.querySelector('input[name="ks_kaitan"]:checked');
-  const kaitan = kaitanEl ? kaitanEl.value : 'tidak_terkait';
-  const row={
-    kegiatan:keg,
-    output:(document.getElementById('act_output').value||'').trim(),
-    volume:(document.getElementById('act_volume').value||'').trim(),
-    waktu_mulai:document.getElementById('act_mulai').value,
-    waktu_selesai:document.getElementById('act_selesai').value,
+
+function _saveActEditModal(){
+  const modal = document.getElementById('actEditModal');
+  if(!modal) return;
+  const actId = modal.dataset.actId;
+  const keg = (document.getElementById('aem_keg')?.value||'').trim();
+  if(!keg){showToast('⚠️ Nama kegiatan wajib diisi!','warn');return;}
+  const kaitan = document.querySelector('input[name="aem_ks"]:checked')?.value||'tidak_terkait';
+  const acts = getActs(_dailyId, _dailyDate);
+  const idx = acts.findIndex(a=>a.id===actId);
+  if(idx<0) return;
+  const old = acts[idx];
+  const wasValidated = old.status==='validated';
+  acts[idx] = {...old, kegiatan:keg,
+    output:(document.getElementById('aem_out')?.value||'').trim(),
+    volume:(document.getElementById('aem_vol')?.value||'').trim(),
+    waktu_mulai:document.getElementById('aem_mulai')?.value||'',
+    waktu_selesai:document.getElementById('aem_selesai')?.value||'',
     kaitan_ss:kaitan,
-    status:'baru', carry:false,
-    created_at:new Date().toISOString(),
+    status: wasValidated ? 'baru' : old.status,
+    valid_by: wasValidated ? '' : old.valid_by,
+    valid_at: wasValidated ? '' : old.valid_at,
+    updated_at: new Date().toISOString(),
   };
-  if(_editActIdx!==null){
-    row.id=acts[_editActIdx].id||uid6();
-    acts[_editActIdx]={...acts[_editActIdx],...row};
-    showToast('✅ Kegiatan berhasil diperbarui!');
+  setActs(_dailyId, _dailyDate, acts);
+  modal.style.display='none';
+  if(wasValidated) showToast('✏️ Diedit – validasi dibatalkan, perlu validasi ulang.','warn');
+  else showToast('✅ Kegiatan berhasil diperbarui!');
+  buildTree(); updateNotifBadge(); _renderDailyInner();
+}
+
+
+function saveAct(){
+  const keg=(document.getElementById('act_kegiatan')?.value||'').trim();
+  if(!keg){showToast('⚠️ Nama kegiatan wajib diisi!','warn');return;}
+  const kaitanEl=document.querySelector('input[name="ks_kaitan"]:checked');
+  const kaitan=kaitanEl?kaitanEl.value:'tidak_terkait';
+  const acts=getActs(_dailyId,_dailyDate);
+  if(_editActId){
+    const idx=acts.findIndex(a=>a.id===_editActId); if(idx<0)return;
+    const old=acts[idx];
+    // If was validated, clear validation
+    if(old.status==='validated'){
+      acts[idx]={...old,kegiatan:keg,output:(document.getElementById('act_output')?.value||'').trim(),
+        volume:(document.getElementById('act_volume')?.value||'').trim(),
+        waktu_mulai:document.getElementById('act_mulai')?.value||'',
+        waktu_selesai:document.getElementById('act_selesai')?.value||'',
+        kaitan_ss:kaitan,status:'baru',
+        valid_by:'',valid_at:'',updated_at:new Date().toISOString()};
+      showToast('✏️ Diedit – validasi dibatalkan, perlu validasi ulang.','warn');
+    } else {
+      acts[idx]={...old,kegiatan:keg,output:(document.getElementById('act_output')?.value||'').trim(),
+        volume:(document.getElementById('act_volume')?.value||'').trim(),
+        waktu_mulai:document.getElementById('act_mulai')?.value||'',
+        waktu_selesai:document.getElementById('act_selesai')?.value||'',
+        kaitan_ss:kaitan,updated_at:new Date().toISOString()};
+      showToast('✅ Kegiatan diperbarui!');
+    }
   } else {
-    row.id=uid6();
-    acts.push(row);
-    showToast('✅ Kegiatan berhasil ditambahkan!');
+    acts.push({id:newActId(),kegiatan:keg,
+      output:(document.getElementById('act_output')?.value||'').trim(),
+      volume:(document.getElementById('act_volume')?.value||'').trim(),
+      waktu_mulai:document.getElementById('act_mulai')?.value||'',
+      waktu_selesai:document.getElementById('act_selesai')?.value||'',
+      kaitan_ss:kaitan,status:'baru',created_at:new Date().toISOString()});
+    showToast('✅ Kegiatan ditambahkan!');
   }
   setActs(_dailyId,_dailyDate,acts);
-  closeActForm();
-  buildTree();
-  renderDailyAct(_dailyId,_dailyOwn,_dailyV);
-}
-function deleteAct(idx){
-  document.getElementById('mDelConfirm').onclick=()=>{
-    const acts=getActs(_dailyId,_dailyDate);
-    acts.splice(idx,1);
-    setActs(_dailyId,_dailyDate,acts);
-    closeMdl('mDel');
-    showToast('🗑 Kegiatan dihapus.');
-    renderDailyAct(_dailyId,_dailyOwn,_dailyV);
-  };
-  document.getElementById('mDel').classList.add('show');
+  closeActForm(); buildTree(); updateNotifBadge(); _renderDailyInner();
 }
 
-// Atasan validasi kegiatan (mengakui kegiatan sudah dilakukan)
-// Staf tandai kegiatannya sendiri sudah selesai dikerjakan
-function stafSelesai(idx){
-  // KD activities are informational – no validation workflow
-  if(STAFF[_dailyId]?.lv==='L0'){
-    showToast('Kegiatan Kepala Dinas tidak memerlukan validasi atasan.','warn');
+// ── Status actions ────────────────────────────────────────
+function actSelesai(actId){
+  var _id=_dailyId, _dt=_dailyDate;
+  var acts=getActs(_id,_dt);
+  var a=acts.find(function(x){return x.id===actId;});
+  if(!a||a.status!=='baru')return;
+  a.status='selesai'; a.selesai_at=ts(); a.updated_at=new Date().toISOString();
+  setActs(_id,_dt,acts);
+  showToast('✅ Ditandai selesai! Menunggu validasi atasan.');
+  buildTree(); updateNotifBadge();
+  _dailyId=_id; _dailyDate=_dt; _renderDailyInner();
+}
+
+function actKDSelesai(actId){
+  var _id=_dailyId, _dt=_dailyDate;
+  var acts=getActs(_id,_dt);
+  var a=acts.find(function(x){return x.id===actId;});
+  if(!a)return;
+  a.status='validated'; a.valid_by='Kepala Dinas'; a.valid_at=ts();
+  a.updated_at=new Date().toISOString();
+  setActs(_id,_dt,acts);
+  showToast('✅ Kegiatan selesai!');
+  buildTree(); _dailyId=_id; _dailyDate=_dt; _renderDailyInner();
+}
+
+function actLanjut(actId){
+  var _id=_dailyId, _dt=_dailyDate;
+  var acts=getActs(_id,_dt);
+  var a=acts.find(function(x){return x.id===actId;});
+  if(!a)return;
+  a.status='lanjut'; a.updated_at=new Date().toISOString();
+  setActs(_id,_dt,acts);
+  showToast('⏩ Kegiatan akan dilanjutkan besok.');
+  buildTree(); _dailyId=_id; _dailyDate=_dt; _renderDailyInner();
+}
+
+function actBatal(actId){
+  var acts=getActs(_dailyId,_dailyDate);
+  var a=acts.find(function(x){return x.id===actId;});
+  if(!a)return;
+  a.status='batal'; a.updated_at=new Date().toISOString();
+  setActs(_dailyId,_dailyDate,acts);
+  showToast('❌ Kegiatan dibatalkan.');
+  _renderDailyInner();
+}
+
+function actDelete(actId){
+  var _id=_dailyId, _dt=_dailyDate;
+  confirmDelete('⚠️ Kegiatan ini akan dihapus permanen. Lanjutkan?', function(){
+    var acts = getActs(_id, _dt).filter(function(a){ return a.id !== actId; });
+    setActs(_id, _dt, acts);
+    showToast('🗑 Kegiatan dihapus.');
+    _dailyId=_id; _dailyDate=_dt;
+    buildTree(); updateNotifBadge(); _renderDailyInner();
+  });
+}
+
+function actValidate(id,date,actId){
+  if(!canValidateAct(id)){showToast('Anda tidak berwenang memvalidasi kegiatan ini.','warn');return;}
+  const acts=getActs(id,date);
+  const a=acts.find(x=>x.id===actId); if(!a||a.status!=='selesai'){showToast('Kegiatan belum ditandai selesai.','warn');return;}
+  a.status='validated'; a.valid_by=STAFF[CUR].nm; a.valid_at=ts();
+  a.updated_at=new Date().toISOString(); a.log_by=STAFF[CUR].nm;
+  setActs(id,date,acts);
+  showToast('✅ Kegiatan tervalidasi!');
+  buildTree(); updateNotifBadge(); _renderDailyInner();
+}
+
+// ── renderChildList (Bawahan Langsung) ────────────────────
+function renderChildList(id){
+  const kids = Object.values(STAFF).filter(s=>s.par===id);
+  const tc = document.getElementById('tcInner');
+  if(!tc) return;
+  if(!kids.length){
+    tc.innerHTML='<div class="ibox">Tidak ada bawahan langsung.</div>';
     return;
   }
-  const acts=getActs(_dailyId,_dailyDate);
-  if(!acts[idx]||acts[idx].status!=='baru'){showToast('Kegiatan sudah ditandai selesai.','warn');return}
-  acts[idx].status='selesai';
-  acts[idx].selesai_at=new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})+', '+new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
-  setActs(_dailyId,_dailyDate,acts);
-  showToast('✅ Kegiatan ditandai selesai! Menunggu validasi atasan.');
-  updateNotifBadge();
-  buildTree();
-  renderDailyAct(_dailyId,true,false);
-}
 
-// Atasan memvalidasi kegiatan bawahan yang sudah ditandai selesai oleh staf
-function validateAct(id,date,idx){
-  if(STAFF[id]?.par!==CUR){showToast('Hanya atasan langsung yang bisa memvalidasi!','warn');return}
-  if(STAFF[id]?.lv==='L0'){showToast('Kegiatan Kepala Dinas tidak memerlukan validasi.','warn');return}
-  const acts=getActs(id,date);
-  if(!acts[idx]||acts[idx].status!=='selesai'){showToast('Kegiatan belum ditandai selesai oleh staf.','warn');return}
-  acts[idx].status='validated';
-  acts[idx].valid_by=STAFF[CUR].nm;
-  acts[idx].valid_at=new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})+', '+new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
-  setActs(id,date,acts);
-  showToast('✅ Kegiatan berhasil divalidasi!');
-  updateNotifBadge();
-  renderDailyAct(id,false,true);
-}
-
-// ══════════════════════════════════════════════════════════
-// PASSWORD
-// ══════════════════════════════════════════════════════════
-function openPwdModal(){
-  ['pwOld','pwNew','pwCon'].forEach(id=>{document.getElementById(id).value=''});
-  document.getElementById('pwErr').style.color='var(--dim)';
-  document.getElementById('pwErr').textContent='Password min. 6 karakter';
-  document.getElementById('pwbar').style.background='var(--b2)';
-  document.getElementById('mPwd').classList.add('show');
-}
-function pwStrength(){
-  const v=document.getElementById('pwNew').value;
-  const b=document.getElementById('pwbar');
-  if(v.length<4){b.style.background='var(--red)';b.style.width='30%'}
-  else if(v.length<7){b.style.background='var(--amber)';b.style.width='60%'}
-  else{b.style.background='var(--green)';b.style.width='100%'}
-}
-function savePwd(){
-  const old=document.getElementById('pwOld').value;
-  const nw=document.getElementById('pwNew').value;
-  const cn=document.getElementById('pwCon').value;
-  const err=document.getElementById('pwErr');
-  const p=getPwds();
-  if(p[CUR]!==old){err.style.color='var(--red)';err.textContent='Password lama tidak sesuai.';return}
-  if(nw.length<6){err.style.color='var(--red)';err.textContent='Password baru min. 6 karakter.';return}
-  if(nw!==cn){err.style.color='var(--red)';err.textContent='Konfirmasi password tidak cocok.';return}
-  p[CUR]=nw;setPwds(p);
-  err.style.color='var(--green)';err.textContent='✅ Password berhasil diubah!';
-  setTimeout(()=>closeMdl('mPwd'),1200);
-}
-
-// ══════════════════════════════════════════════════════════
-// MODAL & TOAST
-// ══════════════════════════════════════════════════════════
-function closeMdl(id){document.getElementById(id).classList.remove('show')}
-document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show')}));
-
-let _toastTimer=null;
-function showToast(msg,type='ok'){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.style.background=type==='warn'?'var(--amber)':'var(--green)';
-  t.classList.add('show');
-  clearTimeout(_toastTimer);
-  _toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
-}
-
-
-
-// ══════════════════════════════════════════════════════════
-// EXECUTIVE VIEW
-// ══════════════════════════════════════════════════════════
-function openExecView(){
-  document.getElementById('execView').classList.add('show');
-  document.getElementById('execUserInfo').textContent=STAFF[CUR]?.nm||'';
-  renderExecView();
-}
-function closeExecView(){
-  document.getElementById('execView').classList.remove('show');
-}
-
-function getAllScope(){
-  // Exec view: semua staff (bisa dilihat semua orang)
-  return Object.keys(STAFF);
-}
-
-function getCstatEff(id,type){
-  const cst=getCstat(id,type);
-  const data=getC(id,type);
-  if(data.length>0&&cst.status==='belum') return Object.assign({},cst,{status:'diisi'});
-  return cst;
-}
-function getMedalCache(){ return LS.g('sk_medals')||{}; }
-function setMedalCache(d){ LS.s('sk_medals',d); }
-
-function computeMedals(){
-  // Count validated tasks per staff for different periods
   const today = todayStr();
+  const rows = kids.map(c=>{
+    const actsToday = getActs(c.id, today);
+    const jmlVal = actsToday.filter(a=>a.status==='validated').length;
+    const jmlSel = actsToday.filter(a=>a.status==='selesai').length;
+    const jmlTotal = actsToday.length;
 
-  // Yesterday
-  const yest = prevDay(today);
-
-  // Last week Mon-Fri
-  const todayDt = new Date(today+'T00:00:00');
-  const dow = todayDt.getDay(); // 0=Sun
-  // Most recent Friday
-  const daysToFri = dow===0 ? 2 : dow===6 ? 1 : (dow+2)%7===0 ? 7 : dow-5+7*(dow<5?1:0);
-  const lastFri = new Date(todayDt); lastFri.setDate(todayDt.getDate() - (dow===0?2:dow===6?1:dow===5?0:dow));
-  // Actually: find last Friday simply
-  const tmp = new Date(todayDt);
-  while(tmp.getDay()!==5) tmp.setDate(tmp.getDate()-1);
-  const lastFriStr = tmp.toISOString().slice(0,10);
-  const lastMonStr = (()=>{const m=new Date(tmp);m.setDate(m.getDate()-4);return m.toISOString().slice(0,10);})();
-
-  // Last month
-  const lastMonthEnd = new Date(todayDt.getFullYear(), todayDt.getMonth(), 0);
-  const lastMonthStart = new Date(todayDt.getFullYear(), todayDt.getMonth()-1, 1);
-  const lmStartStr = lastMonthStart.toISOString().slice(0,10);
-  const lmEndStr = lastMonthEnd.toISOString().slice(0,10);
-
-  const allIds = Object.keys(STAFF);
-
-  function countValidated(id, startDate, endDate){
-    let count = 0;
-    const s = new Date(startDate+'T00:00:00');
-    const e = new Date(endDate+'T00:00:00');
-    for(let d=new Date(s); d<=e; d.setDate(d.getDate()+1)){
-      const ds = d.toISOString().slice(0,10);
-      const acts = getActs(id, ds);
-      count += acts.filter(a=>a.status==='validated').length;
-    }
-    return count;
-  }
-
-  function topStaff(startDate, endDate){
-    let best = null, bestCount = 0;
-    allIds.forEach(id=>{
-      const c = countValidated(id, startDate, endDate);
-      if(c > bestCount){ bestCount=c; best=id; }
-    });
-    return best && bestCount>0 ? {id:best, count:bestCount} : null;
-  }
-
-  // Use cache if already computed today (avoid slow re-computation)
-  const cache = getMedalCache();
-  const cacheDate = cache.computedOn||'';
-
-  let bronze = cache.bronze, silver = cache.silver, gold = cache.gold;
-
-  // Recompute if today changed
-  if(cacheDate !== today){
-    bronze = topStaff(yest, yest);
-    silver = topStaff(lastMonStr, lastFriStr);
-    gold   = topStaff(lmStartStr, lmEndStr);
-    setMedalCache({computedOn:today, bronze, silver, gold,
-      yest, lastMonStr, lastFriStr, lmStartStr, lmEndStr});
-  }
-
-  const periods = cache.computedOn===today
-    ? {yest:cache.yest||yest, lastMonStr:cache.lastMonStr||lastMonStr,
-       lastFriStr:cache.lastFriStr||lastFriStr,
-       lmStartStr:cache.lmStartStr||lmStartStr, lmEndStr:cache.lmEndStr||lmEndStr}
-    : {yest, lastMonStr, lastFriStr, lmStartStr, lmEndStr};
-
-  return { bronze, silver, gold, ...periods };
-}
-
-
-function buildMedalCard(medal, s, count, period, label, cls){
-  if(!s) return `<div class="medal-card ${cls}"><div class="medal-empty">${label}<br><span style="font-size:10px">Belum ada data</span></div></div>`;
-  return `<div class="medal-card ${cls}">
-    <div class="mav" style="background:${GR[s.lv]}">
-      ${ini(s.nm)}
-      <div class="mbadge">${medal}</div>
-    </div>
-    <div class="medal-info">
-      <div class="mnm" title="${s.nm}">${s.nm}</div>
-      <div class="mti">${s.ti.length>34?s.ti.slice(0,32)+'…':s.ti}</div>
-      <div class="mstat">${count} ✅</div>
-      <div class="mperiod">${period}</div>
-    </div>
-  </div>`;
-}
-
-function renderExecView(){
-  const scope=getAllScope();
-  const allStaff=scope.map(id=>STAFF[id]).filter(Boolean);
-  const today=todayStr();
-
-  // ── Statistik global
-  const totalPeg=allStaff.length;
-  const hasKontrak=allStaff.filter(s=>{
-    const t=s.lv==='L0'||s.lv==='L1'?'kontrak':s.lv==='L2'||s.lv==='L3'?'perjanjian':null;
-    return t&&getC(s.id,t).length>0;
-  }).length;
-  const hasRenaksi=allStaff.filter(s=>{
-    const t=s.lv==='L0'||s.lv==='L1'?'rencana_aksi':s.lv==='L2'||s.lv==='L3'?'rkt':null;
-    return t&&getC(s.id,t).length>0;
-  }).length;
-  const evalFilled=allStaff.filter(s=>[1,2,3,4].some(tw=>getEvTW(s.id,tw).some(e=>e.capaian))).length;
-  const evalValidated=allStaff.filter(s=>[1,2,3,4].some(tw=>getEvTW(s.id,tw).some(e=>{const vl=getEvTWV(s.id,tw,e.eid);return vl&&vl.status==='disetujui';}))).length;
-
-  // ── Medal computation
-  const medals = computeMedals();
-  const bronzeStaff = medals.bronze ? STAFF[medals.bronze.id] : null;
-  const silverStaff = medals.silver ? STAFF[medals.silver.id] : null;
-  const goldStaff   = medals.gold   ? STAFF[medals.gold.id]   : null;
-  const fmtShortDate = d => new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'});
-  const bronzePeriod = medals.yest ? 'Tugas selesai · kemarin '+fmtShortDate(medals.yest) : 'Kemarin';
-  const silverPeriod = medals.lastMonStr && medals.lastFriStr
-    ? 'Tugas selesai · '+fmtShortDate(medals.lastMonStr)+' – '+fmtShortDate(medals.lastFriStr)
-    : 'Senin – Jumat lalu';
-  const goldPeriod = medals.lmStartStr
-    ? 'Tugas selesai · '+new Date(medals.lmStartStr+'T00:00:00').toLocaleDateString('id-ID',{month:'long',year:'numeric'})
-    : 'Bulan lalu';
-  const bronzeCard = buildMedalCard('🥉', bronzeStaff, medals.bronze?.count||0, bronzePeriod, '🥉 Terbaik Kemarin', 'medal-bronze');
-  const silverCard = buildMedalCard('🥈', silverStaff, medals.silver?.count||0, silverPeriod, '🥈 Terbaik Minggu Ini', 'medal-silver');
-  const goldCard   = buildMedalCard('🥇', goldStaff,   medals.gold?.count||0,   goldPeriod,   '🥇 Terbaik Bulan Ini',  'medal-gold');
-
-  // ── Today activities summary
-  const todayActSummary=allStaff.map(s=>{
-    const acts=getActs(s.id,today);
-    if(!acts.length) return null;
-    const jmlValid=acts.filter(a=>a.status==='validated').length;
-    const jmlLang=acts.filter(a=>a.kaitan_ss==='langsung').length;
-    const jmlTLang=acts.filter(a=>a.kaitan_ss==='tidak_langsung').length;
-    const jmlSelesai=acts.filter(a=>a.status==='selesai').length;
-    const jmlBaru=acts.filter(a=>a.status==='baru').length;
-    return {s,acts,jmlBaru,jmlSelesai,jmlValid,jmlLang,jmlTLang,total:acts.length};
-  }).filter(Boolean);
-
-  // ── Kaitan SS aggregation (kegiatan TERVALIDASI hari ini)
-  const allActsToday = allStaff.flatMap(s=>getActs(s.id,today));
-  const valToday     = allActsToday.filter(a=>a.status==='validated');
-  const totalVal     = valToday.length;
-  const ksLang       = valToday.filter(a=>a.kaitan_ss==='langsung').length;
-  const ksTLang      = valToday.filter(a=>a.kaitan_ss==='tidak_langsung').length;
-  const ksTdk        = valToday.filter(a=>!a.kaitan_ss||a.kaitan_ss==='tidak_terkait').length;
-  const pct = n => totalVal>0 ? Math.round(n/totalVal*100) : 0;
-
-  // ── Contract table
-  const cRows=allStaff.map(s=>{
-    const kt=s.lv==='L0'||s.lv==='L1'?'kontrak':'perjanjian';
-    const rat=s.lv==='L0'||s.lv==='L1'?'rencana_aksi':'rkt';
-    const kst=getCstatEff(s.id,kt);
-    const rst=getCstatEff(s.id,rat);
-    const kCell=(st)=>{
-      const cls=st==='tervalidasi'?'cell-ok':st==='diserahkan'||st==='diisi'?'cell-mid':'cell-no';
-      const ico=st==='tervalidasi'?'✅':st==='diserahkan'?'📤':st==='diisi'?'📝':'—';
-      return `<td class="${cls}" style="text-align:center">${ico}</td>`;
-    };
-    return `<tr>
-      <td style="font-size:12px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.nm}">${s.nm}</td>
-      ${kCell(kst.status)}
-      ${kCell(rst.status)}
-    </tr>`;
-  }).join('');
-
-  // ── Eval table
-  const eRows=allStaff.map(s=>{
-    const twCells=[1,2,3,4].map(tw=>{
-      const list=getEvTW(s.id,tw);
-      const val=list.filter(e=>{const vl=getEvTWV(s.id,tw,e.eid);return vl&&vl.status==='disetujui';}).length;
+    const evSts = [1,2,3,4].map(tw=>{
+      const list=getEvTW(c.id,tw);
+      const val=list.filter(e=>{const vl=getEvTWV(c.id,tw,e.eid);return vl&&vl.status==='disetujui';}).length;
       const fil=list.filter(e=>e.capaian).length;
       const st=val>0&&val===fil&&fil>0?'V':fil>0?'P':'E';
-      const lbl=list.length?`${val}/${list.length}`:'—';
-      return `<td class="tw-cell"><span class="ep ${st==='V'?'epv':st==='P'?'epp':'epn'}" title="${list.length} poin">${lbl}</span></td>`;
-    }).join('');
-    return `<tr><td style="font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.nm}">${s.nm}</td>${twCells}</tr>`;
+      return '<span class="bdg '+(st==='V'?'bg':st==='P'?'bb':'bd')+'" style="font-size:10px">TW'+tw+(st==='V'?'✅':st==='P'?'📝':'—')+'</span>';
+    }).join(' ');
+
+    const pending = countPendingFor(c.id);
+    const pendingBadge = pending>0
+      ? '<span style="background:var(--red);color:#fff;border-radius:8px;padding:1px 6px;font-size:10px;font-weight:700">'+pending+' perlu validasi</span>'
+      : '<span style="font-size:11px;color:var(--green)">✅ Tidak ada pending</span>';
+
+    const ut=getUT(c.id), utv=getUTV(c.id);
+    const utBadge=!ut?'<span class="bdg bd" style="font-size:10px">UT: Belum</span>'
+      :utv&&utv.status==='disetujui'?'<span class="bdg bg" style="font-size:10px">UT: ✅</span>'
+      :ut.status==='diserahkan'?'<span class="bdg bb" style="font-size:10px">UT: 📤 Menunggu</span>'
+      :'<span class="bdg bd" style="font-size:10px">UT: Diisi</span>';
+
+    return `<div class="child-row" onclick="selectPerson('${c.id}')" style="cursor:pointer;padding:12px 15px;border-bottom:1px solid var(--b3);display:flex;align-items:center;gap:10px;transition:background .1s" onmouseover="this.style.background='var(--card2)'" onmouseout="this.style.background=''">
+      <div class="av" style="background:${GR[c.lv]};width:36px;height:36px;font-size:12px;flex-shrink:0">${ini(c.nm)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:600;color:var(--txt)">${c.nm}</div>
+        <div style="font-size:11px;color:var(--dim);margin-top:2px">${c.ti}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">
+          ${evSts} ${utBadge}
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:5px;flex-wrap:wrap">
+          ${pendingBadge}
+          <span style="font-size:11px;color:var(--dim)">Kegiatan hari ini: ${jmlTotal} (${jmlVal} tervalidasi${jmlSel?' · '+jmlSel+' menunggu':''})</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+        <span style="font-size:12px;color:var(--tl)">Buka halaman →</span>
+        ${pending>0?'<button class="btn btn-teal btn-xs" onclick="event.stopPropagation();selectPerson(\''+c.id+'\')">Validasi Sekarang</button>':''}
+      </div>
+    </div>`;
   }).join('');
 
-  // ── Today rows
-  const todayRows=todayActSummary.length?todayActSummary.map(({s,total,jmlBaru,jmlSelesai,jmlValid,jmlLang,jmlTLang})=>`
-    <div class="act-today-row" onclick="closeExecView();_dailyDate=todayStr();selectPerson('${s.id}')">
-      <div class="av" style="background:${GR[s.lv]};width:28px;height:28px;font-size:10px;flex-shrink:0">${ini(s.nm)}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.nm}</div>
-        <div style="font-size:11px;color:var(--dim);margin-top:2px;display:flex;gap:5px;flex-wrap:wrap">
-          <span>${s.ti.length>36?s.ti.slice(0,34)+'…':s.ti}</span>
-          ${jmlLang?`<span class="ks-bdg ks-lang-bdg">🎯${jmlLang}</span>`:''}
-          ${jmlTLang?`<span class="ks-bdg ks-tidak-lang-bdg">↗${jmlTLang}</span>`:''}
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;margin-left:8px">
-        <span class="ev-pill ep-n" style="font-size:12px">${total} keg</span>
-        <div style="display:flex;gap:4px">
-          ${jmlSelesai?`<span class="ev-pill ep-p">⏳${jmlSelesai}</span>`:''}
-          ${jmlValid?`<span class="ev-pill ep-v">✅${jmlValid}</span>`:''}
-        </div>
-      </div>
-    </div>`).join('')
-    :'<div style="text-align:center;padding:36px 20px;color:var(--dim)"><div style="font-size:34px;opacity:.25;margin-bottom:10px">📅</div><div style="font-size:14px">Tidak ada kegiatan hari ini.</div></div>';
-
-  document.getElementById('execBody').innerHTML=`
-  <!-- MEDAL STRIP -->
-  <div class="medal-strip">
-    ${goldCard}
-    ${silverCard}
-    ${bronzeCard}
-  </div>
-
-  <!-- ROW 1: Statistik Strip -->
-  <div class="exec-stat-strip">
-    <div class="estat"><div class="estat-v">${totalPeg}</div><div class="estat-l">Total Pegawai</div></div>
-    <div class="estat"><div class="estat-v" style="color:var(--amber)">${hasKontrak}</div><div class="estat-l">Isi Kontrak/Perjanjian</div></div>
-    <div class="estat"><div class="estat-v" style="color:var(--blue)">${hasRenaksi}</div><div class="estat-l">Isi Rencana Aksi/RKT</div></div>
-    <div class="estat"><div class="estat-v" style="color:var(--green)">${evalValidated}</div><div class="estat-l">Evaluasi Tervalidasi</div></div>
-  </div>
-
-  <!-- ROW 2: Kaitan SS Comparison Strip -->
-  <div style="flex-shrink:0">
-    <div style="font-size:13px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">
-      🎯 Kegiatan Tervalidasi Hari Ini – Kaitan dengan Sasaran Strategis
-      <span style="font-weight:400;color:var(--dim2);font-size:12px;margin-left:8px">${totalVal} kegiatan tervalidasi</span>
-    </div>
-    <div class="ks-comp-strip">
-      <div class="ksc-card ksc-lang">
-        <div class="ksc-icon">🎯</div>
-        <div class="ksc-info">
-          <div class="ksc-v">${ksLang}</div>
-          <div class="ksc-l">Terkait Langsung</div>
-          <div class="ksc-sub">Mendukung sasaran strategis secara langsung</div>
-        </div>
-        <div class="ksc-pct">${pct(ksLang)}%</div>
-        <div class="ksc-bar-wrap"><div class="ksc-bar" style="width:${pct(ksLang)}%"></div></div>
-      </div>
-      <div class="ksc-card ksc-tlang">
-        <div class="ksc-icon">↗</div>
-        <div class="ksc-info">
-          <div class="ksc-v">${ksTLang}</div>
-          <div class="ksc-l">Terkait Tidak Langsung</div>
-          <div class="ksc-sub">Mendukung sasaran secara tidak langsung</div>
-        </div>
-        <div class="ksc-pct">${pct(ksTLang)}%</div>
-        <div class="ksc-bar-wrap"><div class="ksc-bar" style="width:${pct(ksTLang)}%"></div></div>
-      </div>
-      <div class="ksc-card ksc-tdk">
-        <div class="ksc-icon">➡</div>
-        <div class="ksc-info">
-          <div class="ksc-v">${ksTdk}</div>
-          <div class="ksc-l">Tidak Terkait</div>
-          <div class="ksc-sub">Kegiatan administratif / rutin lainnya</div>
-        </div>
-        <div class="ksc-pct">${pct(ksTdk)}%</div>
-        <div class="ksc-bar-wrap"><div class="ksc-bar" style="width:${pct(ksTdk)}%"></div></div>
+  tc.innerHTML = `<div class="sb2">
+    <div class="sbh2 op">
+      <div class="sbico">👥</div>
+      <div class="sbt">
+        <div class="sbt1">Bawahan Langsung (${kids.length} orang)</div>
+        <div class="sbt2">Klik untuk membuka halaman dan memvalidasi</div>
       </div>
     </div>
-  </div>
-
-  <!-- ROW 2: 3 equal-height scrollable panels -->
-  <div class="exec-panels">
-
-    <!-- PANEL 1: Kontrak & Rencana Aksi -->
-    <div class="exec-card">
-      <div class="exec-card-hd">
-        <span class="eico">📋</span>
-        <h3>Kontrak & Rencana Aksi</h3>
-        <span class="echd-right">${fmtDate(today)}</span>
-      </div>
-      <div class="exec-card-body">
-        <table class="exec-table">
-          <thead><tr>
-            <th>Nama Pegawai</th>
-            <th style="width:48px;text-align:center">Kontrak</th>
-            <th style="width:48px;text-align:center">Ren.Aksi</th>
-          </tr></thead>
-          <tbody>${cRows||'<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--dim)">—</td></tr>'}</tbody>
-        </table>
-      </div>
-      <div class="exec-card-foot">
-        <span>✅ Tervalidasi</span><span>📤 Diserahkan</span><span>📝 Diisi</span><span>— Belum</span>
-      </div>
-    </div>
-
-    <!-- PANEL 2: Evaluasi Triwulan -->
-    <div class="exec-card">
-      <div class="exec-card-hd">
-        <span class="eico">📊</span>
-        <h3>Evaluasi Triwulan</h3>
-        <span class="echd-right">${evalValidated} tervalidasi</span>
-      </div>
-      <div class="exec-card-body">
-        <table class="exec-table">
-          <thead><tr>
-            <th>Nama Pegawai</th>
-            <th class="tw-cell">TW I</th>
-            <th class="tw-cell">TW II</th>
-            <th class="tw-cell">TW III</th>
-            <th class="tw-cell">TW IV</th>
-          </tr></thead>
-          <tbody>${eRows||'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--dim)">—</td></tr>'}</tbody>
-        </table>
-      </div>
-      <div class="exec-card-foot">
-        <span class="ev-pill ep-v">V</span> Tervalidasi &nbsp;
-        <span class="ev-pill ep-p">P</span> Diisi &nbsp;
-        <span class="ev-pill ep-n">—</span> Belum
-      </div>
-    </div>
-
-    <!-- PANEL 3: Kegiatan Hari Ini -->
-    <div class="exec-card">
-      <div class="exec-card-hd">
-        <span class="eico">📅</span>
-        <h3>Kegiatan Hari Ini</h3>
-        <span class="echd-right">${todayActSummary.length} pegawai aktif</span>
-      </div>
-      <div class="exec-card-body">
-        ${todayRows}
-      </div>
-    </div>
-
+    <div class="sbbd op">${rows}</div>
   </div>`;
 }
 
-// ══════════════════════════════════════════════════════════
-// EXPORT EXCEL – KEGIATAN HARIAN
-// ══════════════════════════════════════════════════════════
-function exportExcelHarian(id){
-  const s = STAFF[id];
-  const inp = prompt('Masukkan bulan yang ingin diekspor (format YYYY-MM, contoh 2025-06):', todayStr().slice(0,7));
-  if(!inp) return;
-  if(!/^\d{4}-\d{2}$/.test(inp)){ showToast('Format tidak valid. Gunakan YYYY-MM','warn'); return; }
-
-  const [yr, mo] = inp.split('-').map(Number);
-  const days = new Date(yr, mo, 0).getDate();
-  const moName = new Date(yr, mo-1, 1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
-
-  // Build CSV rows
-  const BOM = '\uFEFF'; // UTF-8 BOM for Excel
-  const esc = v => '"' + String(v||'').replace(/"/g,'""') + '"';
-  const kaitanLabel = k => k==='langsung'?'Terkait Langsung':k==='tidak_langsung'?'Terkait Tidak Langsung':'Tidak Terkait';
-  const statusLabel = st => st==='validated'?'Tervalidasi':st==='selesai'?'Selesai (blm validasi)':st==='baru'?'Belum Selesai':'Lanjutan';
-
-  const headers = ['No','Tanggal','Hari','Nama Kegiatan','Jam Mulai','Jam Selesai','Output / Hasil','Volume','Kaitan Sasaran Strategis','Status','Divalidasi Oleh','Waktu Validasi'];
-
-  const rows = [headers];
-  let no = 1;
-
-  for(let d=1; d<=days; d++){
-    const ds = yr+'-'+(mo<10?'0':'')+mo+'-'+(d<10?'0':'')+d;
-    const acts = getActs(id, ds);
-    if(!acts.length) continue;
-    const sorted = acts.slice().sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||''));
-    const hariNm = new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long'});
-    sorted.forEach(a=>{
-      rows.push([
-        no++,
-        ds,
-        hariNm,
-        a.kegiatan||'',
-        a.waktu_mulai||'',
-        a.waktu_selesai||'',
-        a.output||'',
-        a.volume||'',
-        kaitanLabel(a.kaitan_ss||'tidak_terkait'),
-        statusLabel(a.status),
-        a.valid_by||'',
-        a.valid_at||'',
-      ]);
-    });
-  }
-
-  if(rows.length <= 1){
-    showToast('Tidak ada data kegiatan pada bulan '+moName,'warn');
-    return;
-  }
-
-  // Add summary rows
-  rows.push([]);
-  rows.push(['RINGKASAN']);
-  rows.push(['Nama Pegawai', s.nm]);
-  rows.push(['Jabatan', s.ti]);
-  rows.push(['Unit Kerja', UL[s.un]||s.un]);
-  rows.push(['Bulan', moName]);
-  rows.push(['Total Kegiatan', rows.length - 6]);
-
-  // Generate CSV
-  const csv = BOM + rows.map(r => r.map(esc).join(',')).join('\r\n');
-
-  // Download
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'Kegiatan_'+s.nm.replace(/[^a-zA-Z0-9]/g,'_').slice(0,20)+'_'+inp+'.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('✅ File Excel berhasil diunduh!');
-}
-
-function exportExcelBulkHarian(){
-  // Export all staff for a given month (for admin use)
-  const inp = prompt('Ekspor semua staf – masukkan bulan (YYYY-MM):', todayStr().slice(0,7));
-  if(!inp) return;
-  if(!/^\d{4}-\d{2}$/.test(inp)){ showToast('Format tidak valid','warn'); return; }
-  const [yr, mo] = inp.split('-').map(Number);
-  const days = new Date(yr, mo, 0).getDate();
-  const moName = new Date(yr, mo-1, 1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
-  const BOM = '\uFEFF';
-  const esc = v => '"' + String(v||'').replace(/"/g,'""') + '"';
-  const kLabel = k => k==='langsung'?'Terkait Langsung':k==='tidak_langsung'?'Terkait Tidak Langsung':'Tidak Terkait';
-  const stLabel = st => st==='validated'?'Tervalidasi':st==='selesai'?'Selesai (blm validasi)':st==='baru'?'Belum Selesai':'Lanjutan';
-  const headers = ['No','Nama Pegawai','Jabatan','Tanggal','Hari','Kegiatan','Jam Mulai','Jam Selesai','Output','Volume','Kaitan SS','Status','Divalidasi Oleh'];
-  const rows = [headers];
-  let no = 1;
-  Object.values(STAFF).forEach(s=>{
-    for(let d=1;d<=days;d++){
-      const ds = yr+'-'+(mo<10?'0':'')+mo+'-'+(d<10?'0':'')+d;
-      const acts = getActs(s.id, ds);
-      if(!acts.length) continue;
-      acts.slice().sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||'')).forEach(a=>{
-        const hari = new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long'});
-        rows.push([no++, s.nm, s.ti, ds, hari, a.kegiatan||'', a.waktu_mulai||'', a.waktu_selesai||'', a.output||'', a.volume||'', kLabel(a.kaitan_ss||''), stLabel(a.status), a.valid_by||'']);
-      });
-    }
+// ── Clear all daily data (utility) ───────────────────────
+function clearAllDailyData(){
+  Object.keys(localStorage).forEach(k=>{
+    if(k.startsWith('sk_act_')) localStorage.removeItem(k);
   });
-  if(rows.length<=1){ showToast('Tidak ada data','warn'); return; }
-  const csv = BOM + rows.map(r=>r.map(esc).join(',')).join('\r\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'Kegiatan_Semua_'+inp+'.csv';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('✅ File Excel semua staf berhasil diunduh!');
+  showToast('✅ Semua data kegiatan harian dikosongkan.');
+  if(_dailyId) renderDailyAct(_dailyId,_dailyOwn,_dailyV);
 }
+
 
 
 // ══════════════════════════════════════════════════════════
@@ -2567,9 +2701,336 @@ function openPrintMonthly(id){
 }
 
 // ══════════════════════════════════════════════════════════
-// CONTRACT STATUS (submit & validate)
+// EXPORT EXCEL
 // ══════════════════════════════════════════════════════════
-const cskey=(id,t)=>`sk_cst_${id}_${t}`;
+function exportExcelHarian(id){
+  const s=STAFF[id];
+  const inp=prompt('Masukkan bulan (YYYY-MM):',todayStr().slice(0,7));
+  if(!inp||!/^\d{4}-\d{2}$/.test(inp)){if(inp!==null)showToast('Format tidak valid','warn');return;}
+  const [yr,mo]=inp.split('-').map(Number);
+  const days=new Date(yr,mo,0).getDate();
+  const moName=new Date(yr,mo-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  const BOM='\uFEFF';
+  const esc=v=>'"'+String(v||'').replace(/"/g,'""')+'"';
+  const kLbl=k=>k==='langsung'?'Terkait Langsung':k==='tidak_langsung'?'Terkait Tidak Langsung':'Tidak Terkait';
+  const stLbl=st=>st==='validated'?'Tervalidasi':st==='selesai'?'Selesai':st==='lanjut'?'Lanjut Besok':st==='batal'?'Dibatalkan':'Belum Selesai';
+  const headers=['No','Tanggal','Hari','Nama Kegiatan','Jam Mulai','Jam Selesai','Output','Volume','Kaitan SS','Status','Divalidasi Oleh','Waktu Validasi'];
+  const rows=[headers]; let no=1;
+  for(let d=1;d<=days;d++){
+    const ds=yr+'-'+(mo<10?'0':'')+mo+'-'+(d<10?'0':'')+d;
+    const acts=getActs(id,ds); if(!acts.length) continue;
+    const hari=new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long'});
+    acts.slice().sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||'')).forEach(a=>{
+      rows.push([no++,ds,hari,a.kegiatan||'',a.waktu_mulai||'',a.waktu_selesai||'',a.output||'',a.volume||'',kLbl(a.kaitan_ss||''),stLbl(a.status),a.valid_by||'',a.valid_at||'']);
+    });
+  }
+  if(rows.length<=1){showToast('Tidak ada data pada bulan '+moName,'warn');return;}
+  const csv=BOM+rows.map(r=>r.map(esc).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='Kegiatan_'+s.nm.replace(/[^a-zA-Z0-9]/g,'_').slice(0,20)+'_'+inp+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ File Excel berhasil diunduh!');
+}
+
+function exportExcelBulkHarian(){
+  const inp=prompt('Ekspor semua staf – masukkan bulan (YYYY-MM):',todayStr().slice(0,7));
+  if(!inp||!/^\d{4}-\d{2}$/.test(inp)){if(inp!==null)showToast('Format tidak valid','warn');return;}
+  const [yr,mo]=inp.split('-').map(Number);
+  const days=new Date(yr,mo,0).getDate();
+  const moName=new Date(yr,mo-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  const BOM='\uFEFF';
+  const esc=v=>'"'+String(v||'').replace(/"/g,'""')+'"';
+  const kLbl=k=>k==='langsung'?'Terkait Langsung':k==='tidak_langsung'?'Terkait Tidak Langsung':'Tidak Terkait';
+  const stLbl=st=>st==='validated'?'Tervalidasi':st==='selesai'?'Selesai':st==='lanjut'?'Lanjut Besok':st==='batal'?'Dibatalkan':'Belum Selesai';
+  const headers=['No','Nama Pegawai','Jabatan','Tanggal','Hari','Kegiatan','Jam Mulai','Jam Selesai','Output','Volume','Kaitan SS','Status','Divalidasi Oleh'];
+  const rows=[headers]; let no=1;
+  Object.values(STAFF).forEach(s=>{
+    for(let d=1;d<=days;d++){
+      const ds=yr+'-'+(mo<10?'0':'')+mo+'-'+(d<10?'0':'')+d;
+      const acts=getActs(s.id,ds); if(!acts.length) continue;
+      const hari=new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long'});
+      acts.slice().sort((a,b)=>(a.waktu_mulai||'').localeCompare(b.waktu_mulai||'')).forEach(a=>{
+        rows.push([no++,s.nm,s.ti,ds,hari,a.kegiatan||'',a.waktu_mulai||'',a.waktu_selesai||'',a.output||'',a.volume||'',kLbl(a.kaitan_ss||''),stLbl(a.status),a.valid_by||'']);
+      });
+    }
+  });
+  if(rows.length<=1){showToast('Tidak ada data','warn');return;}
+  const csv=BOM+rows.map(r=>r.map(esc).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='Kegiatan_Semua_'+inp+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ File Excel semua staf berhasil diunduh!');
+}
+
+// ══════════════════════════════════════════════════════════
+// EXECUTIVE VIEW – MEDALS + STATS + KAITAN SS
+// ══════════════════════════════════════════════════════════
+function getCstatEff(id,type){
+  const cst=getCstat(id,type);
+  const data=getC(id,type);
+  if(data.length>0&&cst.status==='belum') return Object.assign({},cst,{status:'diisi'});
+  return cst;
+}
+function openExecView(){
+  document.getElementById('execView').classList.add('show');
+  document.getElementById('execUserInfo').textContent=STAFF[CUR]?.nm||'';
+  renderExecView();
+}
+function closeExecView(){ document.getElementById('execView').classList.remove('show'); }
+
+function getAllScope(){ return Object.keys(STAFF); }
+
+function getMedalCache(){ return LS.g('sk_medals')||{}; }
+function setMedalCache(d){ LS.s('sk_medals',d); }
+
+function computeMedals(){
+  const today=todayStr();
+  const cache=getMedalCache();
+  if(cache.computedOn===today) return cache;
+
+  const allIds=Object.keys(STAFF);
+  function countVal(id,from,to){
+    let n=0;
+    const s=new Date(from+'T00:00:00'), en=new Date(to+'T00:00:00');
+    for(let d=new Date(s);d<=en;d.setDate(d.getDate()+1)){
+      n+=getActs(id,d.toISOString().slice(0,10)).filter(a=>a.status==='validated').length;
+    }
+    return n;
+  }
+  function topStaff(from,to){
+    let best=null,bestN=0;
+    allIds.forEach(id=>{ const c=countVal(id,from,to); if(c>bestN){bestN=c;best=id;} });
+    return best&&bestN>0?{id:best,count:bestN}:null;
+  }
+  const yest=prevDay(today);
+  const tmp=new Date(today+'T00:00:00');
+  while(tmp.getDay()!==5) tmp.setDate(tmp.getDate()-1);
+  const lastFri=tmp.toISOString().slice(0,10);
+  const lastMon=new Date(tmp); lastMon.setDate(tmp.getDate()-4);
+  const lastMonStr=lastMon.toISOString().slice(0,10);
+  const lmEnd=new Date(tmp.getFullYear(),tmp.getMonth(),0);
+  const lmStart=new Date(tmp.getFullYear(),tmp.getMonth()-1,1);
+  const lmS=lmStart.toISOString().slice(0,10), lmE=lmEnd.toISOString().slice(0,10);
+
+  const data={computedOn:today,
+    bronze:topStaff(yest,yest), silver:topStaff(lastMonStr,lastFri), gold:topStaff(lmS,lmE),
+    yest, lastMonStr, lastFriStr:lastFri, lmStartStr:lmS, lmEndStr:lmE};
+  setMedalCache(data);
+  return data;
+}
+
+function buildMedalCard(medal,s,count,period,label,cls){
+  if(!s) return '<div class="medal-card '+cls+'"><div class="medal-empty">'+label+'<br><span style="font-size:10px">Belum ada data</span></div></div>';
+  return '<div class="medal-card '+cls+'"><div class="mav" style="background:'+GR[s.lv]+'">'+ini(s.nm)+'<div class="mbadge">'+medal+'</div></div><div class="medal-info"><div class="mnm" title="'+s.nm+'">'+s.nm+'</div><div class="mti">'+(s.ti.length>34?s.ti.slice(0,32)+'…':s.ti)+'</div><div class="mstat">'+count+' ✅</div><div class="mperiod">'+period+'</div></div></div>';
+}
+
+function renderExecView(){
+  var scope = getAllScope();
+  var allStaff = scope.map(function(id){return STAFF[id];}).filter(Boolean);
+  var today = todayStr();
+  var totalPeg = allStaff.length;
+
+  // ── Medals ───────────────────────────────────────────────────────
+  var medals = computeMedals();
+  var goldStaff   = medals.gold   ? STAFF[medals.gold.id]   : null;
+  var silverStaff = medals.silver ? STAFF[medals.silver.id] : null;
+  var bronzeStaff = medals.bronze ? STAFF[medals.bronze.id] : null;
+  function fmtSh(d){ return d ? new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}) : ''; }
+
+  // ── Row 2 stats ───────────────────────────────────────────────────
+  var utOK = allStaff.filter(function(s){var v=getUTV(s.id);return v&&v.status==='disetujui';}).length;
+  var kOK  = allStaff.filter(function(s){var t=s.lv==='L0'||s.lv==='L1'?'kontrak':'perjanjian';return getCstatEff(s.id,t).status==='tervalidasi';}).length;
+  var rOK  = allStaff.filter(function(s){var t=s.lv==='L0'||s.lv==='L1'?'rencana_aksi':'rkt';return getCstatEff(s.id,t).status==='tervalidasi';}).length;
+  var eOK  = allStaff.filter(function(s){return [1,2,3,4].some(function(tw){return getEvTW(s.id,tw).some(function(e){var vl=getEvTWV(s.id,tw,e.eid);return vl&&vl.status==='disetujui';});});}).length;
+  function pBar(val){ return totalPeg>0 ? Math.round(val/totalPeg*100) : 0; }
+
+  // ── Row 3: Kaitan SS ──────────────────────────────────────────────
+  var allActsToday = allStaff.reduce(function(acc,s){return acc.concat(getActs(s.id,today));}, []);
+  var valToday  = allActsToday.filter(function(a){return a.status==='validated';});
+  var totalVal  = valToday.length;
+  var ksLang    = valToday.filter(function(a){return a.kaitan_ss==='langsung';}).length;
+  var ksTLang   = valToday.filter(function(a){return a.kaitan_ss==='tidak_langsung';}).length;
+  var ksTdk     = valToday.filter(function(a){return !a.kaitan_ss||a.kaitan_ss==='tidak_terkait';}).length;
+  function pct(n){ return totalVal>0 ? Math.round(n/totalVal*100) : 0; }
+
+  // ── Row 4: Today summary ──────────────────────────────────────────
+  var todayActSummary = allStaff.map(function(s){
+    var acts = getActs(s.id, today);
+    if(!acts.length) return null;
+    var jmlVal = acts.filter(function(a){return a.status==='validated';}).length;
+    var jmlSel = acts.filter(function(a){return a.status==='selesai';}).length;
+    var jmlBaru = acts.filter(function(a){return a.status==='baru';}).length;
+    var jmlLang = acts.filter(function(a){return a.kaitan_ss==='langsung';}).length;
+    var jmlTLang = acts.filter(function(a){return a.kaitan_ss==='tidak_langsung';}).length;
+    return {s:s, acts:acts, total:acts.length, jmlVal:jmlVal, jmlSel:jmlSel, jmlBaru:jmlBaru, jmlLang:jmlLang, jmlTLang:jmlTLang};
+  }).filter(Boolean);
+
+  // ── Build helpers ─────────────────────────────────────────────────
+  function stIco(st){ return st==='validated'?'✅':st==='selesai'?'⏳':st==='lanjut'?'⏩':st==='batal'?'❌':'🔵'; }
+  function stCls(st){ return st==='validated'?'st-val':st==='selesai'?'st-sel':st==='lanjut'?'st-lanjut':st==='batal'?'st-batal':'st-baru'; }
+
+  // ── HTML: ROW 1 – Bintang ─────────────────────────────────────────
+  function starCard(stars, label, color, borderColor, staff, medalData, period){
+    var starStr = '';
+    for(var x=0;x<stars;x++) starStr += '⭐';
+    if(!staff) return '<div style="background:var(--card);border:1px dashed var(--b2);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--dim)">'
+      +'<span style="font-size:26px;opacity:.3">'+starStr+'</span>'
+      +'<div><div style="font-size:13px;font-weight:600">'+label+'</div>'
+      +'<div style="font-size:11px;margin-top:2px">Belum ada data validasi</div></div></div>';
+    return '<div style="background:'+color+';border:1px solid '+borderColor+';border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px">'
+      +'<div style="position:relative;flex-shrink:0">'
+      +'<div class="av" style="background:'+GR[staff.lv]+';width:52px;height:52px;font-size:16px">'+ini(staff.nm)+'</div>'
+      +'<div style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:16px">'+starStr+'</div>'
+      +'</div>'
+      +'<div style="flex:1;min-width:0;padding-top:6px">'
+      +'<div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:'+borderColor+';font-weight:700;margin-bottom:3px">'+label+'</div>'
+      +'<div style="font-size:14px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+staff.nm+'">'+staff.nm+'</div>'
+      +'<div style="font-size:11px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+staff.ti+'</div>'
+      +'<div style="margin-top:6px;display:flex;align-items:baseline;gap:5px">'
+      +'<span style="font-family:var(--ff-serif);font-size:26px;font-weight:700;color:'+borderColor+'">'+medalData.count+'</span>'
+      +'<span style="font-size:11px;color:var(--dim)">kegiatan tervalidasi &nbsp;·&nbsp; '+period+'</span>'
+      +'</div>'
+      +'</div></div>';
+  }
+
+  var goldPeriod   = medals.lmStartStr ? new Date(medals.lmStartStr+'T00:00:00').toLocaleDateString('id-ID',{month:'long',year:'numeric'}) : 'Bulan lalu';
+  var silverPeriod = (medals.lastMonStr&&medals.lastFriStr) ? fmtSh(medals.lastMonStr)+' – '+fmtSh(medals.lastFriStr) : 'Minggu lalu';
+  var bronzePeriod = medals.yest ? 'Kemarin, '+fmtSh(medals.yest) : 'Kemarin';
+
+  var row1 = '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;flex-shrink:0">'
+    + starCard(3,'⭐⭐⭐ Terbaik Bulan Lalu', 'rgba(200,148,31,.08)', '#C8941F', goldStaff, medals.gold||{count:0}, goldPeriod)
+    + starCard(2,'⭐⭐ Terbaik Minggu Lalu', 'rgba(180,180,180,.08)', '#A0A0A0', silverStaff, medals.silver||{count:0}, silverPeriod)
+    + starCard(1,'⭐ Terbaik Kemarin',       'rgba(160,100,50,.08)', '#8B5E3C', bronzeStaff, medals.bronze||{count:0}, bronzePeriod)
+    + '</div>';
+
+  // ── HTML: ROW 2 – Capaian Dokumen Kinerja ────────────────────────
+  function docCard(ico, label, val, color){
+    var pct2 = pBar(val);
+    return '<div style="background:var(--card);border:1px solid var(--b2);border-radius:12px;padding:16px 18px">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">'+ico+' '+label+'</div>'
+      +'<div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:10px">'
+      +'<span style="font-family:var(--ff-serif);font-size:48px;font-weight:700;color:'+color+';line-height:1">'+val+'</span>'
+      +'<span style="font-size:18px;color:var(--dim);padding-bottom:7px">/ '+totalPeg+'</span>'
+      +'</div>'
+      +'<div style="background:var(--card2);border-radius:6px;height:8px;overflow:hidden;margin-bottom:6px">'
+      +'<div style="background:'+color+';height:100%;width:'+pct2+'%;border-radius:6px;transition:width .6s ease"></div>'
+      +'</div>'
+      +'<div style="font-size:12px;color:var(--dim)">'+pct2+'% telah tervalidasi</div>'
+      +'</div>';
+  }
+
+  var row2 = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex-shrink:0">'
+    + docCard('📄','Uraian Tugas', utOK, 'var(--green)')
+    + docCard('📋','Kontrak Kinerja', kOK, 'var(--blue)')
+    + docCard('📌','Rencana Aksi / RKT', rOK, 'var(--amber)')
+    + docCard('📊','Evaluasi Triwulan', eOK, 'var(--teal)')
+    + '</div>';
+
+  // ── HTML: ROW 3 – Kaitan Kegiatan ────────────────────────────────
+  function kaitanCard(ico, label, sub, val, color, bg, bc){
+    var pct3 = pct(val);
+    return '<div style="background:'+bg+';border:1px solid '+bc+';border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden">'
+      +'<div style="font-size:28px;flex-shrink:0;opacity:.85">'+ico+'</div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-family:var(--ff-serif);font-size:52px;font-weight:700;line-height:1;color:'+color+'">'+val+'</div>'
+      +'<div style="font-size:14px;font-weight:600;color:'+color+';margin-top:4px">'+label+'</div>'
+      +'<div style="font-size:11px;color:var(--dim);margin-top:3px">'+sub+' &nbsp;·&nbsp; '+pct3+'% dari '+totalVal+' tervalidasi hari ini</div>'
+      +'</div>'
+      +'<div style="font-family:var(--ff-serif);font-size:24px;font-weight:600;color:'+color+';flex-shrink:0;align-self:flex-start;padding-top:4px">'+pct3+'%</div>'
+      +'<div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(255,255,255,.06)">'
+      +'<div style="background:'+color+';height:100%;width:'+pct3+'%;transition:width .8s ease"></div>'
+      +'</div>'
+      +'</div>';
+  }
+
+  var row3 = '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;flex-shrink:0">'
+    + kaitanCard('🎯','Terkait Langsung','mendukung sasaran strategis langsung', ksLang, 'var(--green)', 'rgba(46,201,126,.08)', 'rgba(46,201,126,.3)')
+    + kaitanCard('↗','Terkait Tidak Langsung','mendukung sasaran tidak langsung', ksTLang, 'var(--amber)', 'rgba(245,158,11,.08)', 'rgba(245,158,11,.3)')
+    + kaitanCard('➡','Tidak Terkait','kegiatan administratif / rutin', ksTdk, 'var(--dim)', 'rgba(96,122,156,.08)', 'rgba(96,122,156,.25)')
+    + '</div>';
+
+  // ── HTML: ROW 4 – Kegiatan Hari Ini ──────────────────────────────
+  var todayHTML = '';
+  if(!todayActSummary.length){
+    todayHTML = '<div style="text-align:center;padding:48px 20px;color:var(--dim)">'
+      +'<div style="font-size:40px;opacity:.2;margin-bottom:12px">📅</div>'
+      +'<div style="font-size:16px">Tidak ada kegiatan hari ini.</div>'
+      +'</div>';
+  } else {
+    todayActSummary.forEach(function(item){
+      var s = item.s;
+      var acts = item.acts.slice().sort(function(a,b){return (a.waktu_mulai||'').localeCompare(b.waktu_mulai||'');});
+
+      var actRows = acts.map(function(a,i){
+        var ico = stIco(a.status);
+        var cls = stCls(a.status);
+        var ksBdg = a.kaitan_ss==='langsung'
+          ? '<span class="ks-bdg ks-lang-bdg">🎯</span>'
+          : a.kaitan_ss==='tidak_langsung'
+          ? '<span class="ks-bdg ks-tidak-lang-bdg">↗</span>' : '';
+        var valInfo = a.status==='validated' ? ('<div style="font-size:10px;color:var(--green);margin-top:1px">✅ '+( a.valid_by||'')+'</div>') : '';
+        return '<tr style="border-bottom:1px solid var(--b3)">'
+          +'<td style="padding:7px 10px;font-size:11px;color:var(--dim2)">'+(i+1)+'</td>'
+          +'<td style="padding:7px 10px;font-size:13px"><span style="font-weight:500">'+(a.kegiatan||'—')+'</span> '+ksBdg+valInfo+'</td>'
+          +'<td style="padding:7px 10px;font-size:11px;color:var(--dim);white-space:nowrap">'+(a.waktu_mulai||'—')+' – '+(a.waktu_selesai||'—')+'</td>'
+          +'<td style="padding:7px 10px;font-size:12px">'+(a.output||'—')+'</td>'
+          +'<td style="padding:7px 10px;text-align:center"><span class="actst '+cls+'">'+ico+'</span></td>'
+          +'</tr>';
+      }).join('');
+
+      var bTags = '';
+      if(item.jmlBaru)  bTags += '<span class="ev-pill" style="background:rgba(74,158,245,.15);color:var(--blue);font-size:11px">🔵 '+item.jmlBaru+'</span>';
+      if(item.jmlSel)   bTags += '<span class="ev-pill ep-p" style="font-size:11px">⏳ '+item.jmlSel+'</span>';
+      if(item.jmlVal)   bTags += '<span class="ev-pill ep-v" style="font-size:11px">✅ '+item.jmlVal+'</span>';
+      if(item.jmlLang)  bTags += '<span class="ks-bdg ks-lang-bdg">🎯 '+item.jmlLang+'</span>';
+
+      todayHTML += '<div style="border:1px solid var(--b2);border-radius:10px;overflow:hidden;margin-bottom:10px">'
+        +'<div style="padding:10px 14px;background:var(--card2);display:flex;align-items:center;gap:10px;cursor:pointer" onclick=\"closeExecView();_dailyDate=todayStr();selectPerson(\"'+s.id+'\")">'
+        +'<div class="av" style="background:'+GR[s.lv]+';width:36px;height:36px;font-size:12px;flex-shrink:0">'+ini(s.nm)+'</div>'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:14px;font-weight:700;color:var(--txt)">'+s.nm+'</div>'
+        +'<div style="font-size:11px;color:var(--dim);margin-top:1px">'+(s.ti.length>44?s.ti.slice(0,42)+'…':s.ti)+'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;flex-shrink:0">'+bTags+'</div>'
+        +'<span style="font-size:12px;color:var(--tl);margin-left:8px;flex-shrink:0">→</span>'
+        +'</div>'
+        +'<div style="overflow-x:auto">'
+        +'<table style="width:100%;border-collapse:collapse">'
+        +'<thead><tr style="background:var(--card3);border-bottom:1px solid var(--b2)">'
+        +'<th style="padding:6px 10px;text-align:left;font-size:10px;text-transform:uppercase;color:var(--dim);font-weight:600;width:28px">No</th>'
+        +'<th style="padding:6px 10px;text-align:left;font-size:10px;text-transform:uppercase;color:var(--dim);font-weight:600">Kegiatan</th>'
+        +'<th style="padding:6px 10px;text-align:left;font-size:10px;text-transform:uppercase;color:var(--dim);font-weight:600;white-space:nowrap">Jam</th>'
+        +'<th style="padding:6px 10px;text-align:left;font-size:10px;text-transform:uppercase;color:var(--dim);font-weight:600">Output</th>'
+        +'<th style="padding:6px 10px;text-align:center;font-size:10px;text-transform:uppercase;color:var(--dim);font-weight:600;width:56px">Status</th>'
+        +'</tr></thead>'
+        +'<tbody>'+actRows+'</tbody>'
+        +'</table>'
+        +'</div>'
+        +'</div>';
+    });
+  }
+
+  var row4 = '<div style="flex:1;min-height:400px;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--b2);border-radius:12px;overflow:hidden">'
+    +'<div style="padding:14px 18px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--card2)">'
+    +'<span style="font-size:20px">📅</span>'
+    +'<div>'
+    +'<div style="font-family:var(--ff-serif);font-size:17px;font-weight:600;color:var(--goldl)">Kegiatan Hari Ini – '+fmtDate(today)+'</div>'
+    +'<div style="font-size:11px;color:var(--dim);margin-top:2px">'+todayActSummary.length+' pegawai aktif &nbsp;·&nbsp; '+allActsToday.length+' kegiatan total &nbsp;·&nbsp; '+valToday.length+' tervalidasi</div>'
+    +'</div>'
+    +'<button class="btn btn-grn btn-sm no-print" style="margin-left:auto" onclick="exportExcelBulkHarian()">📥 Export Excel</button>'
+    +'</div>'
+    +'<div style="flex:1;overflow-y:auto;padding:14px 16px">'+todayHTML+'</div>'
+    +'</div>';
+
+  document.getElementById('execBody').innerHTML = row1 + row2 + row3 + row4;
+}
+
 function getCstat(id,t){return LS.g(cskey(id,t))||{status:'belum'}}
 function setCstat(id,t,d){LS.s(cskey(id,t),d)}
 
@@ -2621,24 +3082,18 @@ function buildNotifications(){
     const d=dt.toISOString().slice(0,10);
     myChildren.filter(child=>child.lv!=='L0').forEach(child=>{
       const acts=getActs(child.id,d);
-      acts.forEach((a,idx)=>{
-        // Tipe 1: staf sudah selesai, menunggu validasi atasan (bukan KD)
+      acts.forEach(a=>{
         if(a.status==='selesai'){
           notifs.push({
             type:'validasi_awal',
-            targetId:child.id,
-            targetNm:child.nm,
-            targetTi:child.ti,
-            actId:a.id,
-            actDate:d,
-            actIdx:idx,
-            kegiatan:a.kegiatan,
-            waktu:a.waktu_mulai?`${a.waktu_mulai}–${a.waktu_selesai}`:'',
+            targetId:child.id, targetNm:child.nm, targetTi:child.ti,
+            actId:a.id, actDate:d,
+            kegiatan:a.kegiatan||'Kegiatan',
+            waktu:a.waktu_mulai?(a.waktu_mulai+'–'+a.waktu_selesai):'',
             created:a.selesai_at||a.created_at||d,
-            notifId:`val_${child.id}_${a.id}`,
+            notifId:'val_'+child.id+'_'+a.id,
           });
         }
-        // Tipe 2: kegiatan sudah divalidasi – tidak perlu notifikasi lagi (selesai)
       });
     });
   }
@@ -2857,6 +3312,7 @@ function toggleNotifPanel(){
 function notifClick(notifId,targetId,actDate){
   markRead(notifId);
   updateNotifBadge();
+  _dailyDate = actDate || todayStr();
   // Tutup panel
   document.getElementById('notifPanel').classList.remove('show');
   // Navigate ke halaman orang tsb, tab kegiatan harian, tanggal tsb
@@ -2889,6 +3345,10 @@ let _notifTimer=null;
 function startNotifTimer(){
   clearInterval(_notifTimer);
   _notifTimer=setInterval(()=>{
+    // Skip all refreshes if user is actively typing in a form
+    const focused = document.activeElement;
+    const tag = focused ? focused.tagName : '';
+    if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
     updateNotifBadge();
     const panel=document.getElementById('notifPanel');
     if(panel?.classList.contains('show')) renderNotifPanel();
@@ -3048,10 +3508,20 @@ function renderUraianTugas(id, canEdit){
   const utv = getUTV(id);
   const tc  = document.getElementById('tcInner');
   const isV = (_panelAcc==='VALIDATE');
+  // Preserve form open state
+  const utFormWas = document.getElementById('sbbd_utFormBan');
+  const utFormOpen = utFormWas && utFormWas.classList.contains('op');
   tc.innerHTML = '';
 
   if(canEdit)  tc.innerHTML += buildUTForm(id, ut, utv);
   if(ut)       tc.innerHTML += buildUTView(id, ut, utv, canEdit, isV);
+  // Restore form open state
+  if(utFormOpen){
+    const b=document.getElementById('sbbd_utFormBan');
+    const a=document.getElementById('sbarr_utFormBan');
+    const h=document.getElementById('utFormBan');
+    if(b&&!b.classList.contains('op')){ b.classList.add('op'); if(a)a.classList.add('op'); if(h)h.classList.add('op'); }
+  }
   else if(!canEdit)
     tc.innerHTML = '<div class="ut-empty"><div class="ut-empty-i">📄</div><p style="font-size:13px">Uraian tugas belum diisi oleh pegawai ini.</p></div>';
 }
@@ -3072,7 +3542,7 @@ function buildUTForm(id, ut, utv){
     </div>`).join('');
 
   return `<div class="sb2" id="utFormBan" style="margin-bottom:12px">
-    <div class="sbh2 ${open?'op':''}" onclick="toggleSB('utFormBan')">
+    <div class="sbh2 ${open?'op':''}" onclick=\"toggleSB('utFormBan', event)\">
       <div class="sbico">✏️</div>
       <div class="sbt">
         <div class="sbt1">${ut?'Edit':'Isi'} Uraian Tugas</div>
@@ -3104,7 +3574,7 @@ function buildUTForm(id, ut, utv){
         </div>
 
         <div class="facts" style="margin-top:10px">
-          <button class="btn btn-out btn-sm" onclick="toggleSB('utFormBan')">Tutup</button>
+          <button class="btn btn-out btn-sm" onclick=\"toggleSB('utFormBan', event)\">Tutup</button>
           <button class="btn btn-gold" onclick="saveUT('${id}')">💾 Simpan</button>
           <button class="btn btn-blu" onclick="submitUT('${id}')">📤 Serahkan ke Atasan</button>
         </div>
@@ -3299,6 +3769,40 @@ function revalidateUT(id){
   LS.d(utvkey(id));
   renderUraianTugas(id, _panelAcc==='FULL');
 }
+
+// ══════════════════════════════════════════════════════════
+// MODAL UTILITIES
+// ══════════════════════════════════════════════════════════
+function closeMdl(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.remove('show');
+}
+function openMdl(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.add('show');
+}
+
+// Global pending delete callback (avoids closure capture issues)
+var _pendingDelete = null;
+
+function confirmDelete(msg, onConfirm){
+  _pendingDelete = onConfirm;
+  const modal = document.getElementById('mDel');
+  if(!modal){ onConfirm(); _pendingDelete=null; return; }
+  const wb = modal.querySelector('.warn-box');
+  if(wb && msg) wb.textContent = msg;
+  openMdl('mDel');
+}
+
+function runPendingDelete(){
+  closeMdl('mDel');
+  if(typeof _pendingDelete === 'function'){
+    var fn = _pendingDelete;
+    _pendingDelete = null;
+    fn();
+  }
+}
+
 
 // ══════════════════════════════════════════════════════════
 // INIT
