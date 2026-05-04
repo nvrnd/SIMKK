@@ -548,6 +548,123 @@ select.fc option{background:var(--card3)}
 .btn-gold:hover{background:rgba(200,148,31,.25)}
 
 </style>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- FIREBASE CONFIG — GANTI DENGAN KONFIGURASI ANDA   -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, writeBatch }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  // ── GANTI NILAI-NILAI INI DENGAN KONFIGURASI FIREBASE ANDA ──────────
+  const FIREBASE_CONFIG = {
+    apiKey:            "AIzaSyDLlA1f3QZX5jyQGI8hleJIeLsQqRfYPS8",
+    authDomain:        "simkk-limapuluhkota.firebaseapp.com",
+    projectId:         "simkk-limapuluhkota",
+    storageBucket:     "simkk-limapuluhkota.firebasestorage.app",
+    messagingSenderId: "430659095362",
+    appId:             "1:430659095362:web:38fbbceb7192e8a11356db"
+  };
+  // ─────────────────────────────────────────────────────────────────────
+
+  // Check if config has been filled
+  const CONFIG_FILLED = !Object.values(FIREBASE_CONFIG).some(v => v.startsWith('GANTI_'));
+
+  let db = null;
+  let _fsConnected = false;
+
+  if(CONFIG_FILLED){
+    try {
+      const app = initializeApp(FIREBASE_CONFIG);
+      db = getFirestore(app);
+      _fsConnected = true;
+      window._firestoreDB = db;
+      window._firestoreReady = true;
+      console.log('[SIMKK] Firebase connected ✅');
+    } catch(e) {
+      console.warn('[SIMKK] Firebase init failed:', e.message);
+    }
+  } else {
+    console.info('[SIMKK] Firebase not configured — using localStorage only');
+  }
+
+  // ── Firestore helpers ────────────────────────────────────────────────
+  const PREFIX = 'simkk_';
+
+  async function fsGet(key) {
+    if(!db) return null;
+    try {
+      const snap = await getDoc(doc(db, PREFIX + key.split('_')[0], key));
+      return snap.exists() ? snap.data().v : null;
+    } catch(e) { return null; }
+  }
+
+  async function fsSet(key, val) {
+    if(!db) return;
+    try {
+      const col = key.startsWith('sk_act') ? 'simkk_kegiatan'
+        : key.startsWith('sk_evtw_v') ? 'simkk_eval_val'
+        : key.startsWith('sk_evtw') ? 'simkk_evaluasi'
+        : key.startsWith('sk_utv') ? 'simkk_ut_val'
+        : key.startsWith('sk_ut') ? 'simkk_ut'
+        : key.startsWith('sk_cst') ? 'simkk_cstat'
+        : key.startsWith('sk_c_') ? 'simkk_kontrak'
+        : key.startsWith('sk_medals') ? 'simkk_misc'
+        : 'simkk_misc';
+      const docId = key.replace(/[^a-zA-Z0-9_-]/g, '_');
+      await setDoc(doc(db, col, docId), { v: val, k: key, t: Date.now() }, { merge: false });
+    } catch(e) { console.warn('[SIMKK] fsSet error:', e.message); }
+  }
+
+  // ── Sync: localStorage → Firestore on every write ───────────────────
+  // Intercept LS.s to also write to Firestore
+  window._fsSet = fsSet;
+  window._fsGet = fsGet;
+  window._fsConnected = () => _fsConnected;
+
+  // ── Pull all user data from Firestore on login ───────────────────────
+  window._fsPullUserData = async function(userId) {
+    if(!db) return;
+    const KEYS_TO_PULL = [
+      'simkk_kegiatan', 'simkk_evaluasi', 'simkk_eval_val',
+      'simkk_ut', 'simkk_ut_val', 'simkk_kontrak', 'simkk_cstat'
+    ];
+    let count = 0;
+    for(const col of KEYS_TO_PULL){
+      try {
+        // Fetch all docs in collection
+        const { getDocs, query, where } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const q = col === 'simkk_kegiatan'
+          ? query(collection(db, col), where('k', '>=', 'sk_act_'+userId+'_'), where('k', '<=', 'sk_act_'+userId+'_￿'))
+          : query(collection(db, col), where('k', '>=', 'sk_'), where('k', '<=', 'sk_￿'));
+        const snap = await getDocs(q);
+        snap.forEach(d => {
+          const data = d.data();
+          if(data.k && data.v !== undefined){
+            localStorage.setItem(data.k, JSON.stringify(data.v));
+            count++;
+          }
+        });
+      } catch(e) { /* silently continue */ }
+    }
+    if(count > 0) console.log('[SIMKK] Pulled', count, 'records from Firestore');
+    return count;
+  };
+
+  // ── Update connection indicator ──────────────────────────────────────
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const ind = document.getElementById('fsIndicator');
+      if(ind){
+        if(_fsConnected){ ind.textContent='☁ Cloud'; ind.style.color='var(--green)'; ind.title='Terhubung ke Firebase Firestore'; }
+        else if(CONFIG_FILLED){ ind.textContent='⚠ Cloud'; ind.style.color='var(--amber)'; ind.title='Gagal terhubung ke Firebase'; }
+        else { ind.textContent='💾 Lokal'; ind.style.color='var(--dim)'; ind.title='Mode lokal (Firebase belum dikonfigurasi)'; }
+      }
+    }, 2000);
+  });
+
+  </script>
 </head>
 <body>
 
@@ -579,7 +696,7 @@ select.fc option{background:var(--card3)}
       <div class="ht">SIMKK – Kinerja Berjenjang</div>
       <div class="hs">Dinas Kesehatan Kab. Lima Puluh Kota</div>
     </div>
-    <div class="hright">
+    <div class="hright"><span id="fsIndicator" style="font-size:11px;padding:3px 8px;border-radius:8px;border:1px solid var(--b2);cursor:help;margin-right:4px">💾 Lokal</span>
       <div class="uchip">
         <div class="ucav" id="hav"></div>
         <div><div class="ucname" id="hnm">—</div><div class="ucrole" id="hrl">—</div></div>
@@ -831,7 +948,13 @@ const STAFF={
 // ══════════════════════════════════════════════════════════
 const LS={
   g:k=>{try{return JSON.parse(localStorage.getItem(k)??'null')}catch{return null}},
-  s:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
+  s:(k,v)=>{
+    localStorage.setItem(k,JSON.stringify(v));
+    // Background sync to Firestore (non-blocking)
+    if(window._fsSet && window._fsConnected && window._fsConnected()){
+      window._fsSet(k,v).catch(()=>{});
+    }
+  },
   d:k=>localStorage.removeItem(k)
 };
 const SS={
@@ -934,6 +1057,12 @@ function doLogin(){
   if(getPwds()[id]!==pw){err.style.display='block';err.textContent='Password salah. Coba lagi.';return}
   err.style.display='none';
   CUR=id;SS.s('sk_cur',id);
+  // Pull latest data from Firestore cloud before showing dashboard
+  if(window._fsPullUserData){
+    window._fsPullUserData(id).then(n=>{
+      if(n>0) setTimeout(()=>showToast('☁ '+n+' data terbaru dari cloud'),1500);
+    }).catch(()=>{});
+  }
   document.getElementById('ls').style.display='none';
   document.getElementById('app').style.display='flex';
   document.getElementById('app').style.flexDirection='column';
