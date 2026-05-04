@@ -851,9 +851,45 @@ function defPwd(nm){
 }
 function ts(){return new Date().toLocaleString('id-ID',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function nowTs(){ return ts(); }
-function todayStr(){ return new Date().toISOString().slice(0,10); }
-function prevDay(d){ const dt=new Date(d+'T00:00:00'); dt.setDate(dt.getDate()-1); return dt.toISOString().slice(0,10); }
-function nextDay(d){ const dt=new Date(d+'T00:00:00'); dt.setDate(dt.getDate()+1); return dt.toISOString().slice(0,10); }
+function todayStr(){
+  // Use LOCAL date (not UTC) - important for WIB (UTC+7)
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+
+// Track current day - reset _dailyDate when day changes
+let _currentDay = todayStr();
+function checkDayChange(){
+  const now = todayStr();
+  if(now !== _currentDay){
+    _currentDay = now;
+    // Day has changed - if viewing today, update to new today
+    if(_dailyDate && _dailyDate < now && _dailyId){
+      // Was viewing yesterday (which was "today") - update to new today
+      _dailyDate = now;
+      if(_dailyId) renderDailyAct(_dailyId, _dailyOwn, _dailyV);
+    }
+  }
+}
+function prevDay(d){
+  const dt=new Date(d+'T00:00:00');
+  dt.setDate(dt.getDate()-1);
+  const y=dt.getFullYear();
+  const m=String(dt.getMonth()+1).padStart(2,'0');
+  const dd=String(dt.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+function nextDay(d){
+  const dt=new Date(d+'T00:00:00');
+  dt.setDate(dt.getDate()+1);
+  const y=dt.getFullYear();
+  const m=String(dt.getMonth()+1).padStart(2,'0');
+  const dd=String(dt.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
 function fmtDate(d){ return new Date(d+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
 function fmtDateShort(d){ return new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
 function showToast(msg, type){
@@ -2024,7 +2060,10 @@ function _renderTableOnly(id){
 
 function renderDailyAct(id,isOwn,isV){
   _dailyId=id; _dailyOwn=isOwn; _dailyV=isV;
+  // Always verify date is today if viewing "today" but day has changed
   if(!_dailyDate) _dailyDate=todayStr();
+  // If _dailyDate is in the future (shouldn't happen), reset to today
+  if(_dailyDate > todayStr()) _dailyDate=todayStr();
   runCarryOver(id,_dailyDate);
   _renderDailyInner();
   // Realtime: refresh every 30s if viewing today
@@ -2066,7 +2105,7 @@ function _renderDailyInner(){
   const isPast = _dailyDate < today;
   const isFuture = _dailyDate > today;
   const isKD = STAFF[id]?.lv==='L0';
-  const canEdit = isOwn && !isFuture;
+  const canEdit = isOwn; // can edit any past or present date (not future)
   const canVal = !isOwn && canValidateAct(id) && !isFuture;
 
   // Stats
@@ -2084,8 +2123,9 @@ function _renderDailyInner(){
       <div class="day-title">${fmtDate(_dailyDate)}</div>
       <div class="day-sub">${_dailyDate===today?'Hari ini':isPast?'Hari lalu':'Hari ke depan'}</div>
     </div>
-    <button class="day-btn" onclick="dailyChDay(1)"${_dailyDate>=today?' disabled style="opacity:.4"':''}>Berikutnya ▶</button>
-    <input type="date" class="day-inp" value="${_dailyDate}" max="${today}" onchange="dailyJump(this.value)">
+    <button class="day-btn" onclick="dailyGoToday()" title="Ke hari ini">📅 Hari Ini</button>
+    <button class="day-btn" onclick="dailyChDay(1)"${_dailyDate>=todayStr()?' disabled style="opacity:.4"':''}>Berikutnya ▶</button>
+    <input type="date" class="day-inp" id="dailyDatePicker" value="${_dailyDate}" max="${todayStr()}" onchange="dailyJump(this.value)">
     <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
       ${canEdit?'<button class="btn btn-gold btn-sm" onclick="openActForm()">+ Tambah Kegiatan</button>':''}
       ${isOwn||canVal?'<button class="btn btn-out btn-sm no-print" onclick="openPrintMonthly(\''+id+'\')">🖨️ Cetak</button><button class="btn btn-grn btn-sm no-print" onclick="exportExcelHarian(\''+id+'\')">📥 Excel</button>':''}
@@ -2124,7 +2164,7 @@ function _renderDailyInner(){
       <div class="sbico">📋</div>
       <div class="sbt">
         <div class="sbt1">Kegiatan – ${fmtDate(_dailyDate)}</div>
-        <div class="sbt2">${STAFF[id]?.nm} · ${jmlVal}/${total} tervalidasi${_dailyDate===today?' · <span style="color:var(--green);font-size:11px">● Live</span>':''}</div>
+        <div class="sbt2">${STAFF[id]?.nm} · ${jmlVal}/${total} tervalidasi${_dailyDate===todayStr()?' · <span style="color:var(--green);font-size:11px">● Live</span>'+'':''}</div>
       </div>
     </div>
     <div class="sbbd op">${info}<div style="overflow-x:auto">
@@ -2316,13 +2356,18 @@ function _buildActLog(acts, id){
 
 // ── Navigation ───────────────────────────────────────────
 function dailyChDay(d){
+  const today = todayStr();
   const dt=new Date(_dailyDate+'T00:00:00'); dt.setDate(dt.getDate()+d);
   const nd=dt.toISOString().slice(0,10);
-  if(nd>todayStr()) return;
+  if(nd>today) return; // cannot navigate to future
   _dailyDate=nd;
   renderDailyAct(_dailyId,_dailyOwn,_dailyV);
 }
-function dailyJump(d){ if(d>todayStr())return; _dailyDate=d; renderDailyAct(_dailyId,_dailyOwn,_dailyV); }
+function dailyGoToday(){
+  _dailyDate = todayStr();
+  renderDailyAct(_dailyId, _dailyOwn, _dailyV);
+}
+function dailyJump(d){ const today=todayStr(); if(d>today)return; _dailyDate=d; renderDailyAct(_dailyId,_dailyOwn,_dailyV); }
 
 // ── Form ─────────────────────────────────────────────────
 function openActForm(){
@@ -3345,7 +3390,9 @@ let _notifTimer=null;
 function startNotifTimer(){
   clearInterval(_notifTimer);
   _notifTimer=setInterval(()=>{
-    // Skip all refreshes if user is actively typing in a form
+    // Check for day change first (auto-advance to new day)
+    checkDayChange();
+    // Skip other refreshes if user is actively typing in a form
     const focused = document.activeElement;
     const tag = focused ? focused.tagName : '';
     if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
