@@ -833,16 +833,24 @@ const STAFF={
 // UTILS
 // ══════════════════════════════════════════════════════════
 const LS={
-  g:k=>{try{return JSON.parse(localStorage.getItem(k)??'null')}catch{return null}},
-  s:(k,v)=>{
-    localStorage.setItem(k,JSON.stringify(v));
-    // Background sync to Firestore (non-blocking)
-    if(window._fsSet && window._fsConnected && window._fsConnected()){
+  g: k => { try{ return JSON.parse(localStorage.getItem(k)??'null'); }catch{ return null; } },
+  s: (k,v) => {
+    // 1. Tulis ke localStorage segera (sinkron) agar UI responsif
+    try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){}
+    // 2. Sync ke Firestore (async, non-blocking) — module akan override ini
+    if(window._fsSet && window._fsReady){
       window._fsSet(k,v).catch(()=>{});
     }
   },
-  d:k=>localStorage.removeItem(k)
+  d: k => {
+    try{ localStorage.removeItem(k); }catch(e){}
+    if(window._fsDel && window._fsReady){
+      window._fsDel(k).catch(()=>{});
+    }
+  }
 };
+// Expose agar Firebase module bisa override method .s dan .d
+window.LS = LS;
 const SS={
   g:k=>{try{return JSON.parse(sessionStorage.getItem(k)??'null')}catch{return null}},
   s:(k,v)=>sessionStorage.setItem(k,JSON.stringify(v))
@@ -936,23 +944,41 @@ const setPwds=p=>LS.s('sk_pwds',p);
 let CUR=null;
 
 function doLogin(){
-  const id=document.getElementById('lsel').value;
-  const pw=document.getElementById('lpwd').value;
-  const err=document.getElementById('lerr');
-  if(!id){err.style.display='block';err.textContent='Pilih nama terlebih dahulu.';return}
-  if(getPwds()[id]!==pw){err.style.display='block';err.textContent='Password salah. Coba lagi.';return}
+  const id  = document.getElementById('lsel').value;
+  const pw  = document.getElementById('lpwd').value;
+  const err = document.getElementById('lerr');
+  const btn = document.querySelector('.lbtn');
+  if(!id){ err.style.display='block'; err.textContent='Pilih nama terlebih dahulu.'; return; }
+  if(getPwds()[id]!==pw){ err.style.display='block'; err.textContent='Password salah. Coba lagi.'; return; }
   err.style.display='none';
-  CUR=id;SS.s('sk_cur',id);
-  // Pull latest data from Firestore cloud before showing dashboard
-  if(window._fsPullUserData){
-    window._fsPullUserData(id).then(n=>{
-      if(n>0) setTimeout(()=>showToast('☁ '+n+' data terbaru dari cloud'),1500);
-    }).catch(()=>{});
+  CUR = id; SS.s('sk_cur', id);
+
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Memuat data dari cloud…'; }
+
+  function afterLogin(){
+    if(btn){ btn.disabled=false; btn.textContent='Masuk ke SIMKK'; }
+    document.getElementById('ls').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('app').style.flexDirection='column';
+    initApp();
   }
-  document.getElementById('ls').style.display='none';
-  document.getElementById('app').style.display='flex';
-  document.getElementById('app').style.flexDirection='column';
-  initApp();
+
+  // Tunggu Firebase module siap (max 5 detik) lalu pull data
+  let waited=0;
+  const waitFs = setInterval(()=>{
+    waited += 200;
+    if(window._fsReady || waited >= 5000){
+      clearInterval(waitFs);
+      if(window._fsPullUserData){
+        const t = setTimeout(()=>afterLogin(), 8000); // timeout 8 detik
+        window._fsPullUserData(id)
+          .then(n=>{ clearTimeout(t); if(n>0) showToast('☁ '+n+' data dimuat dari cloud'); afterLogin(); })
+          .catch(()=>{ clearTimeout(t); afterLogin(); });
+      } else {
+        afterLogin();
+      }
+    }
+  }, 200);
 }
 function doLogout(){
   CUR=null;SS.s('sk_cur',null);
@@ -3910,23 +3936,37 @@ function initApp(){
   const saved = SS.g('sk_cur');
   if(saved && STAFF[saved]){
     CUR = saved;
-    document.getElementById('ls').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    document.getElementById('app').style.flexDirection = 'column';
-    initApp();
+    // Tunggu Firebase module siap, lalu pull data terbaru
+    let waited2 = 0;
+    const waitFs2 = setInterval(()=>{
+      waited2 += 100;
+      if(window._fsReady || waited2 >= 4000){
+        clearInterval(waitFs2);
+        if(window._fsPullUserData){
+          window._fsPullUserData(saved)
+            .then(n=>{ if(n>0) setTimeout(()=>showToast('☁ '+n+' data terbaru dari cloud'),500); })
+            .catch(()=>{});
+        }
+        document.getElementById('ls').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        document.getElementById('app').style.flexDirection = 'column';
+        initApp();
+      }
+    }, 100);
   }
 })();
 </script>
 
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- FIREBASE CONFIG — GANTI DENGAN KONFIGURASI ANDA   -->
-  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- FIREBASE MODULE – Firestore sebagai penyimpanan UTAMA          -->
+  <!-- localStorage hanya sebagai cache read (bukan write utama)      -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
   <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where }
+  import { getFirestore, doc, getDoc, setDoc, deleteDoc,
+           collection, getDocs, query, where, writeBatch }
     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-  // ── GANTI NILAI-NILAI INI DENGAN KONFIGURASI FIREBASE ANDA ──────────
   const FIREBASE_CONFIG = {
     apiKey:            "AIzaSyDLlA1f3QZX5jyQGI8hleJIeLsQqRfYPS8",
     authDomain:        "simkk-limapuluhkota.firebaseapp.com",
@@ -3935,153 +3975,190 @@ function initApp(){
     messagingSenderId: "430659095362",
     appId:             "1:430659095362:web:38fbbceb7192e8a11356db"
   };
-  // ─────────────────────────────────────────────────────────────────────
-
-  // Check if config has been filled
-  const CONFIG_FILLED = FIREBASE_CONFIG.apiKey && 
-    FIREBASE_CONFIG.apiKey !== 'GANTI_DENGAN_API_KEY_ANDA' &&
-    FIREBASE_CONFIG.projectId && 
-    FIREBASE_CONFIG.projectId !== 'GANTI_DENGAN_PROJECT_ID';
 
   let db = null;
-  let _fsConnected = false;
 
-  if(CONFIG_FILLED){
-    try {
-      const app = initializeApp(FIREBASE_CONFIG);
-      db = getFirestore(app);
-      _fsConnected = true;
-      window._firestoreDB = db;
-      window._firestoreReady = true;
-      console.log('[SIMKK] Firebase connected ✅');
-    } catch(e) {
-      console.warn('[SIMKK] Firebase init failed:', e.message);
-    }
-  } else {
-    console.info('[SIMKK] Firebase not configured — using localStorage only');
+  // ── Init ──────────────────────────────────────────────────────────
+  try {
+    const app = initializeApp(FIREBASE_CONFIG);
+    db = getFirestore(app);
+    window._db = db;
+    console.log('[SIMKK] Firebase init OK ✅');
+  } catch(e) {
+    console.error('[SIMKK] Firebase init FAILED:', e.message);
   }
 
-  // ── Firestore helpers ────────────────────────────────────────────────
-  const PREFIX = 'simkk_';
-
-  function getColName(key){
-    if(key.startsWith('sk_act'))      return 'simkk_kegiatan';
-    if(key.startsWith('sk_evtw_v'))   return 'simkk_eval_val';
-    if(key.startsWith('sk_evtw'))     return 'simkk_evaluasi';
-    if(key.startsWith('sk_utv'))      return 'simkk_ut_val';
-    if(key.startsWith('sk_ut'))       return 'simkk_ut';
-    if(key.startsWith('sk_cst'))      return 'simkk_cstat';
-    if(key.startsWith('sk_c_'))       return 'simkk_kontrak';
+  // ── Collection routing ────────────────────────────────────────────
+  function getCol(key){
+    if(key.startsWith('sk_act'))     return 'simkk_kegiatan';
+    if(key.startsWith('sk_evtw_v'))  return 'simkk_eval_val';
+    if(key.startsWith('sk_evtw'))    return 'simkk_evaluasi';
+    if(key.startsWith('sk_utv'))     return 'simkk_ut_val';
+    if(key.startsWith('sk_ut'))      return 'simkk_ut';
+    if(key.startsWith('sk_cst'))     return 'simkk_cstat';
+    if(key.startsWith('sk_c_'))      return 'simkk_kontrak';
+    if(key.startsWith('sk_medals'))  return 'simkk_misc';
+    if(key.startsWith('sk_notif'))   return 'simkk_misc';
+    if(key.startsWith('sk_pwds'))    return 'simkk_misc';
     return 'simkk_misc';
   }
-  function safeDocId(key){ return key.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,500); }
+  function safeId(key){ return key.replace(/[^a-zA-Z0-9_\-]/g,'_').slice(0,500); }
 
-  async function fsGet(key) {
-    if(!db) return null;
+  // ── WRITE: simpan ke Firestore DAN localStorage (cache) ──────────
+  async function fsSet(key, val){
+    // Selalu tulis ke localStorage sebagai cache
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
+    // Tulis ke Firestore sebagai primary storage
+    if(!db) return;
     try {
-      const snap = await getDoc(doc(db, getColName(key), safeDocId(key)));
-      return snap.exists() ? snap.data().v : null;
-    } catch(e) {
-      console.warn('[SIMKK] fsGet error for key:', key, e.message);
-      return null;
+      await setDoc(doc(db, getCol(key), safeId(key)), {
+        v: val, k: key, t: Date.now()
+      });
+    } catch(e){
+      console.warn('[SIMKK] fsSet failed ('+key+'):', e.code || e.message);
     }
   }
 
-  async function fsSet(key, val) {
+  // ── DELETE: hapus dari Firestore DAN localStorage ─────────────────
+  async function fsDel(key){
+    try { localStorage.removeItem(key); } catch(e){}
     if(!db) return;
     try {
-      const col = getColName(key);
-      const docId = safeDocId(key);
-      await setDoc(doc(db, col, docId), { v: val, k: key, t: Date.now() });
-    } catch(e) {
-      console.warn('[SIMKK] fsSet error for key:', key, e.message);
+      await deleteDoc(doc(db, getCol(key), safeId(key)));
+    } catch(e){
+      console.warn('[SIMKK] fsDel failed ('+key+'):', e.code || e.message);
     }
   }
 
-  // ── Sync: localStorage → Firestore on every write ───────────────────
-  // Intercept LS.s to also write to Firestore
-  window._fsSet = fsSet;
-  window._fsGet = fsGet;
-  window._fsConnected = () => _fsConnected;
-
-  // ── Pull all user data from Firestore on login ───────────────────────
-  window._fsPullUserData = async function(userId) {
-    if(!db) return;
-    const KEYS_TO_PULL = [
-      'simkk_kegiatan', 'simkk_evaluasi', 'simkk_eval_val',
-      'simkk_ut', 'simkk_ut_val', 'simkk_kontrak', 'simkk_cstat'
-    ];
-    let count = 0;
-    for(const col of KEYS_TO_PULL){
+  // ── READ: coba Firestore dulu, fallback ke localStorage cache ─────
+  async function fsGet(key){
+    // Coba Firestore dulu
+    if(db){
       try {
-        // Fetch all docs in collection
-        const { getDocs, query, where } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        const q = col === 'simkk_kegiatan'
-          ? query(collection(db, col), where('k', '>=', 'sk_act_'+userId+'_'), where('k', '<=', 'sk_act_'+userId+'_ '))
-          : query(collection(db, col), where('k', '>=', 'sk_'), where('k', '<=', 'sk_ '));
+        const snap = await getDoc(doc(db, getCol(key), safeId(key)));
+        if(snap.exists()){
+          const val = snap.data().v;
+          // Update cache
+          try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
+          return val;
+        }
+      } catch(e){
+        console.warn('[SIMKK] fsGet Firestore failed ('+key+'), fallback ke cache:', e.code);
+      }
+    }
+    // Fallback ke localStorage cache
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+
+  // ── PULL semua data user dari Firestore ke localStorage cache ─────
+  async function fsPullUser(userId){
+    if(!db) return 0;
+    const COLS = ['simkk_kegiatan','simkk_evaluasi','simkk_eval_val',
+                  'simkk_ut','simkk_ut_val','simkk_kontrak','simkk_cstat','simkk_misc'];
+    let count = 0;
+    for(const col of COLS){
+      try {
+        // Query dokumen yang key-nya terkait userId
+        const q = query(collection(db, col),
+          where('k', '>=', 'sk_'), where('k', '<=', 'sk_\uFFFF'));
         const snap = await getDocs(q);
         snap.forEach(d => {
           const data = d.data();
           if(data.k && data.v !== undefined){
-            localStorage.setItem(data.k, JSON.stringify(data.v));
-            count++;
+            // Hanya ambil yang relevan untuk userId ini
+            // (kegiatan, eval, ut, kontrak punya userId di keynya)
+            const relevant = data.k.includes('_'+userId+'_')
+              || data.k.includes('_'+userId)
+              || !data.k.match(/sk_(act|evtw|ut|c_|cst)_/); // misc keys
+            if(relevant){
+              try { localStorage.setItem(data.k, JSON.stringify(data.v)); } catch(e){}
+              count++;
+            }
           }
         });
-      } catch(e) { /* silently continue */ }
+      } catch(e){ console.warn('[SIMKK] pull col '+col+' failed:', e.code); }
     }
-    if(count > 0) console.log('[SIMKK] Pulled', count, 'records from Firestore');
+    console.log('[SIMKK] Pulled', count, 'records for user', userId);
     return count;
-  };
-
-  // ── Test connection ─────────────────────────────────────────────────
-  function updateIndicator(text, color, title){
-    // Retry a few times — indicator DOM might not exist yet
-    let tries = 0;
-    const tryUpdate = ()=>{
-      const ind = document.getElementById('fsIndicator');
-      if(ind){ ind.textContent=text; ind.style.color=color; ind.title=title; }
-      else if(++tries < 10) setTimeout(tryUpdate, 300);
-    };
-    tryUpdate();
   }
 
-  if(_fsConnected && db){
-    // Try writing a test doc — this is the most reliable connection test
-    setDoc(doc(db,'simkk_misc','connection_test'),{ ping: Date.now(), ok: true })
+  // ── Expose ke window ──────────────────────────────────────────────
+  window._fsSet  = fsSet;
+  window._fsDel  = fsDel;
+  window._fsGet  = fsGet;
+  window._fsPullUserData = fsPullUser;
+  window._fsReady = true;
+  window._fsConnected = () => db !== null;
+  window._firestoreReady = db !== null;
+
+  // ── Override LS di window setelah module siap ─────────────────────
+  // Ganti LS.s dan LS.d agar pakai Firestore sebagai primary
+  if(window.LS){
+    window.LS.s = (k,v) => {
+      // Tulis ke localStorage segera (sinkron) agar UI tidak menunggu
+      try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){}
+      // Tulis ke Firestore async (non-blocking)
+      fsSet(k, v).catch(e => console.warn('[SIMKK] LS.s sync failed:', k, e.message));
+    };
+    window.LS.d = (k) => {
+      try { localStorage.removeItem(k); } catch(e){}
+      fsDel(k).catch(()=>{});
+    };
+    window.LS.g = (k) => {
+      // Read dari localStorage (sudah di-sync dari Firestore saat login)
+      try { return JSON.parse(localStorage.getItem(k) ?? 'null'); }
+      catch(e){ return null; }
+    };
+    console.log('[SIMKK] LS overridden — writes go to Firestore ✅');
+  }
+
+  // ── Connection indicator ──────────────────────────────────────────
+  function setIndicator(text, color, title){
+    let tries=0;
+    const try_=()=>{
+      const el=document.getElementById('fsIndicator');
+      if(el){ el.textContent=text; el.style.color=color; el.title=title; }
+      else if(++tries<15) setTimeout(try_,300);
+    };
+    try_();
+  }
+
+  if(db){
+    // Test tulis — ini juga sekaligus membuat document pertama di Firestore
+    setDoc(doc(db,'simkk_misc','_ping'),{ t: Date.now(), ok: true })
       .then(()=>{
-        console.log('[SIMKK] Firestore read/write: ✅ OK');
-        updateIndicator('☁ Cloud','var(--green)','Terhubung ke Firebase Firestore – simkk-limapuluhkota');
+        console.log('[SIMKK] Firestore write test: ✅ OK');
+        setIndicator('☁ Cloud','var(--green)',
+          'Terhubung ke Firestore – simkk-limapuluhkota\nSemua data tersimpan di cloud.');
       })
       .catch(e=>{
-        console.error('[SIMKK] Firestore test FAILED:', e.code, e.message);
-        _fsConnected = false;
-        window._firestoreReady = false;
+        console.error('[SIMKK] Firestore write test FAILED:', e.code, e.message);
         if(e.code==='permission-denied'){
-          updateIndicator('🔒 Rules','var(--red)',
-            'Security Rules menolak akses. Salin rules dari file PANDUAN ke Firebase Console → Firestore → Rules lalu klik Publish.');
-          // Tampilkan alert sekali agar user tahu
-          if(!sessionStorage.getItem('rules_warned')){
-            sessionStorage.setItem('rules_warned','1');
+          setIndicator('🔒 Rules','var(--red)',
+            'Security Rules menolak akses!\nBuka Firebase Console → Firestore → Rules\nlalu paste rules dari file FIRESTORE-RULES-SIMKK.txt dan klik Publish.');
+          if(!sessionStorage.getItem('_rules_alerted')){
+            sessionStorage.setItem('_rules_alerted','1');
             setTimeout(()=>alert(
-              '⚠️ SIMKK: Firestore Security Rules belum dikonfigurasi!
-
-'+
-              'Buka Firebase Console → Firestore Database → Rules
-'+
-              'Salin rules dari file PANDUAN-FIREBASE-SIMKK.html
-'+
-              'Klik Publish.
-
-'+
-              'Aplikasi tetap berjalan dengan data lokal.'
-            ), 1000);
+              '⚠️ SIMKK: Firestore Security Rules belum diset!\n\n'+
+              '1. Buka https://console.firebase.google.com\n'+
+              '2. Pilih project simkk-limapuluhkota\n'+
+              '3. Klik Firestore Database → Rules\n'+
+              '4. Paste isi file FIRESTORE-RULES-SIMKK.txt\n'+
+              '5. Klik Publish\n\nData saat ini tersimpan lokal saja.'
+            ), 800);
           }
         } else {
-          updateIndicator('⚠ Offline','var(--amber)','Error: '+e.code+' – '+e.message);
+          setIndicator('⚠ Offline','var(--amber)', 'Gagal terhubung: '+e.message);
         }
+        db = null; // disable future writes to Firestore
+        window._fsReady = false;
+        window._firestoreReady = false;
       });
   } else {
-    setTimeout(()=>updateIndicator('💾 Lokal','var(--dim)','Mode lokal – Firebase tidak terkonfigurasi'), 800);
+    setTimeout(()=>setIndicator('💾 Lokal','var(--dim)','Firebase tidak terkonfigurasi'), 800);
   }
 
   </script>
