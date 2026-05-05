@@ -554,7 +554,7 @@ select.fc option{background:var(--card3)}
   <!-- ═══════════════════════════════════════════════════ -->
   <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, writeBatch }
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where }
     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   // ── GANTI NILAI-NILAI INI DENGAN KONFIGURASI FIREBASE ANDA ──────────
@@ -569,7 +569,10 @@ select.fc option{background:var(--card3)}
   // ─────────────────────────────────────────────────────────────────────
 
   // Check if config has been filled
-  const CONFIG_FILLED = !Object.values(FIREBASE_CONFIG).some(v => v.startsWith('GANTI_'));
+  const CONFIG_FILLED = FIREBASE_CONFIG.apiKey && 
+    FIREBASE_CONFIG.apiKey !== 'GANTI_DENGAN_API_KEY_ANDA' &&
+    FIREBASE_CONFIG.projectId && 
+    FIREBASE_CONFIG.projectId !== 'GANTI_DENGAN_PROJECT_ID';
 
   let db = null;
   let _fsConnected = false;
@@ -592,29 +595,38 @@ select.fc option{background:var(--card3)}
   // ── Firestore helpers ────────────────────────────────────────────────
   const PREFIX = 'simkk_';
 
+  function getColName(key){
+    if(key.startsWith('sk_act'))      return 'simkk_kegiatan';
+    if(key.startsWith('sk_evtw_v'))   return 'simkk_eval_val';
+    if(key.startsWith('sk_evtw'))     return 'simkk_evaluasi';
+    if(key.startsWith('sk_utv'))      return 'simkk_ut_val';
+    if(key.startsWith('sk_ut'))       return 'simkk_ut';
+    if(key.startsWith('sk_cst'))      return 'simkk_cstat';
+    if(key.startsWith('sk_c_'))       return 'simkk_kontrak';
+    return 'simkk_misc';
+  }
+  function safeDocId(key){ return key.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,500); }
+
   async function fsGet(key) {
     if(!db) return null;
     try {
-      const snap = await getDoc(doc(db, PREFIX + key.split('_')[0], key));
+      const snap = await getDoc(doc(db, getColName(key), safeDocId(key)));
       return snap.exists() ? snap.data().v : null;
-    } catch(e) { return null; }
+    } catch(e) {
+      console.warn('[SIMKK] fsGet error for key:', key, e.message);
+      return null;
+    }
   }
 
   async function fsSet(key, val) {
     if(!db) return;
     try {
-      const col = key.startsWith('sk_act') ? 'simkk_kegiatan'
-        : key.startsWith('sk_evtw_v') ? 'simkk_eval_val'
-        : key.startsWith('sk_evtw') ? 'simkk_evaluasi'
-        : key.startsWith('sk_utv') ? 'simkk_ut_val'
-        : key.startsWith('sk_ut') ? 'simkk_ut'
-        : key.startsWith('sk_cst') ? 'simkk_cstat'
-        : key.startsWith('sk_c_') ? 'simkk_kontrak'
-        : key.startsWith('sk_medals') ? 'simkk_misc'
-        : 'simkk_misc';
-      const docId = key.replace(/[^a-zA-Z0-9_-]/g, '_');
-      await setDoc(doc(db, col, docId), { v: val, k: key, t: Date.now() }, { merge: false });
-    } catch(e) { console.warn('[SIMKK] fsSet error:', e.message); }
+      const col = getColName(key);
+      const docId = safeDocId(key);
+      await setDoc(doc(db, col, docId), { v: val, k: key, t: Date.now() });
+    } catch(e) {
+      console.warn('[SIMKK] fsSet error for key:', key, e.message);
+    }
   }
 
   // ── Sync: localStorage → Firestore on every write ───────────────────
@@ -652,17 +664,32 @@ select.fc option{background:var(--card3)}
     return count;
   };
 
-  // ── Update connection indicator ──────────────────────────────────────
-  window.addEventListener('load', () => {
-    setTimeout(() => {
+  // ── Test connection with a real read ─────────────────────────────────
+  if(_fsConnected && db){
+    getDoc(doc(db, 'simkk_misc', 'connection_test')).then(()=>{
+      console.log('[SIMKK] Firestore connection test: ✅ OK');
+      const ind = document.getElementById('fsIndicator');
+      if(ind){ ind.textContent='☁ Cloud'; ind.style.color='var(--green)'; ind.title='Terhubung ke Firebase Firestore – simkk-limapuluhkota'; }
+    }).catch(e=>{
+      console.error('[SIMKK] Firestore connection test FAILED:', e.code, e.message);
+      _fsConnected = false;
       const ind = document.getElementById('fsIndicator');
       if(ind){
-        if(_fsConnected){ ind.textContent='☁ Cloud'; ind.style.color='var(--green)'; ind.title='Terhubung ke Firebase Firestore'; }
-        else if(CONFIG_FILLED){ ind.textContent='⚠ Cloud'; ind.style.color='var(--amber)'; ind.title='Gagal terhubung ke Firebase'; }
-        else { ind.textContent='💾 Lokal'; ind.style.color='var(--dim)'; ind.title='Mode lokal (Firebase belum dikonfigurasi)'; }
+        if(e.code==='permission-denied'){
+          ind.textContent='🔒 Rules Error'; ind.style.color='var(--red)';
+          ind.title='Firestore terhubung tapi Security Rules menolak akses. Periksa Rules di Firebase Console.';
+        } else {
+          ind.textContent='⚠ Offline'; ind.style.color='var(--amber)';
+          ind.title='Error: '+e.message;
+        }
       }
-    }, 2000);
-  });
+    });
+  } else {
+    setTimeout(()=>{
+      const ind = document.getElementById('fsIndicator');
+      if(ind){ ind.textContent='💾 Lokal'; ind.style.color='var(--dim)'; ind.title='Mode lokal saja'; }
+    }, 500);
+  }
 
   </script>
 </head>
