@@ -547,6 +547,20 @@ select.fc option{background:var(--card3)}
 .btn-gold{background:rgba(200,148,31,.15);color:var(--goldl);border:1px solid rgba(200,148,31,.3)}
 .btn-gold:hover{background:rgba(200,148,31,.25)}
 
+/* ── Admin Panel & Profile ──────────────────────────────── */
+.adm-tabs{display:flex;gap:2px;background:var(--card2);border-radius:8px;padding:3px;margin-bottom:16px}
+.adm-tab{flex:1;padding:7px 10px;background:none;border:none;border-radius:6px;font-size:12px;font-weight:600;color:var(--dim);cursor:pointer;transition:.15s}
+.adm-tab.active{background:var(--card3);color:var(--goldl)}
+.user-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--b2);border-radius:8px;margin-bottom:6px;background:var(--card2);transition:.15s}
+.user-row:hover{border-color:var(--b3);background:var(--card3)}
+.user-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-nm{font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-ti{font-size:11px;color:var(--dim);margin-top:1px}
+.user-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:rgba(200,148,31,.15);color:var(--goldl);border:1px solid rgba(200,148,31,.3)}
+.user-badge.adm{background:rgba(226,85,85,.15);color:#E25555;border-color:rgba(226,85,85,.3)}
+.profile-av{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+
 </style>
 
   <script type="module">
@@ -577,6 +591,10 @@ select.fc option{background:var(--card3)}
     if(k.startsWith('sk_ut'))      return 'simkk_ut';
     if(k.startsWith('sk_cst'))     return 'simkk_cstat';
     if(k.startsWith('sk_c_'))      return 'simkk_kontrak';
+    if(k.startsWith('sk_users'))   return 'simkk_config';
+    if(k.startsWith('sk_admins'))  return 'simkk_config';
+    if(k.startsWith('sk_pwds'))    return 'simkk_config';
+    if(k.startsWith('sk_profile')) return 'simkk_config';
     return 'simkk_misc';
   }
   const did = k => k.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,500);
@@ -618,16 +636,34 @@ select.fc option{background:var(--card3)}
     if(!db) return 0;
     const ids = Array.isArray(staffIds)&&staffIds.length ? staffIds : [userId];
     const COLS = ['simkk_kegiatan','simkk_evaluasi','simkk_eval_val',
-                  'simkk_ut','simkk_ut_val','simkk_kontrak','simkk_cstat'];
+                  'simkk_ut','simkk_ut_val','simkk_kontrak','simkk_cstat',
+                  'simkk_config']; // users, admins, passwords, profiles
     let n = 0;
     for(const colName of COLS){
       try{
         const snap = await getDocs(collection(db, colName));
         snap.forEach(d => {
-          const {k,v} = d.data();
+          const data = d.data();
+          const {k,v} = data;
+          const fsTs = data.t || 0;
           if(k && v!==undefined && ids.some(id=>k.includes('_'+id+'_')||k.endsWith('_'+id))){
-            try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){}
-            n++;
+            // Jangan timpa localStorage jika data lokal lebih baru (user baru hapus/edit)
+            const localTs = parseInt(localStorage.getItem(k+'__ts')||'0');
+            if(localTs > fsTs + 500){
+              // Lokal lebih baru → upload ke Firestore agar sync
+              try{
+                const localVal = JSON.parse(localStorage.getItem(k)||'null');
+                if(localVal !== null && db)
+                  setDoc(doc(db,col(k),did(k)),{v:localVal,k,t:localTs}).catch(()=>{});
+              }catch(e){}
+            } else {
+              // Firestore sama baru atau lebih baru → update lokal
+              try{
+                localStorage.setItem(k, JSON.stringify(v));
+                localStorage.setItem(k+'__ts', String(fsTs));
+              }catch(e){}
+              n++;
+            }
           }
         });
       }catch(e){ console.warn('[FB] pull',colName,'fail:',e.code); }
@@ -641,15 +677,16 @@ select.fc option{background:var(--card3)}
   const _override = () => {
     if(window.LS && !window.LS._fb){
       window.LS.s = (k,v) => {
-        try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){}
-        if(db) fsSet(k,v).catch(()=>{});
+        // fsSet sudah handle localStorage + timestamp + Firestore
+        fsSet(k,v).catch(()=>{});
       };
       window.LS.d = (k) => {
-        try{ localStorage.removeItem(k); }catch(e){}
+        const now = Date.now();
+        try{ localStorage.removeItem(k); localStorage.setItem(k+'__ts', String(now)); }catch(e){}
         if(db) fsDel(k).catch(()=>{});
       };
       window.LS._fb = true;
-      console.log('[FB] LS.s + LS.d overridden → data ke Firestore ✅');
+      console.log('[FB] LS overridden → semua data ke Firestore ✅');
     } else if(!window.LS && ++_tries < 60) setTimeout(_override, 100);
   };
   setTimeout(_override, 80);
@@ -746,8 +783,9 @@ select.fc option{background:var(--card3)}
         </div>
       </div>
       <button class="hbtn-exec" onclick="openExecView()">🎯 Eksekutif</button>
-      <button class="hbtn" onclick="openPwdModal()">🔑 Ganti Password</button>
-      <button class="hbtn" onclick="pullAndRefresh()" title="Tarik data terbaru semua bawahan dari cloud">☁ Sync Data</button>
+      <button class="hbtn" onclick="openProfileModal()">👤 Profil &amp; Password</button>
+      <button class="hbtn" id="btnAdmin" style="display:none" onclick="openAdminPanel()">🛡 Admin</button>
+      <button class="hbtn" onclick="pullAndRefresh()" title="Tarik data terbaru dari cloud">☁ Sync</button>
       <button class="hbtn danger" onclick="doLogout()">Keluar</button>
     </div>
   </header>
@@ -814,6 +852,204 @@ select.fc option{background:var(--card3)}
     <div class="mft">
       <button class="btn btn-out" onclick="closeMdl('mDel')">Batal</button>
       <button class="btn btn-danger" id="mDelOk" onclick="runPendingDelete()">🗑 Hapus</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- MODAL: Admin Panel                                              -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="ov" id="mAdmin">
+  <div class="mdl" style="width:820px;max-width:96vw">
+    <div class="mhd">
+      <h3>🛡 Admin Panel – Manajemen User</h3>
+      <button class="mcl" onclick="closeMdl('mAdmin')">×</button>
+    </div>
+    <div class="mb" style="padding:0">
+      <!-- Tabs -->
+      <div style="padding:12px 18px 0;border-bottom:1px solid var(--b2)">
+        <div class="adm-tabs">
+          <button class="adm-tab active" id="admTab1" onclick="admSwitchTab(1)">👥 Daftar User</button>
+          <button class="adm-tab" id="admTab2" onclick="admSwitchTab(2)">➕ Tambah User</button>
+          <button class="adm-tab" id="admTab3" onclick="admSwitchTab(3)">⚙ Pengaturan</button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Daftar User -->
+      <div id="admPane1" style="padding:16px 18px">
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <input class="fc" id="admSearch" placeholder="🔍 Cari nama pegawai…" oninput="admFilterUsers()" style="flex:1;background:var(--card3)">
+          <button class="btn btn-out btn-sm" onclick="admRenderUsers()">↺ Refresh</button>
+        </div>
+        <div id="admUserList" style="max-height:420px;overflow-y:auto;padding-right:2px">
+          <div style="text-align:center;padding:40px;color:var(--dim)">⏳ Memuat…</div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Tambah User -->
+      <div id="admPane2" style="padding:16px 18px;display:none">
+        <div class="fg">
+          <label class="fl">Pilih Pegawai</label>
+          <select class="fc" id="admNewStaff" style="background:var(--card3)">
+            <option value="">— Pilih dari daftar —</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Password Awal</label>
+          <input class="fc" type="password" id="admNewPwd" placeholder="Min. 6 karakter">
+          <div style="font-size:11px;color:var(--dim);margin-top:4px">Kosongkan untuk gunakan password default (nama+123)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <input type="checkbox" id="admNewIsAdmin" style="width:16px;height:16px;accent-color:var(--gold)">
+          <label for="admNewIsAdmin" style="font-size:13px;cursor:pointer">Berikan hak Admin (bisa kelola semua user)</label>
+        </div>
+        <div class="lerr" id="admAddErr" style="display:none;margin-bottom:10px;text-align:left;background:rgba(226,85,85,.1);border:1px solid rgba(226,85,85,.3);border-radius:6px;padding:8px 12px;font-size:12px;color:#E25555"></div>
+        <button class="btn btn-gold" onclick="admAddUser()" style="width:100%">➕ Tambah User</button>
+      </div>
+
+      <!-- Tab 3: Pengaturan -->
+      <div id="admPane3" style="padding:16px 18px;display:none">
+        <div class="info-box" style="margin-bottom:14px;font-size:12px">
+          ⚙️ Pengaturan global aplikasi SIMKK. Hanya Admin yang dapat mengubah ini.
+        </div>
+        <div class="fg">
+          <label class="fl">Reset Password User</label>
+          <div style="display:flex;gap:8px">
+            <select class="fc" id="admResetStaff" style="background:var(--card3);flex:1">
+              <option value="">— Pilih user —</option>
+            </select>
+            <input class="fc" type="password" id="admResetPwd" placeholder="Password baru" style="flex:1;background:var(--card3)">
+            <button class="btn btn-amber btn-sm" onclick="admResetPwd()">Reset</button>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Hapus Semua Data User (Data Kinerja)</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select class="fc" id="admClearStaff" style="background:var(--card3);flex:1">
+              <option value="">— Pilih user —</option>
+            </select>
+            <button class="btn btn-danger btn-sm" onclick="admClearUserData()">🗑 Hapus Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- MODAL: Edit User (Admin)                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="ov" id="mEditUser">
+  <div class="mdl" style="width:440px">
+    <div class="mhd">
+      <h3>✏️ Edit Data User</h3>
+      <button class="mcl" onclick="closeMdl('mEditUser')">×</button>
+    </div>
+    <div class="mb">
+      <input type="hidden" id="euStaffId">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:12px;background:var(--card2);border-radius:8px">
+        <div class="profile-av" id="euAv" style="background:var(--grad-l2)"></div>
+        <div>
+          <div style="font-size:15px;font-weight:700" id="euNmLabel"></div>
+          <div style="font-size:11px;color:var(--dim);margin-top:2px" id="euTiLabel"></div>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Nama Tampilan</label>
+        <input class="fc" id="euNm" placeholder="Nama lengkap">
+      </div>
+      <div class="fg">
+        <label class="fl">Jabatan / Title</label>
+        <input class="fc" id="euTi" placeholder="Jabatan">
+      </div>
+      <div class="fg">
+        <label class="fl">Reset Password Baru <span style="color:var(--dim);font-weight:400">(kosongkan jika tidak diubah)</span></label>
+        <input class="fc" type="password" id="euPwd" placeholder="Password baru min. 6 karakter">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <input type="checkbox" id="euIsAdmin" style="width:16px;height:16px;accent-color:var(--gold)">
+        <label for="euIsAdmin" style="font-size:13px;cursor:pointer;color:var(--txt)">Hak Admin</label>
+      </div>
+      <div class="lerr" id="euErr" style="display:none;margin-top:10px;text-align:left;background:rgba(226,85,85,.1);border:1px solid rgba(226,85,85,.3);border-radius:6px;padding:8px 12px;font-size:12px;color:#E25555"></div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-danger btn-sm" onclick="admDeleteUser(document.getElementById('euStaffId').value)" style="margin-right:auto">🗑 Hapus User</button>
+      <button class="btn btn-out" onclick="closeMdl('mEditUser')">Batal</button>
+      <button class="btn btn-gold" onclick="admSaveUser()">💾 Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- MODAL: Profil & Password User                                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="ov" id="mProfile">
+  <div class="mdl" style="width:480px">
+    <div class="mhd">
+      <h3>👤 Profil &amp; Pengaturan Akun</h3>
+      <button class="mcl" onclick="closeMdl('mProfile')">×</button>
+    </div>
+    <div class="mb">
+      <!-- Avatar + Info -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:14px;background:var(--card2);border-radius:10px">
+        <div class="profile-av" id="profAv"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:16px;font-weight:700;color:var(--txt)" id="profNmDisp"></div>
+          <div style="font-size:12px;color:var(--dim);margin-top:2px" id="profTiDisp"></div>
+          <div style="font-size:11px;color:var(--dim2);margin-top:4px" id="profUnitDisp"></div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="adm-tabs">
+        <button class="adm-tab active" id="profTab1" onclick="profSwitchTab(1)">📋 Data Pribadi</button>
+        <button class="adm-tab" id="profTab2" onclick="profSwitchTab(2)">🔑 Ganti Password</button>
+      </div>
+
+      <!-- Pane 1: Data Pribadi -->
+      <div id="profPane1">
+        <div class="fg">
+          <label class="fl">Nama Tampilan</label>
+          <input class="fc" id="profNm" placeholder="Nama lengkap Anda">
+          <div style="font-size:11px;color:var(--dim);margin-top:4px">Nama ini akan muncul di seluruh aplikasi</div>
+        </div>
+        <div class="fg">
+          <label class="fl">Jabatan</label>
+          <input class="fc" id="profTi" placeholder="Jabatan Anda">
+        </div>
+        <div class="fg">
+          <label class="fl">Nomor HP / WA</label>
+          <input class="fc" id="profHp" placeholder="08xx-xxxx-xxxx" type="tel">
+        </div>
+        <div class="fg" style="margin-bottom:0">
+          <label class="fl">Email</label>
+          <input class="fc" id="profEmail" placeholder="nama@example.com" type="email">
+        </div>
+        <div class="lerr" id="profErr1" style="display:none;margin-top:10px;text-align:left;background:rgba(46,201,126,.08);border:1px solid rgba(46,201,126,.3);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--green)"></div>
+      </div>
+
+      <!-- Pane 2: Ganti Password -->
+      <div id="profPane2" style="display:none">
+        <div class="fg">
+          <label class="fl">Password Lama</label>
+          <input class="fc" type="password" id="profOldPwd" placeholder="Password saat ini">
+        </div>
+        <div class="fg">
+          <label class="fl">Password Baru</label>
+          <input class="fc" type="password" id="profNewPwd" placeholder="Min. 6 karakter" oninput="profPwStrength()">
+          <div class="pw-strength" id="profPwBar"></div>
+        </div>
+        <div class="fg" style="margin-bottom:0">
+          <label class="fl">Konfirmasi Password Baru</label>
+          <input class="fc" type="password" id="profConPwd" placeholder="Ulangi password baru">
+        </div>
+        <div class="lerr" id="profErr2" style="display:none;margin-top:10px;text-align:left;background:transparent;border:none;padding:0;font-size:12px"></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-out" onclick="closeMdl('mProfile')">Batal</button>
+      <button class="btn btn-gold" id="profSaveBtn" onclick="profSave()">💾 Simpan Perubahan</button>
     </div>
   </div>
 </div>
@@ -1049,15 +1285,45 @@ const childs=id=>Object.values(STAFF).filter(s=>s.par===id);
 // AUTH
 // ══════════════════════════════════════════════════════════
 function initPwds(){
-  // Clear old daily activity data from previous sessions (schema migration)
-  const DATA_VER='v5r1';
+  const DATA_VER='v5r2';
   if(LS.g('sk_data_ver')!==DATA_VER){
-    // Remove all old act data
     Object.keys(localStorage).forEach(k=>{ if(k.startsWith('sk_act_')||k.startsWith('sk_a_')) localStorage.removeItem(k); });
     LS.s('sk_data_ver',DATA_VER);
   }
-  if(LS.g('sk_pwds')) return;
-  const p={};Object.values(STAFF).forEach(s=>{p[s.id]=defPwd(s.nm)});LS.s('sk_pwds',p);
+  if(!LS.g('sk_pwds')){
+    const p={};Object.values(STAFF).forEach(s=>{p[s.id]=defPwd(s.nm)});LS.s('sk_pwds',p);
+  }
+  // Init sk_users jika belum ada
+  if(!LS.g('sk_users')){
+    const u={};
+    Object.values(STAFF).forEach(s=>{
+      u[s.id]={id:s.id,nm:s.nm,ti:s.ti,lv:s.lv,par:s.par,un:s.un,isAdmin:s.lv==='L0',active:true};
+    });
+    LS.s('sk_users',u);
+  }
+  // Admin default = KD (Kepala Dinas, L0)
+  const admins = LS.g('sk_admins')||{};
+  if(!Object.keys(admins).length){
+    const firstL0 = Object.values(STAFF).find(s=>s.lv==='L0');
+    if(firstL0){ admins[firstL0.id]=true; LS.s('sk_admins',admins); }
+  }
+}
+// Helper: cek apakah staffId adalah admin
+function isAdmin(id){ return !!(LS.g('sk_admins')||{})[id||CUR]; }
+// Helper: ambil data custom user (nama/jabatan yang sudah diedit)
+function getUserProfile(id){
+  const users = LS.g('sk_users')||{};
+  return users[id]||STAFF[id]||{};
+}
+function saveUserProfile(id, data){
+  const users = LS.g('sk_users')||{};
+  users[id] = {...(users[id]||STAFF[id]||{}), ...data};
+  LS.s('sk_users',users);
+  // Update STAFF object in memory agar langsung terlihat
+  if(STAFF[id]){
+    if(data.nm) STAFF[id].nm = data.nm;
+    if(data.ti) STAFF[id].ti = data.ti;
+  }
 }
 const getPwds=()=>LS.g('sk_pwds')||{};
 const setPwds=p=>LS.s('sk_pwds',p);
@@ -1671,9 +1937,9 @@ function confirmDelete(id,type,idx){
 function evtwKey(id,tw){ return 'sk_evtw_'+id+'_'+tw; }
 function evtwVKey(id,tw,eid){ return 'sk_evtw_v_'+id+'_'+tw+'_'+eid; }
 function getEvTW(id,tw){ return LS.g(evtwKey(id,tw))||[]; }
-function setEvTW(id,tw,arr){ LS.s(evtwKey(id,tw),arr); }
+function setEvTW(id,tw,arr){ const k=evtwKey(id,tw); try{localStorage.setItem(k,JSON.stringify(arr));}catch(e){} if(window._fsSet) window._fsSet(k,arr).catch(()=>{}); else if(window.LS&&window.LS._fb) window.LS.s(k,arr); }
 function getEvTWV(id,tw,eid){ return LS.g(evtwVKey(id,tw,eid))||null; }
-function setEvTWV(id,tw,eid,d){ LS.s(evtwVKey(id,tw,eid),d); }
+function setEvTWV(id,tw,eid,d){ const k=evtwVKey(id,tw,eid); try{localStorage.setItem(k,JSON.stringify(d));}catch(e){} if(window._fsSet) window._fsSet(k,d).catch(()=>{}); else if(window.LS&&window.LS._fb) window.LS.s(k,d); }
 function delEvTWV(id,tw,eid){ LS.d(evtwVKey(id,tw,eid)); }
 function newEvId(){ return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 
@@ -2150,7 +2416,17 @@ function resetPoinVal(id, tw, eid, isOwn, isV){
 // ── Storage ─────────────────────────────────────────────
 function actKey(id,d){ return 'sk_act_'+id+'_'+d; }
 function getActs(id,d){ return LS.g(actKey(id,d))||[]; }
-function setActs(id,d,arr){ LS.s(actKey(id,d),arr); }
+function setActs(id,d,arr){
+  const k = actKey(id,d);
+  // 1. Tulis ke localStorage segera
+  try{ localStorage.setItem(k, JSON.stringify(arr)); }catch(e){}
+  // 2. Sync ke Firestore langsung — tidak lewat LS.s yang mungkin belum ready
+  if(window._fsSet){
+    window._fsSet(k, arr).catch(e=>console.warn('[SIMKK] setActs sync fail:', e.code||e.message));
+  } else if(window.LS && window.LS._fb){
+    window.LS.s(k, arr);
+  }
+}
 function newActId(){ return 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 
 // ── Carry-over (lanjut besok) ────────────────────────────
@@ -2741,8 +3017,15 @@ function actDelete(actId){
   var _id=_dailyId, _dt=_dailyDate;
   confirmDelete('⚠️ Kegiatan ini akan dihapus permanen. Lanjutkan?', function(){
     var acts = getActs(_id, _dt).filter(function(a){ return a.id !== actId; });
-    setActs(_id, _dt, acts);
-    showToast('🗑 Kegiatan dihapus.');
+    // Tandai timestamp hapus agar pull dari Firestore tidak menimpa
+    var k = actKey(_id, _dt);
+    var now = Date.now();
+    try{ localStorage.setItem(k, JSON.stringify(acts)); localStorage.setItem(k+'__ts', String(now)); }catch(e){}
+    // Sync ke Firestore langsung
+    if(window._fsSet){
+      window._fsSet(k, acts).catch(function(e){ console.warn('[SIMKK] delete sync fail:', e.code||e.message); });
+    }
+    showToast('🗑 Kegiatan dihapus dan disinkron ke cloud.');
     _dailyId=_id; _dailyDate=_dt;
     buildTree(); updateNotifBadge(); _renderDailyInner();
   });
@@ -3755,9 +4038,9 @@ function toggleVB(){
 function utkey(id){ return 'sk_ut_'+id; }
 function utvkey(id){ return 'sk_utv_'+id; }
 function getUT(id){ return LS.g(utkey(id))||null; }
-function setUT(id,d){ LS.s(utkey(id),d); }
+function setUT(id,d){ const k=utkey(id); try{localStorage.setItem(k,JSON.stringify(d));}catch(e){} if(window._fsSet) window._fsSet(k,d).catch(()=>{}); else if(window.LS&&window.LS._fb) window.LS.s(k,d); }
 function getUTV(id){ return LS.g(utvkey(id))||null; }
-function setUTV(id,d){ LS.s(utvkey(id),d); }
+function setUTV(id,d){ const k=utvkey(id); try{localStorage.setItem(k,JSON.stringify(d));}catch(e){} if(window._fsSet) window._fsSet(k,d).catch(()=>{}); else if(window.LS&&window.LS._fb) window.LS.s(k,d); }
 
 // ── Render ───────────────────────────────────────────────────────────────
 function renderUraianTugas(id, canEdit){
@@ -4066,10 +4349,19 @@ function runPendingDelete(){
 // ══════════════════════════════════════════════════════════
 function initApp(){
   const s=STAFF[CUR];if(!s) return;
+  // Gunakan profil custom jika ada (nama/jabatan yang sudah diedit)
+  const prof=getUserProfile(CUR);
+  const dispNm=prof.nm||s.nm;
+  const dispTi=prof.ti||s.ti;
+  if(dispNm!==s.nm) STAFF[CUR].nm=dispNm;
+  if(dispTi!==s.ti) STAFF[CUR].ti=dispTi;
   const av=document.getElementById('hav');
-  av.style.background=GR[s.lv];av.textContent=ini(s.nm);
-  document.getElementById('hnm').textContent=s.nm;
-  document.getElementById('hrl').textContent=s.ti;
+  av.style.background=GR[s.lv];av.textContent=ini(dispNm);
+  document.getElementById('hnm').textContent=dispNm;
+  document.getElementById('hrl').textContent=dispTi;
+  // Tampilkan tombol Admin jika user adalah admin
+  const adminBtn=document.getElementById('btnAdmin');
+  if(adminBtn) adminBtn.style.display=isAdmin(CUR)?'':'none';
   buildTree();
   // Notifikasi – hanya tampil untuk yang punya bawahan
   updateNotifBadge();
@@ -4125,6 +4417,295 @@ function _startBgPull(){
   },60000);
 }
 
+
+// ════════════════════════════════════════════════════════════════
+// PROFILE MODAL – user bisa edit data pribadi & ganti password
+// ════════════════════════════════════════════════════════════════
+let _profTab = 1;
+
+function openProfileModal(){
+  if(!CUR||!STAFF[CUR]) return;
+  _profTab = 1;
+  profSwitchTab(1);
+  const s = STAFF[CUR];
+  const prof = getUserProfile(CUR);
+  // Avatar
+  const el = document.getElementById('profAv');
+  el.textContent = ini(prof.nm||s.nm);
+  el.style.background = GR[s.lv]||GR.L3;
+  // Display
+  document.getElementById('profNmDisp').textContent = prof.nm||s.nm;
+  document.getElementById('profTiDisp').textContent  = prof.ti||s.ti;
+  document.getElementById('profUnitDisp').textContent = (UL[s.un]||'')+' · Level '+s.lv;
+  // Fields
+  document.getElementById('profNm').value    = prof.nm||s.nm;
+  document.getElementById('profTi').value    = prof.ti||s.ti;
+  document.getElementById('profHp').value    = prof.hp||'';
+  document.getElementById('profEmail').value = prof.email||'';
+  // Password fields
+  document.getElementById('profOldPwd').value = '';
+  document.getElementById('profNewPwd').value = '';
+  document.getElementById('profConPwd').value = '';
+  document.getElementById('profPwBar').style.cssText = 'height:4px;border-radius:2px;background:var(--b2);margin-top:4px';
+  document.getElementById('profErr1').style.display = 'none';
+  document.getElementById('profErr2').style.display = 'none';
+  document.getElementById('mProfile').classList.add('show');
+}
+
+function profSwitchTab(n){
+  _profTab = n;
+  [1,2].forEach(i=>{
+    document.getElementById('profTab'+i).classList.toggle('active',i===n);
+    document.getElementById('profPane'+i).style.display = i===n?'':'none';
+  });
+}
+
+function profPwStrength(){
+  const pw = document.getElementById('profNewPwd').value;
+  const bar = document.getElementById('profPwBar');
+  const score = (pw.length>=8?1:0)+(pw.length>=12?1:0)+(/[A-Z]/.test(pw)?1:0)+(/[0-9]/.test(pw)?1:0)+(/[^A-Za-z0-9]/.test(pw)?1:0);
+  const cols = ['#E25555','#F59E0B','#F59E0B','#2EC97E','#2EC97E','#1DB3A3'];
+  const pcts = [0,20,40,60,80,100];
+  bar.style.cssText = `height:4px;border-radius:2px;margin-top:4px;background:${cols[score]};width:${pcts[score]}%;transition:all .3s`;
+}
+
+function profSave(){
+  if(_profTab===1) profSaveData();
+  else profSavePwd();
+}
+
+function profSaveData(){
+  const nm    = document.getElementById('profNm').value.trim();
+  const ti    = document.getElementById('profTi').value.trim();
+  const hp    = document.getElementById('profHp').value.trim();
+  const email = document.getElementById('profEmail').value.trim();
+  const err   = document.getElementById('profErr1');
+  if(!nm){ err.textContent='Nama tidak boleh kosong!'; err.style.color='#E25555'; err.style.display='block'; return; }
+  // Simpan profile
+  saveUserProfile(CUR,{nm,ti,hp,email,updatedAt:ts()});
+  // Update header avatar
+  const av = document.getElementById('hav');
+  if(av){ av.textContent=ini(nm); }
+  const hnm = document.getElementById('hUserNm');
+  if(hnm) hnm.textContent=nm;
+  err.style.color='var(--green)';
+  err.textContent='✅ Data pribadi berhasil disimpan!';
+  err.style.display='block';
+  setTimeout(()=>{ err.style.display='none'; closeMdl('mProfile'); },1500);
+  showToast('✅ Profil diperbarui!');
+}
+
+function profSavePwd(){
+  const oldPw = document.getElementById('profOldPwd').value;
+  const newPw = document.getElementById('profNewPwd').value;
+  const conPw = document.getElementById('profConPwd').value;
+  const err   = document.getElementById('profErr2');
+  err.style.display='none';
+  const pwds = getPwds();
+  if(pwds[CUR]!==oldPw){ err.style.color='#E25555'; err.textContent='❌ Password lama salah!'; err.style.display='block'; return; }
+  if(newPw.length<6){ err.style.color='#E25555'; err.textContent='❌ Password baru min. 6 karakter!'; err.style.display='block'; return; }
+  if(newPw!==conPw){ err.style.color='#E25555'; err.textContent='❌ Konfirmasi password tidak cocok!'; err.style.display='block'; return; }
+  // Simpan password baru
+  pwds[CUR]=newPw; setPwds(pwds);
+  err.style.color='var(--green)'; err.textContent='✅ Password berhasil diubah!'; err.style.display='block';
+  setTimeout(()=>{ err.style.display='none'; closeMdl('mProfile'); },1500);
+  showToast('✅ Password diperbarui!');
+}
+
+// Backward compat: openPwdModal → buka profil tab password
+function openPwdModal(){ openProfileModal(); profSwitchTab(2); }
+function savePwd(){ profSavePwd(); }
+function pwStrength(){ profPwStrength(); }
+
+// ════════════════════════════════════════════════════════════════
+// ADMIN PANEL
+// ════════════════════════════════════════════════════════════════
+let _admTab = 1;
+
+function openAdminPanel(){
+  if(!isAdmin(CUR)){ showToast('⛔ Hanya admin yang bisa mengakses panel ini!','warn'); return; }
+  _admTab=1; admSwitchTab(1);
+  document.getElementById('mAdmin').classList.add('show');
+  admRenderUsers();
+  admPopulateStaffSelects();
+}
+
+function admSwitchTab(n){
+  _admTab=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('admTab'+i).classList.toggle('active',i===n);
+    document.getElementById('admPane'+i).style.display=i===n?'':'none';
+  });
+}
+
+function admPopulateStaffSelects(){
+  const order={L0:0,L1:1,L2:2,L3:3};
+  const sorted = Object.values(STAFF).sort((a,b)=>order[a.lv]-order[b.lv]||a.nm.localeCompare(b.nm));
+  const users = LS.g('sk_users')||{};
+  // admNewStaff: hanya yang belum ada di sk_users (belum punya login)
+  const nsEl = document.getElementById('admNewStaff');
+  nsEl.innerHTML='<option value="">— Pilih dari daftar —</option>';
+  sorted.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s.id; o.textContent=`[${s.lv}] ${s.nm} – ${s.ti.length>40?s.ti.slice(0,38)+'…':s.ti}`;
+    nsEl.appendChild(o);
+  });
+  // admResetStaff & admClearStaff: semua user yang ada
+  ['admResetStaff','admClearStaff'].forEach(elId=>{
+    const el=document.getElementById(elId);
+    el.innerHTML='<option value="">— Pilih user —</option>';
+    sorted.forEach(s=>{
+      const o=document.createElement('option');
+      o.value=s.id; o.textContent=`${s.nm} (${s.lv})`;
+      el.appendChild(o);
+    });
+  });
+}
+
+function admRenderUsers(){
+  const container=document.getElementById('admUserList');
+  container.innerHTML='<div style="text-align:center;padding:30px;color:var(--dim)">⏳ Memuat…</div>';
+  const users = LS.g('sk_users')||{};
+  const pwds  = getPwds();
+  const admins= LS.g('sk_admins')||{};
+  const order={L0:0,L1:1,L2:2,L3:3};
+  const sorted = Object.values(users).sort((a,b)=>(order[a.lv]??9)-(order[b.lv]??9)||a.nm.localeCompare(b.nm));
+  if(!sorted.length){ container.innerHTML='<div style="text-align:center;padding:40px;color:var(--dim)">Belum ada user terdaftar.</div>'; return; }
+  container.innerHTML = sorted.map(u=>`
+    <div class="user-row" id="urow_${u.id}">
+      <div class="user-av" style="background:${GR[u.lv]||GR.L3}">${ini(u.nm)}</div>
+      <div class="user-info">
+        <div class="user-nm">${u.nm}</div>
+        <div class="user-ti">${u.ti||''} <span style="color:var(--dim2)">· ${u.lv}</span></div>
+      </div>
+      ${admins[u.id]?'<span class="user-badge adm">Admin</span>':''}
+      <span class="user-badge">${pwds[u.id]?'Punya Login':'—'}</span>
+      <button class="btn btn-blue btn-xs" onclick="admOpenEditUser('${u.id}')">✏️ Edit</button>
+    </div>`).join('');
+}
+
+function admFilterUsers(){
+  const q = document.getElementById('admSearch').value.toLowerCase();
+  document.querySelectorAll('#admUserList .user-row').forEach(row=>{
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function admOpenEditUser(id){
+  const u = getUserProfile(id)||STAFF[id]||{};
+  const admins = LS.g('sk_admins')||{};
+  document.getElementById('euStaffId').value = id;
+  document.getElementById('euNmLabel').textContent = u.nm||id;
+  document.getElementById('euTiLabel').textContent = u.ti||'';
+  const avEl = document.getElementById('euAv');
+  avEl.textContent=ini(u.nm||id); avEl.style.background=GR[u.lv]||GR.L3;
+  document.getElementById('euNm').value = u.nm||'';
+  document.getElementById('euTi').value = u.ti||'';
+  document.getElementById('euPwd').value = '';
+  document.getElementById('euIsAdmin').checked = !!admins[id];
+  document.getElementById('euErr').style.display = 'none';
+  closeMdl('mAdmin');
+  document.getElementById('mEditUser').classList.add('show');
+}
+
+function admSaveUser(){
+  const id = document.getElementById('euStaffId').value;
+  const nm = document.getElementById('euNm').value.trim();
+  const ti = document.getElementById('euTi').value.trim();
+  const pw = document.getElementById('euPwd').value;
+  const isAdm=document.getElementById('euIsAdmin').checked;
+  const err=document.getElementById('euErr');
+  err.style.display='none';
+  if(!nm){ err.textContent='Nama tidak boleh kosong!'; err.style.display='block'; return; }
+  if(pw && pw.length<6){ err.textContent='Password min. 6 karakter!'; err.style.display='block'; return; }
+  // Simpan profile
+  saveUserProfile(id,{nm,ti});
+  // Simpan password jika diisi
+  if(pw){ const p=getPwds(); p[id]=pw; setPwds(p); }
+  // Admin flag
+  const admins = LS.g('sk_admins')||{};
+  if(isAdm) admins[id]=true; else delete admins[id];
+  LS.s('sk_admins',admins);
+  // Update sk_users
+  const users=LS.g('sk_users')||{};
+  if(!users[id]) users[id]={...STAFF[id]||{id}};
+  users[id].nm=nm; users[id].ti=ti; users[id].isAdmin=isAdm;
+  LS.s('sk_users',users);
+  showToast('✅ Data user '+nm+' berhasil disimpan!');
+  closeMdl('mEditUser');
+  document.getElementById('mAdmin').classList.add('show');
+  admRenderUsers();
+}
+
+function admDeleteUser(id){
+  if(!id){ showToast('ID user tidak valid','warn'); return; }
+  const u = getUserProfile(id)||STAFF[id]||{};
+  if(!confirm('Hapus user "'+u.nm+'"?\n\nData kinerja tidak akan ikut terhapus.')) return;
+  // Hapus dari sk_users
+  const users=LS.g('sk_users')||{};
+  delete users[id]; LS.s('sk_users',users);
+  // Hapus dari sk_pwds (tidak bisa login)
+  const pwds=getPwds(); delete pwds[id]; setPwds(pwds);
+  // Hapus dari sk_admins
+  const admins=LS.g('sk_admins')||{}; delete admins[id]; LS.s('sk_admins',admins);
+  showToast('🗑 User '+u.nm+' dihapus');
+  closeMdl('mEditUser');
+  document.getElementById('mAdmin').classList.add('show');
+  admRenderUsers();
+}
+
+function admAddUser(){
+  const id  = document.getElementById('admNewStaff').value;
+  const pw  = document.getElementById('admNewPwd').value;
+  const isAdm=document.getElementById('admNewIsAdmin').checked;
+  const err = document.getElementById('admAddErr');
+  err.style.display='none';
+  if(!id){ err.textContent='Pilih pegawai terlebih dahulu!'; err.style.display='block'; return; }
+  const s=STAFF[id]; if(!s){ err.textContent='Pegawai tidak ditemukan!'; err.style.display='block'; return; }
+  // Pakai password default jika tidak diisi
+  const finalPw = pw&&pw.length>=6 ? pw : (pw&&pw.length?'' : defPwd(s.nm));
+  if(pw && pw.length && pw.length<6){ err.textContent='Password min. 6 karakter!'; err.style.display='block'; return; }
+  // Tambah ke sk_users
+  const users=LS.g('sk_users')||{};
+  users[id]={id,nm:s.nm,ti:s.ti,lv:s.lv,par:s.par,un:s.un,isAdmin:isAdm,active:true,createdAt:ts()};
+  LS.s('sk_users',users);
+  // Set password
+  const pwds=getPwds(); pwds[id]=finalPw; setPwds(pwds);
+  // Admin flag
+  if(isAdm){ const adms=LS.g('sk_admins')||{}; adms[id]=true; LS.s('sk_admins',adms); }
+  showToast('✅ User '+s.nm+' berhasil ditambahkan!');
+  document.getElementById('admNewStaff').value='';
+  document.getElementById('admNewPwd').value='';
+  document.getElementById('admNewIsAdmin').checked=false;
+  admSwitchTab(1); admRenderUsers();
+}
+
+function admResetPwd(){
+  const id=document.getElementById('admResetStaff').value;
+  const pw=document.getElementById('admResetPwd').value;
+  if(!id||!pw){ showToast('Pilih user dan masukkan password baru!','warn'); return; }
+  if(pw.length<6){ showToast('Password min. 6 karakter!','warn'); return; }
+  const p=getPwds(); p[id]=pw; setPwds(p);
+  const nm=getUserProfile(id)?.nm||id;
+  showToast('✅ Password '+nm+' berhasil direset!');
+  document.getElementById('admResetStaff').value='';
+  document.getElementById('admResetPwd').value='';
+}
+
+function admClearUserData(){
+  const id=document.getElementById('admClearStaff').value;
+  if(!id){ showToast('Pilih user terlebih dahulu!','warn'); return; }
+  const nm=getUserProfile(id)?.nm||id;
+  if(!confirm('⚠️ HAPUS SEMUA data kinerja "'+nm+'"?\n\nIni termasuk kegiatan harian, evaluasi, uraian tugas, dan kontrak kinerja.\n\nTindakan ini TIDAK BISA dibatalkan!')) return;
+  // Hapus semua key terkait user dari localStorage
+  const prefix=['sk_act_'+id,'sk_evtw_'+id,'sk_evtw_v_'+id,'sk_ut_'+id,'sk_utv_'+id,'sk_cst_'+id,'sk_c_'+id];
+  let count=0;
+  Object.keys(localStorage).forEach(k=>{
+    if(prefix.some(p=>k.startsWith(p))){ localStorage.removeItem(k); count++; }
+  });
+  showToast('🗑 '+count+' data '+nm+' dihapus');
+  document.getElementById('admClearStaff').value='';
+}
 
 (function setup(){
   initPwds();
